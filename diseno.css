@@ -1,0 +1,254 @@
+/* Diseño de la landing: el mismo sistema visual de los reels y las historias.
+   Papel crema, tinta ciruela y los colores de las mostacillas del logo; títulos en Bricolage Grotesque
+   con acentos en Instrument Serif itálica; fotos en marcos con sombra sólida de color; mostacillas como motivo.
+   Se carga DESPUÉS del <style> de la página, así que solo pisa lo que cambia. El logo conserva DM Sans + Cormorant. */
+
+:root {
+  --paper: #f4ede3; --paper2: #ebe1d3; --card: #fbf7f1; --ink: #24122e; --plum: #7a3fa0; --lilac: #dcc2f2;
+  --red: #e5392f; --yel: #f7b928; --blue: #1e7be0; --green: #2e9f4f; --pink: #f06ba8; --mint: #bfe3c9;
+
+  /* los nombres que ya usa la página, apuntando a la paleta nueva */
+  --bg: var(--paper); --bg-alt: var(--paper2); --ink-soft: #5a4a63; --line: transparent;
+  --accent: var(--plum); --white: var(--card);
+  --dot-1: var(--red); --dot-2: var(--yel); --dot-3: var(--blue); --dot-4: var(--green);
+  --radius: 28px;
+  --serif: "Instrument Serif", Georgia, serif;
+  --sans: "Bricolage Grotesque", system-ui, sans-serif;
+}
+
+body { font-size: 17px; font-optical-sizing: auto; }
+
+/* ---------- tipografía ---------- */
+h1, h2, h3 { font-family: var(--sans); font-weight: 750; font-stretch: 90%; letter-spacing: -.035em; line-height: .95; }
+h1 em, h2 em, h3 em { font-family: var(--serif); font-style: italic; font-weight: 400; font-stretch: normal; letter-spacing: -.01em; color: var(--plum); }
+h2 { font-size: clamp(40px, 6vw, 76px); margin-top: 14px; }
+.section-head { max-width: 760px; }
+.section-head p { color: var(--ink); font-size: 18px; max-width: 560px; margin-left: auto; margin-right: auto; }
+
+/* la etiqueta sobre los títulos, igual que en los reels: mayúsculas con una mostacilla */
+.eyebrow { display: inline-flex; align-items: center; gap: 10px; font-size: 14px; font-weight: 700; letter-spacing: .16em; font-stretch: 100%; color: var(--plum); }
+.eyebrow::before { content: ""; width: 14px; height: 14px; border-radius: 4px; background: var(--red); box-shadow: inset 0 -3px 0 rgba(0,0,0,.2); }
+
+/* el logo no cambia */
+.logo .k { font-family: "DM Sans", system-ui, sans-serif; font-weight: 700; }
+.logo .m { font-family: "Cormorant Garamond", Georgia, serif; }
+
+/* ---------- mostacillas ---------- */
+.bead { position: relative; display: inline-block; width: var(--s, 46px); height: var(--s, 46px); border-radius: 28%; background: var(--c, var(--red)); flex: none;
+  box-shadow: inset 0 calc(var(--s, 46px) * -.12) 0 rgba(0,0,0,.18), inset 0 calc(var(--s, 46px) * .1) 0 rgba(255,255,255,.3); }
+.bead::after { content: ""; position: absolute; inset: 34%; border-radius: 50%; background: rgba(0,0,0,.32); }
+.bd { position: relative; display: inline-block; width: 18px; height: 18px; border-radius: 5px; background: var(--c, var(--red)); box-shadow: inset 0 -3px 0 rgba(0,0,0,.2); }
+.bd::after { content: ""; position: absolute; inset: 6px; border-radius: 50%; background: rgba(0,0,0,.3); }
+
+/* cordón de mostacillas que separa partes de la página */
+.cordon { display: flex; justify-content: center; align-items: center; gap: 10px; height: 64px; max-width: var(--max); margin: 0 auto; padding: 0 24px; overflow: hidden; }
+.cordon i { flex: none; position: relative; width: 26px; height: 26px; border-radius: 28%; background: var(--c); box-shadow: inset 0 -4px 0 rgba(0,0,0,.18), inset 0 3px 0 rgba(255,255,255,.3); }
+.cordon i::after { content: ""; position: absolute; inset: 9px; border-radius: 50%; background: rgba(0,0,0,.3); }
+
+/* ---------- botones ---------- */
+.btn { font-family: var(--sans); font-weight: 700; font-stretch: 100%; font-size: 16px; padding: 16px 28px; border-width: 2px;
+  transition: background .2s, color .2s, transform .2s, box-shadow .2s; }
+.btn-primary { background: var(--ink); color: var(--paper); }
+.btn-primary:hover { background: var(--plum); transform: translate(-3px, -3px); box-shadow: 5px 5px 0 var(--yel); }
+.btn-ghost { border-color: var(--ink); }
+.btn-ghost:hover { background: var(--ink); color: var(--paper); transform: translate(-3px, -3px); box-shadow: 5px 5px 0 var(--lilac); }
+.btn:active { transform: none; box-shadow: none; }
+.btn:focus-visible, .filter:focus-visible, summary:focus-visible, a:focus-visible { outline: 3px solid var(--blue); outline-offset: 3px; }
+
+/* ---------- aviso superior y menú ---------- */
+.announce { background: var(--plum); animation: none; font-size: 16px; }
+.ann-msg strong { background: var(--yel); color: var(--ink); font-size: 13px; }
+.ann-msg u { border-width: 2px; font-size: 14px; }
+.ann-msg:hover u { color: var(--plum); }
+nav { background: var(--paper); backdrop-filter: none; border-bottom: 0; }
+.nav-links { font-size: 15px; font-weight: 600; color: var(--ink); }
+.nav-links a:hover { color: var(--plum); }
+
+/* ---------- portada ---------- */
+.hero { padding: 64px 0 88px; }
+.hero-grid { grid-template-columns: 1.3fr 1fr; gap: 64px; }
+.hero h1 { font-size: clamp(40px, 5vw, 72px); margin: 20px 0 28px; }
+.hero h1 .h-a, .hero h1 em { display: block; }
+.hero h1 em { white-space: nowrap; }
+.hero p.lead { color: var(--ink); font-size: 19px; max-width: 500px; }
+.hero-proof { color: var(--ink); font-weight: 600; font-size: 15px; gap: 8px; }
+.hero-proof span:last-child { margin-left: 8px; }
+.hero-visual .loose { position: absolute; z-index: 2; }
+
+/* ---------- beneficios ---------- */
+.benefits { background: var(--paper2); border: 0; }
+.benefit { border: 0 !important; align-items: center; padding: 30px 22px; }
+.benefit svg { width: 54px; height: 54px; padding: 13px; border-radius: 16px; background: var(--c); stroke: var(--ink); stroke-width: 1.8;
+  box-shadow: inset 0 -5px 0 rgba(0,0,0,.14); }
+.benefit:nth-child(1) { --c: var(--yel); } .benefit:nth-child(2) { --c: var(--pink); }
+.benefit:nth-child(3) { --c: var(--lilac); } .benefit:nth-child(4) { --c: var(--mint); }
+.benefit b { font-size: 18px; font-weight: 700; }
+.benefit span { font-size: 15px; color: var(--ink); }
+
+/* ---------- lanzamientos: campo ciruela, como la tarjeta final de los reels ---------- */
+.launches { background: var(--plum); color: var(--paper); }
+.launches .eyebrow { color: var(--paper); }
+.launches .eyebrow::before { background: var(--yel); }
+.launches h2 { color: var(--paper); }
+.launches .section-head p { color: var(--paper); }
+.launch-list { gap: 30px; }
+.launch { background: var(--card); color: var(--ink); border-radius: 28px; box-shadow: 10px 10px 0 var(--c, var(--ink)); }
+.launch:nth-child(4n+1) { --c: var(--yel); } .launch:nth-child(4n+2) { --c: var(--pink); }
+.launch:nth-child(4n+3) { --c: var(--lilac); } .launch:nth-child(4n+4) { --c: var(--ink); }
+.launch:hover { transform: translate(-4px, -4px); box-shadow: 14px 14px 0 var(--c, var(--ink)); }
+.launch-img { border-radius: 28px 28px 0 0; }
+.launch-img .tag { background: var(--yel); color: var(--ink); font-size: 13px; }
+.launch h3 { color: var(--ink); font-size: 27px; }
+.launch .lp { color: var(--plum); font-size: 18px; font-weight: 700; }
+.launch .lp s { color: var(--ink-soft); font-size: 14px; }
+.launch p.ld { color: var(--ink); font-size: 16px; }
+.launch .btn-light { background: var(--ink); color: var(--paper); }
+.launch .btn-light:hover { background: var(--plum); }
+.try-btn { background: var(--card); color: var(--ink); font: 700 14px var(--sans); box-shadow: 3px 3px 0 var(--ink); }
+.try-btn:hover { background: var(--lilac); }
+
+/* ---------- colección ---------- */
+.filter { border: 0; background: var(--paper2); color: var(--ink); font: 600 15px var(--sans); }
+.filter:hover { background: var(--lilac); color: var(--ink); }
+.filter.active { background: var(--ink); color: var(--paper); }
+.card { background: var(--card); border-radius: 28px; box-shadow: 10px 10px 0 var(--c, var(--ink)); }
+.card:nth-child(4n+1) { --c: var(--red); } .card:nth-child(4n+2) { --c: var(--yel); }
+.card:nth-child(4n+3) { --c: var(--blue); } .card:nth-child(4n+4) { --c: var(--green); }
+.card:hover { transform: translate(-4px, -4px); box-shadow: 14px 14px 0 var(--c, var(--ink)); }
+.tag { font-size: 13px; background: var(--yel); color: var(--ink); }
+.card h3 { font-size: 27px; }
+.price { color: var(--plum); font-weight: 700; }
+.card p { color: var(--ink); font-size: 16px; }
+
+/* ---------- vitrina 3D ---------- */
+.vitrina-copy h2 { font-size: clamp(42px, 5.6vw, 76px); }
+.vitrina-copy > p { color: var(--ink); font-size: 18px; }
+.vt-stage { background: var(--lilac); border-radius: 48px; box-shadow: 18px 18px 0 var(--plum); }
+.vt-hint, .vt-loading { color: var(--ink); font-size: 14px; font-weight: 600; }
+.vt-thumbs button { border: 0; background: var(--card); box-shadow: 4px 4px 0 var(--ink); }
+.vt-thumbs button[aria-pressed="true"] { border: 0; background: var(--yel); }
+.vt-buy b { font-family: var(--sans); font-weight: 750; font-stretch: 90%; letter-spacing: -.03em; font-size: 38px; }
+.vt-buy span { font-size: 20px; font-weight: 700; }
+
+/* ---------- tejido en vivo ---------- */
+.tejido { background: var(--ink); color: var(--paper); }
+.tejido .eyebrow { color: var(--yel); }
+.tejido .eyebrow::before { background: var(--yel); }
+.tejido-copy h2 { color: var(--paper); font-size: clamp(42px, 6vw, 84px); }
+.tejido-copy > p { color: #e3d8ea; font-size: 18px; }
+.tj-count b { font-family: var(--sans); font-weight: 750; font-stretch: 90%; letter-spacing: -.04em; color: var(--paper); }
+.tj-count span, .tj-row { color: #e3d8ea; font-size: 15px; }
+.tj-bar { height: 8px; border-radius: 8px; background: rgba(244,237,227,.14); }
+.tj-bar i { background: var(--yel); border-radius: 8px; }
+.tj-done { font-family: var(--serif); color: var(--lilac); font-size: 32px; }
+.tj-fine { color: #b9a9c4; font-size: 13px; }
+
+/* ---------- cómo se hacen ---------- */
+.story { background: var(--lilac); }
+.story-collage { gap: 26px; }
+.story-collage img { border-radius: 28px; box-shadow: 10px 10px 0 var(--c); }
+.story-collage img:nth-child(1) { --c: var(--red); } .story-collage img:nth-child(2) { --c: var(--yel); }
+.story-collage img:nth-child(3) { --c: var(--blue); } .story-collage img:nth-child(4) { --c: var(--green); }
+.story-text p { color: var(--ink); font-size: 18px; }
+.step-num { border: 0; border-radius: 30%; background: var(--c); color: var(--ink); font: 800 18px var(--sans); width: 52px; height: 52px;
+  box-shadow: inset 0 -6px 0 rgba(0,0,0,.18), inset 0 5px 0 rgba(255,255,255,.3); }
+.step:nth-child(1) .step-num { --c: var(--red); } .step:nth-child(2) .step-num { --c: var(--yel); } .step:nth-child(3) .step-num { --c: var(--green); }
+.step { align-items: center; }
+.step b { font-size: 19px; font-weight: 700; }
+.step span { font-size: 16px; color: var(--ink); }
+
+/* ---------- cómo comprar: campo amarillo, pasos con mostacillas ---------- */
+.buy { background: var(--yel); color: var(--ink); }
+.buy .eyebrow { color: var(--ink); }
+.buy .eyebrow::before { background: var(--plum); }
+.buy h2 { color: var(--ink); }
+.buy .section-head p { color: var(--ink); }
+.buy-grid { list-style: none; background: none; gap: 30px; border-radius: 0; overflow: visible; }
+.buy-item { background: var(--card); border-radius: 28px; box-shadow: 10px 10px 0 var(--ink); padding: 36px 32px 38px; }
+.buy-item .n { --s: 64px; }
+.buy-item h3 { color: var(--ink); font-size: 32px; margin: 24px 0 10px; }
+.buy-item p { color: var(--ink); font-size: 16px; }
+.buy .btn-primary { background: var(--ink); color: var(--paper); }
+.buy .btn-primary:hover { background: var(--plum); box-shadow: 5px 5px 0 var(--card); }
+
+/* ---------- Instagram ---------- */
+.ig-grid { gap: 16px; }
+.ig-grid a { border-radius: 22px; }
+.ig-grid a:nth-child(odd) { rotate: -1.5deg; } .ig-grid a:nth-child(even) { rotate: 1.5deg; }
+.ig-handle a { border-bottom: 3px solid var(--plum); font-weight: 700; font-size: 18px; }
+
+/* ---------- cuidados: campo menta ---------- */
+.care { background: var(--mint); }
+.care-item { background: var(--card); border-radius: 28px; box-shadow: 8px 8px 0 var(--ink); padding: 30px 24px; }
+.care-item svg { width: 54px; height: 54px; padding: 13px; border-radius: 16px; background: var(--c); stroke: var(--ink); stroke-width: 1.8;
+  box-shadow: inset 0 -5px 0 rgba(0,0,0,.14); }
+.care-item:nth-child(1) { --c: var(--pink); } .care-item:nth-child(2) { --c: #a9d4f5; } .care-item:nth-child(3) { --c: var(--yel); }
+.care-item:nth-child(4) { --c: var(--lilac); } .care-item:nth-child(5) { --c: #ffc9a8; }
+.care-item b { font-family: var(--sans); font-weight: 750; font-stretch: 90%; letter-spacing: -.03em; font-size: 24px; }
+.care-item span { color: var(--ink); font-size: 15px; }
+
+/* ---------- preguntas ---------- */
+details { border-bottom: 0; background: var(--card); border-radius: 24px; padding: 22px 28px; margin-bottom: 14px; }
+summary { font: 700 19px var(--sans); }
+summary::after { content: "+"; flex: none; display: grid; place-items: center; width: 38px; height: 38px; border-radius: 30%; background: var(--yel);
+  color: var(--ink); font-size: 26px; font-weight: 500; box-shadow: inset 0 -4px 0 rgba(0,0,0,.15); }
+details[open] summary::after { background: var(--lilac); }
+details p { color: var(--ink); }
+
+/* ---------- cierre: igual que la tarjeta final de los reels ---------- */
+.final { background: var(--plum); color: var(--paper); padding: 120px 0 128px; }
+.final-logo { color: var(--paper); transform: scale(1.9); margin: 0 auto 64px; }
+.final h2 { color: var(--paper); font-size: clamp(42px, 6.4vw, 88px); max-width: 900px; }
+.final h2 em { display: block; color: var(--lilac); }
+.final p { color: var(--paper); font-size: 19px; }
+.final .btn-primary { background: var(--paper); color: var(--ink); font-size: 18px; padding: 18px 34px; }
+.final .btn-primary:hover { background: var(--yel); box-shadow: 5px 5px 0 var(--ink); }
+
+/* ---------- pie ---------- */
+footer { color: var(--ink); font-size: 15px; }
+.copy { border-top: 0; background: var(--paper2); border-radius: 18px; padding: 18px 22px; }
+.footer-links a { font-weight: 600; }
+
+/* botón flotante de Instagram */
+.ig-float { background: var(--ink); box-shadow: 5px 5px 0 var(--yel); }
+.ig-float svg { stroke: var(--paper); }
+.toast { background: var(--ink); color: var(--paper); font-family: var(--sans); }
+
+/* ---------- movimiento (solo si la persona no pidió menos movimiento) ---------- */
+@keyframes kk-float { 0%, 100% { translate: 0 0; } 50% { translate: 0 -12px; } }
+.kw .w { display: inline-block; overflow: hidden; vertical-align: top; padding: .04em .03em .14em; margin: -.04em -.03em -.14em; }
+.kw .w > span { display: inline-block; }
+@media (prefers-reduced-motion: no-preference) {
+  .hero-visual .loose { animation: kk-float 4s ease-in-out infinite; }
+  .hero-visual .loose:nth-of-type(2n) { animation-delay: -2s; }
+  .reveal .kw .w > span { transform: translateY(115%) rotate(6deg); transition: transform .85s cubic-bezier(.16,1,.3,1) var(--d, 0ms); }
+  .reveal.in .kw .w > span { transform: none; }
+  .cordon i { transform: scale(0) rotate(-60deg); transition: transform .55s cubic-bezier(.2,.9,.3,1.3) var(--d, 0ms); }
+  .cordon.in i { transform: none; }
+}
+
+/* ---------- celular y tablet ---------- */
+@media (max-width: 960px) {
+  .hero-grid { grid-template-columns: 1fr; }
+}
+@media (max-width: 640px) {
+  .hero h1 { font-size: clamp(30px, 8.4vw, 40px); }
+  h2 { font-size: clamp(36px, 10vw, 46px); }
+  .final-logo { transform: scale(1.5); margin-bottom: 44px; }
+  .launch { box-shadow: 6px 6px 0 var(--c, var(--ink)); }
+  .launch h3 { font-size: 21px; }
+  .buy-item, .care-item { box-shadow: 6px 6px 0 var(--ink); }
+  .vt-stage { box-shadow: 10px 10px 0 var(--plum); border-radius: 32px; }
+  .cordon { gap: 8px; height: 52px; }
+  .cordon i { width: 22px; height: 22px; }
+  .cordon i::after { inset: 7px; }
+}
+
+/* títulos en media columna: más chicos para que no pasen de dos líneas */
+.story-text h2 { font-size: clamp(38px, 4.4vw, 62px); }
+@media (max-width: 640px) { .hero h1 em { white-space: normal; } }
+
+/* portada: el logo tejido en mostacillas (diseno.js lo teje en el canvas) */
+.telar-logo { position: relative; width: 100%; aspect-ratio: 1 / 1.1; border-radius: 48px; rotate: -1.5deg; overflow: hidden; background: var(--ink); box-shadow: 18px 18px 0 var(--yel); }
+.telar-logo canvas { display: block; width: 100%; height: 100%; }
+@media (max-width: 640px) { .telar-logo { border-radius: 36px; box-shadow: 12px 12px 0 var(--yel); } }
