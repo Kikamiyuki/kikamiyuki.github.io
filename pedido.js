@@ -81,20 +81,21 @@
     g.restore();
     BEADS.forEach((color, i) => bead(pad + size - 4 * 50 + i * 50 - 18, pad + 26, 40, color));
 
-    // línea 1: «Aros» en itálica + nombre · línea 2: precio (y precio anterior tachado)
+    // línea 1: «Aros» (o «Anillo») en itálica + nombre · línea 2: precio (y precio anterior tachado)
+    const pre = p.tipo === "anillo" ? "Anillo " : "Aros ";
     const y = pad + size + off + 96;
     g.textBaseline = "alphabetic";
     if ("fontStretch" in g) g.fontStretch = "semi-condensed";
     if ("letterSpacing" in g) g.letterSpacing = "-2px";
     let fs = 84;
     const fit = () => {
-      g.font = `italic 400 ${fs * 1.05}px "Instrument Serif", Georgia, serif`; const w1 = g.measureText("Aros ").width;
+      g.font = `italic 400 ${fs * 1.05}px "Instrument Serif", Georgia, serif`; const w1 = g.measureText(pre).width;
       g.font = `750 ${fs}px "Bricolage Grotesque", "DM Sans", sans-serif`; return w1 + g.measureText(p.name).width;
     };
     while (fit() > W - pad * 2 && fs > 44) fs -= 4;
     g.font = `italic 400 ${fs * 1.05}px "Instrument Serif", Georgia, serif`; g.fillStyle = PLUM;
-    g.fillText("Aros ", pad, y);
-    const nx = pad + g.measureText("Aros ").width;
+    g.fillText(pre, pad, y);
+    const nx = pad + g.measureText(pre).width;
     g.font = `750 ${fs}px "Bricolage Grotesque", "DM Sans", sans-serif`; g.fillStyle = INK;
     g.fillText(p.name, nx, y);
     if ("letterSpacing" in g) g.letterSpacing = "0px";
@@ -129,13 +130,14 @@
     if (!styled) {
       const s = document.createElement("style"); s.textContent = css; document.head.appendChild(s); styled = true;
     }
+    const anillo = p.tipo === "anillo";
     const slug = p.img.split("/").pop().replace(/\.[a-z]+$/i, "");
     const back = document.createElement("div");
     back.className = "kp-back";
     back.innerHTML = `
-      <div class="kp-sheet" role="dialog" aria-modal="true" aria-label="Pedir aros ${p.name}">
-        <div class="kp-top"><b>Pide tus aros <em>${p.name}</em></b><button class="kp-x" aria-label="Cerrar">×</button></div>
-        <img class="kp-card" alt="Ficha de los aros ${p.name}" />
+      <div class="kp-sheet" role="dialog" aria-modal="true" aria-label="Pedir ${anillo ? "el anillo" : "los aros"} ${p.name}">
+        <div class="kp-top"><b>Pide ${anillo ? "tu anillo" : "tus aros"} <em>${p.name}</em></b><button class="kp-x" aria-label="Cerrar">×</button></div>
+        <img class="kp-card" alt="Ficha ${anillo ? "del anillo" : "de los aros"} ${p.name}" />
         <p class="kp-steps"></p>
         <button class="kp-btn kp-send" disabled>Preparando foto…</button>
         <div class="kp-note" role="status"></div>
@@ -164,7 +166,7 @@
       const canShare = !!(navigator.canShare && navigator.canShare({ files: [file] })) && matchMedia("(pointer: coarse)").matches;
 
       if (canShare) {
-        steps.innerHTML = 'Toca el botón, elige <strong>Instagram</strong> → <strong>Chats / Mensajes</strong> y envíala a <strong>@kikamiyuki</strong>. Así sabemos exactamente qué aros quieres.';
+        steps.innerHTML = 'Toca el botón, elige <strong>Instagram</strong> → <strong>Chats / Mensajes</strong> y envíala a <strong>@kikamiyuki</strong>. Así sabemos exactamente qué ' + (anillo ? 'anillo' : 'aros') + ' quieres.';
         send.innerHTML = igIcon + "Enviar foto por Instagram";
         send.disabled = false;
         send.onclick = () => {

@@ -1,6 +1,6 @@
 // Vitrina 3D y "tejido en vivo": arma cada aro en 3D, mostacilla por mostacilla, a partir de su recorte (img/probador/<slug>.png).
-// Los datos vienen de window.KIKA_VITRINA (index.html, productos con el campo `vitrina`).
-// Solo sirve para aros tejidos únicamente con Delicas: perlas o dijes se verían como mostacillas.
+// Los datos vienen de window.KIKA_VITRINA (index.html: todos los aros con recorte del probador; `vitrina` ajusta cada uno).
+// Arma las mostacillas como Delicas; lo que no es tejido (gancho, poste arriba, perlas o flecos abajo con `fondo`) se muestra desde la foto.
 // three.js se descarga recién cuando la sección está por aparecer en pantalla.
 const THREE_URL = "https://cdn.jsdelivr.net/npm/three@0.160.0/+esm";
 const ROOM_URL = "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/environments/RoomEnvironment.js/+esm";
@@ -31,12 +31,20 @@ async function analyze(item) {
   const c = document.createElement("canvas"); c.width = W; c.height = H;
   const g = c.getContext("2d", { willReadFrequently: true }); g.drawImage(img, 0, 0);
   const d = g.getImageData(0, 0, W, H).data;
-  const y0 = Math.round(H * item.top);
+  // sin datos medidos: mostacillas de ~1/22 del ancho, k 6 colores, y el tejido empieza donde la pieza ya es más ancha que el gancho
+  const P0 = item.pitch || W / 22;
+  let top = item.top;
+  if (top == null) {
+    top = 0;
+    const wide = (y) => { let n = 0; for (let x = 0; x < W; x++) if (d[(y * W + x) * 4 + 3] > 160) n++; return n > P0 * 3; };
+    for (let y = 0; y < H - 2; y++) if (wide(y) && wide(y + 1) && wide(y + 2)) { top = y / H; break; }
+  }
+  const y0 = Math.round(H * top), y1 = Math.round(H * (item.fondo || 1));
 
   // colores de mostacilla: k-means sobre los píxeles opacos
   const pts = [];
-  for (let y = y0; y < H; y += 2) for (let x = 0; x < W; x += 2) { const i = (y * W + x) * 4; if (d[i + 3] > 200) pts.push([d[i], d[i + 1], d[i + 2]]); }
-  const K = item.k;
+  for (let y = y0; y < y1; y += 2) for (let x = 0; x < W; x += 2) { const i = (y * W + x) * 4; if (d[i + 3] > 200) pts.push([d[i], d[i + 1], d[i + 2]]); }
+  const K = item.k || 6;
   const dist = (a, b) => (a[0] - b[0]) ** 2 + (a[1] - b[1]) ** 2 + (a[2] - b[2]) ** 2;
   let cent = [pts[Math.floor(pts.length / 2)].slice()];
   while (cent.length < K) {
@@ -51,9 +59,9 @@ async function analyze(item) {
     cent = s.map((v, k) => v[3] ? [v[0] / v[3], v[1] / v[3], v[2] / v[3]] : cent[k]);
   }
 
-  const P = item.pitch, R = P * (item.row || 1), beads = [];
+  const P = P0, R = P * (item.row || 1), beads = [];
   let row = 0;
-  for (let cy = y0 + R / 2; cy < H; cy += R, row++) {
+  for (let cy = y0 + R / 2; cy < y1; cy += R, row++) {
     const off = (row % 2) * P / 2, line = [];
     for (let cx = off + P / 2; cx < W; cx += P) {
       let tot = 0, op = 0; const votes = new Array(K).fill(0);
@@ -67,7 +75,7 @@ async function analyze(item) {
     if (row % 2) line.reverse(); // se teje de ida y vuelta
     beads.push(...line);
   }
-  return (cache[item.slug] = { img, W, H, y0, P, R, beads, cent, rows: row });
+  return (cache[item.slug] = { img, W, H, y0, y1, P, R, beads, cent, rows: row });
 }
 
 // Delica: un cilindro corto con su agujero
@@ -94,7 +102,7 @@ function makeStage(canvas) {
     if (!w || !h) return;
     renderer.setSize(w, h, false); cam.aspect = w / h;
     if (piece) {
-      const ph = piece.h * 1.06, pw = piece.w * 1.12, t = Math.tan(THREE.MathUtils.degToRad(cam.fov / 2));
+      const ph = piece.h * 1.3, pw = piece.w * 1.4, t = Math.tan(THREE.MathUtils.degToRad(cam.fov / 2));
       cam.position.set(0, 0, Math.max(ph / 2 / t, pw / 2 / t / cam.aspect));
     }
     cam.updateProjectionMatrix();
@@ -110,7 +118,7 @@ function makeStage(canvas) {
 }
 
 function buildPiece(data) {
-  const { W, H, y0, P, R } = data, rand = rng(7);
+  const { W, H, y0, y1, P, R } = data, rand = rng(7);
   const grp = new THREE.Group(), geo = beadGeometry(R / P);
   // los tonos dorados/cobre se tratan como mostacilla metalizada, el resto como vidrio
   const hsl = { h: 0, s: 0, l: 0 }, tmp = new THREE.Color();
@@ -131,14 +139,27 @@ function buildPiece(data) {
     b.rot = new THREE.Quaternion().setFromEuler(e.set((rand() - .5) * .14, rand() * Math.PI, (rand() - .5) * .1));
     m.compose(b.pos, b.rot, one); meshes[b.mi].setMatrixAt(b.ii, m);
   });
-  // el gancho (y lo que cuelga arriba) se muestra desde la foto
-  const hc = document.createElement("canvas"); hc.width = W; hc.height = y0;
-  hc.getContext("2d").drawImage(data.img, 0, 0);
-  const tex = new THREE.CanvasTexture(hc); tex.colorSpace = THREE.SRGBColorSpace;
-  const hook = new THREE.Mesh(new THREE.PlaneGeometry(W / P, y0 / P),
-    new THREE.MeshBasicMaterial({ map: tex, transparent: true, alphaTest: .35, side: THREE.DoubleSide }));
-  hook.position.set(0, (H / 2 - y0 / 2) / P, 0);
+  // el gancho (y lo que cuelga arriba) se muestra desde la foto; los aros de poste no tienen (queda un plano vacío)
+  let hook;
+  if (y0 >= 1) {
+    const hc = document.createElement("canvas"); hc.width = W; hc.height = y0;
+    hc.getContext("2d").drawImage(data.img, 0, 0);
+    const tex = new THREE.CanvasTexture(hc); tex.colorSpace = THREE.SRGBColorSpace;
+    hook = new THREE.Mesh(new THREE.PlaneGeometry(W / P, y0 / P),
+      new THREE.MeshBasicMaterial({ map: tex, transparent: true, alphaTest: .35, side: THREE.DoubleSide }));
+    hook.position.set(0, (H / 2 - y0 / 2) / P, 0);
+  } else hook = new THREE.Mesh(new THREE.PlaneGeometry(.01, .01), new THREE.MeshBasicMaterial({ transparent: true, opacity: 0 }));
   grp.add(hook);
+  // lo que cuelga abajo y no es tejido (perlas, flecos) también desde la foto
+  if (y1 < H) {
+    const bc = document.createElement("canvas"); bc.width = W; bc.height = H - y1;
+    bc.getContext("2d").drawImage(data.img, 0, -y1);
+    const bt = new THREE.CanvasTexture(bc); bt.colorSpace = THREE.SRGBColorSpace;
+    const low = new THREE.Mesh(new THREE.PlaneGeometry(W / P, (H - y1) / P),
+      new THREE.MeshBasicMaterial({ map: bt, transparent: true, alphaTest: .35, side: THREE.DoubleSide }));
+    low.position.set(0, -(H / 2 - (H - y1) / 2) / P, 0);
+    grp.add(low);
+  }
   return {
     grp, hook, beads: data.beads, w: W / P, h: H / P,
     setBead: (b, mat) => meshes[b.mi].setMatrixAt(b.ii, mat),

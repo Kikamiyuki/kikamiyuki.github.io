@@ -22,10 +22,12 @@
   function place(img, clientX, clientY, aboveFinger) {
     const r = img.getBoundingClientRect();
     const x = Math.max(0, Math.min(r.width, clientX - r.left)), y = Math.max(0, Math.min(r.height, clientY - r.top));
-    // la foto se muestra recortada con object-fit: cover; se replica ese recorte en la lupa
-    const nw = img.naturalWidth || r.width, nh = img.naturalHeight || r.height;
-    const scale = Math.max(r.width / nw, r.height / nh);
-    const dw = nw * scale, dh = nh * scale, ox = (r.width - dw) / 2, oy = (r.height - dh) / 2;
+    // se replica cómo se ve la foto: con object-fit cover (recortada) o contain (entera), dentro del padding
+    const cs = getComputedStyle(img), pl = parseFloat(cs.paddingLeft) || 0, pt = parseFloat(cs.paddingTop) || 0;
+    const cw = r.width - pl - (parseFloat(cs.paddingRight) || 0), ch = r.height - pt - (parseFloat(cs.paddingBottom) || 0);
+    const nw = img.naturalWidth || cw, nh = img.naturalHeight || ch;
+    const scale = (cs.objectFit === "contain" ? Math.min : Math.max)(cw / nw, ch / nh);
+    const dw = nw * scale, dh = nh * scale, ox = pl + (cw - dw) / 2, oy = pt + (ch - dh) / 2;
     lens.style.backgroundImage = `url("${img.currentSrc || img.src}")`;
     lens.style.backgroundSize = `${dw * ZOOM}px ${dh * ZOOM}px`;
     lens.style.backgroundPosition = `${-(x - ox) * ZOOM + SIZE / 2 - 4}px ${-(y - oy) * ZOOM + SIZE / 2 - 4}px`;

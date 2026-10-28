@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Aros Miyuki artesanales en Iquique, Chile · Kika Miyuki</title>
-  <meta name="description" content="Aros de mostacillas Miyuki Delica tejidos a mano en Iquique, Chile. Diseños exclusivos y piezas únicas desde $15.000. Pruébatelos con tu cámara y pide por Instagram." />
+  <meta name="description" content="Aros de mostacillas Miyuki Delica tejidos a mano en Iquique, Chile. Diseños exclusivos y piezas únicas desde $11.000. Pruébatelos con tu cámara y pide por Instagram." />
   <link rel="canonical" href="https://kikamiyuki.github.io/" />
   <meta name="google-site-verification" content="dV82jJ7p62wdyg4jx_UUdmzdf-CzxC_7w3dvXzxCM1U" />
   <meta name="robots" content="index, follow, max-image-preview:large" />
@@ -30,7 +30,7 @@
         "url": "https://kikamiyuki.github.io/",
         "logo": "https://kikamiyuki.github.io/img/flor-de-loto.jpg",
         "image": "https://kikamiyuki.github.io/img/flor-de-loto.jpg",
-        "priceRange": "$15.000 – $29.000",
+        "priceRange": "$11.000 – $29.000",
         "currenciesAccepted": "CLP",
         "address": { "@type": "PostalAddress", "addressLocality": "Iquique", "addressRegion": "Tarapacá", "addressCountry": "CL" },
         "areaServed": { "@type": "Country", "name": "Chile" },
@@ -523,7 +523,7 @@
       <div class="section-head reveal">
         <span class="eyebrow">Nuevos lanzamientos</span>
         <h2>Recién salidos del telar</h2>
-        <p>Los diseños más nuevos de Kika Miyuki, en pocas unidades. Toca «Probar» y míralos en ti con la cámara de tu teléfono.</p>
+        <p>Los diseños más nuevos de Kika Miyuki, en pocas unidades. Toca «Probar» en cualquier aro y míralo en ti con la cámara de tu teléfono.</p>
       </div>
       <div class="launch-list" id="launchList"></div>
     </div>
@@ -540,9 +540,10 @@
 
       <div class="filters reveal">
         <button class="filter active" data-filter="all">Todos</button>
-        <button class="filter" data-filter="mandalas">Mandalas</button>
+        <button class="filter" data-filter="figuras">Figuras</button>
         <button class="filter" data-filter="flores">Flores</button>
         <button class="filter" data-filter="geometricos">Geométricos</button>
+        <button class="filter" data-filter="anillos">Anillos</button>
       </div>
 
       <div class="products" id="products"></div>
@@ -800,27 +801,49 @@
 
     // price: déjalo en null para no mostrar precio, o pon un número (ej. 12900)
     // oldPrice: precio anterior tachado (para ofertas); quítalo cuando termine la oferta
+    // resena: frase corta y con gracia que se ve en las tarjetas (unos 70 caracteres); desc es el detalle para la página de cada pieza
+    // tryon: alto del aro en el probador virtual, como fracción del ancho de la cara (necesita el recorte en img/probador/<slug>.png)
+    // centro: true → aro de poste sin colgante: en el probador va centrado en el lóbulo en vez de colgar
     // launch: true → aparece destacado en "Nuevos lanzamientos" (y no se repite en la colección).
-    //   Agrega los aros nuevos AL PRINCIPIO de la lista: se muestran los 6 lanzamientos más recientes y el resto pasa a la colección.
+    //   Agrega los aros nuevos AL PRINCIPIO de la lista: se muestran los 8 lanzamientos más recientes y el resto pasa a la colección.
     const PRODUCTS = [
-      { name: "Calavera Florida", cat: "geometricos", img: "calavera-halloween.jpg", price: 29000, desc: "Edición limitada de Halloween: calavera con corazón y flores en rojo, naranjo, morado y dorado. Pocas unidades.", tag: "Edición limitada", launch: true, tryon: 0.5, vitrina: { pitch: 7.0, top: 0.335, k: 8 } },
-      { name: "Calaveritas Mix",  cat: "geometricos", img: "calaveritas-mix.jpg",  price: 15000, desc: "Edición limitada de Halloween: par de calaveritas distintas, una verde y una lila, con ojos de colores.", tag: "Edición limitada", launch: true, tryon: 0.31 },
-      { name: "Flor de Loto",     cat: "flores",      img: "flor-de-loto.jpg",     price: 24000, desc: "Rombo con flor de loto en tonos crema y dorado, sobre un degradé de lila a azul. Ganchos dorados.", tag: "Nuevo", launch: true, tryon: 0.5, vitrina: { pitch: 7.4, top: 0.262, k: 7, tejido: true } },
-      { name: "Perla Dorada",     cat: "geometricos", img: "perla-dorada.jpg",     price: 24000, desc: "Hexágono dorado tejido en Miyuki con flecos de perlas. Elegante para ocasiones especiales.", tag: "Nuevo", launch: true, tryon: 0.5 },
-      { name: "Acróbatas Pop",    cat: "geometricos", img: "haring-acrobatas.jpg", price: 28000, desc: "Figuras acróbatas en azul, rojo y verde, inspiradas en el arte pop de Keith Haring. Modelo único: solo existe este par.", tag: "Pieza única", launch: true, tryon: 0.62, vitrina: { pitch: 8.6, top: 0.145, k: 11 } },
-      { name: "Corazón Ojo Turco", cat: "geometricos", img: "corazon-ojo-turco.jpg", price: 22000, desc: "Corazón fucsia y azul marino con cuentas de ojo turco, para llevar amor y buena suerte.", tag: "Nuevo", launch: true, tryon: 0.44, vitrina: { pitch: 9.6, top: 0.355, k: 4 } },
+      { name: "Alien Lunar",       cat: "figuras",     img: "alien-lunar.jpg",       price: 20000, resena: "Un alien verde lima colgando de la luna. Para las que miran al cielo.", desc: "Alienígenas verde lima de ojos negros, colgando de un poste plateado en forma de luna.", tag: "Nuevo", launch: true, tryon: 0.32, vitrina: { pitch: 8.5, top: 0.21, k: 4 } },
+      { name: "Calaveritas Mix",   cat: "figuras",     img: "calaveritas-mix.jpg",   price: 15000, resena: "Una lila y una amarilla: no combinan, y justo por eso funcionan.", desc: "Par disparejo: una calaverita lila y otra amarilla con flores rojas y naranjas. Ganchos plateados.", tag: "Nuevo", launch: true, tryon: 0.32, vitrina: { pitch: 8.5, top: 0.48, k: 6 } },
+      { name: "Ojo Protector",     cat: "figuras",     img: "ojo-protector.jpg",     price: 23000, resena: "Un ojo turco en triángulo para alejar la mala onda con estilo.", desc: "Triángulo con un ojo turco azul, rodeado de naranjo, lila y verde oliva. Para andar con buena energía.", tag: "Nuevo", launch: true, tryon: 0.48, vitrina: { pitch: 9.5, top: 0.18, k: 7 } },
+      { name: "Joker y Harley",    cat: "figuras",     img: "joker-harley.jpg",      price: 15000, resena: "Él en una oreja, ella en la otra. Chiquititos y con harta personalidad.", desc: "Par disparejo con las caras del Joker y Harley Quinn. Chiquititos y con mucha personalidad.", tag: "Nuevo", launch: true, tryon: 0.27, vitrina: { pitch: 6, top: 0.5, k: 5 } },
+      { name: "Ataúd Gótico",      cat: "figuras",     img: "ataud-gotico.jpg",      price: 20000, resena: "Morado oscuro, plata y una cruz que brilla. Para tu lado más dark.", desc: "Ataúd en morado oscuro y plata con una cruz brillante al centro. Ganchos plateados.", tag: "Nuevo", launch: true, tryon: 0.42, vitrina: { pitch: 9.5, top: 0.37, k: 4 } },
+      { name: "Calavera Pastel",   cat: "figuras",     img: "calavera-pastel.jpg",   price: 26000, resena: "Una calavera grande en tonos dulces: rosado, celeste y amarillo.", desc: "Calavera grande en rosado, amarillo, celeste y morado, con poste plateado redondo.", tag: "Nuevo", launch: true, tryon: 0.36, vitrina: { pitch: 9, top: 0.18, k: 8 } },
+      { name: "Ojo Místico",       cat: "figuras",     img: "ojo-mistico.jpg",       price: 16000, resena: "Un ojo fucsia que todo lo ve, bajo un triángulo dorado.", desc: "Ojo fucsia bajo un triángulo de mostacillas fucsia y doradas, con poste dorado en punta.", tag: "Nuevo", launch: true, tryon: 0.32, vitrina: { pitch: 7, top: 0.17, k: 6 } },
+      { name: "Sol Fucsia",        cat: "geometricos", img: "sol-fucsia.jpg",        price: 18000, resena: "Un sol fucsia que brilla cuando te mueves, con corazón dorado de poste.", desc: "Sol fucsia brillante tejido en círculo, con poste dorado en forma de corazón.", tag: "Nuevo", launch: true, tryon: 0.3, vitrina: { pitch: 6, top: 0.21, k: 3 } },
+      { name: "Calavera Florida",  cat: "figuras",     img: "calavera-halloween.jpg", price: 29000, resena: "Calavera con flores y corazón, al estilo Día de Muertos. Quedan pocas.", desc: "Calavera con corazón y flores en rojo, naranjo, morado y dorado. Pocas unidades.", tag: "Edición limitada", tryon: 0.5, vitrina: { pitch: 7.0, top: 0.335, k: 8 } },
+      { name: "Leopardo Fucsia",   cat: "geometricos", img: "leopardo-fucsia.jpg",   price: 16000, resena: "Animal print en fucsia y turquesa. Atrevido, pero fácil de combinar.", desc: "Aro de poste redondo en fucsia con manchas de leopardo turquesa, doradas y café.", tag: "Nuevo", tryon: 0.18, centro: true, vitrina: { pitch: 10, top: 0, k: 5 } },
+      { name: "Leopardo Blanco",   cat: "geometricos", img: "leopardo-blanco.jpg",   price: 16000, resena: "Leopardo sobre blanco perla: el print de siempre en versión suave.", desc: "Aro de poste redondo en blanco perla con manchas de leopardo moradas, turquesa y doradas.", tag: "Nuevo", tryon: 0.18, centro: true, vitrina: { pitch: 8, top: 0, k: 5 } },
+      { name: "Acróbatas Pop",     cat: "figuras",     img: "haring-acrobatas.jpg",  price: 28000, resena: "Figuritas que bailan, inspiradas en Keith Haring. Hay una sola.", desc: "Figuras acróbatas en azul, rojo y verde oliva, inspiradas en el arte pop de Keith Haring. Ganchos dorados.", tag: "Pieza única", tryon: 0.48, vitrina: { pitch: 6, top: 0.12, k: 7 } },
+      { name: "Corazón Ojo Turco", cat: "figuras",     img: "corazon-ojo-turco.jpg", price: 22000, resena: "Amor y buena suerte en un mismo aro: corazón fucsia y ojo turco.", desc: "Corazón fucsia y azul marino con cuentas de ojo turco, para llevar amor y buena suerte.", tryon: 0.44, vitrina: { pitch: 9.6, top: 0.355, k: 4, tejido: true } },
+      { name: "Flores Lavanda",    cat: "flores",      img: "flores-lavanda.jpg",    price: 15000, resena: "Una flor jaspeada en lila y azul que se queda pegadita a la oreja.", desc: "Flor de cinco pétalos en lila, azul y fucsia jaspeado, con centro dorado. Aro de poste.", tag: "Nuevo", tryon: 0.17, centro: true, vitrina: { pitch: 8, top: 0, k: 6 } },
+      { name: "Ramillete",         cat: "flores",      img: "ramillete.jpg",         price: 13000, resena: "Un racimo de florcitas de colores, como un ramo en miniatura.", desc: "Racimo de florcitas fucsia, amarillas, turquesa y verde limón. Ganchos dorados.", tag: "Nuevo", tryon: 0.32, vitrina: { pitch: 8, top: 0.5, k: 7 } },
+      { name: "Margaritas",        cat: "flores",      img: "margaritas.jpg",        price: 11000, resena: "Una margarita blanca con su tallito. Delicada, para todos los días.", desc: "Margarita blanca con centro amarillo y tallito verde. Delicada, para todos los días. Ganchos dorados.", tag: "Nuevo", tryon: 0.29, vitrina: { pitch: 6.5, top: 0.42, k: 5 } },
+      { name: "Perla Dorada",      cat: "geometricos", img: "perla-dorada.jpg",      price: 24000, resena: "Hexágono dorado y flecos de perlas, para una noche especial.", desc: "Hexágono dorado tejido en Miyuki con flecos de perlas. Elegante para ocasiones especiales.", tryon: 0.5, vitrina: { pitch: 6, top: 0.07, k: 3, fondo: 0.62 } },
+      { name: "Hexágono Oliva",    cat: "geometricos", img: "hexagono-oliva.jpg",    price: 12000, resena: "Verde oliva y amarillo con un toque turquesa. Geométrico y sobrio.", desc: "Hexágono verde oliva y amarillo con un detalle turquesa. Ganchos dorados.", tag: "Nuevo", tryon: 0.32, vitrina: { pitch: 6, top: 0.52, k: 4 } },
+      { name: "Calaveritas Verdes", cat: "figuras",    img: "calaveritas-verdes.jpg", price: 15000, resena: "Dos calaveritas en verdes: una seria y la otra llena de flores.", desc: "Par disparejo de calaveritas: una verde oliva de ojos naranjos y otra verde limón con flores.", tag: "Nuevo", tryon: 0.32, vitrina: { pitch: 7, top: 0.47, k: 6 } },
+      { name: "Sushi",             cat: "figuras",     img: "sushi.jpg",             price: 15000, resena: "Un roll de salmón para tu oreja. Para fanáticas del sushi.", desc: "Rollito de sushi de salmón tejido en mostacillas, en versión aro de poste.", tag: "Nuevo", tryon: 0.14, centro: true, vitrina: { pitch: 8.5, top: 0, k: 5 } },
+      { name: "Mini Macetas",      cat: "figuras",     img: "mini-macetas.jpg",      price: 13000, resena: "Macetitas con su planta, tan chiquititas que dan ternura.", desc: "Macetitas mini con su planta verde. Aros de poste chiquititos y muy tiernos.", tag: "Nuevo", tryon: 0.1, centro: true, vitrina: { pitch: 10, top: 0, k: 4 } },
+      { name: "Hexágono Bruma",    cat: "geometricos", img: "hexagono-bruma.jpg",    price: 13000, resena: "Lila y gris grafito con brillo metálico. Discreto para el día a día.", desc: "Hexágono mini en lila y gris grafito con brillo metálico. Aro de poste discreto.", tag: "Nuevo", tryon: 0.11, centro: true, vitrina: { pitch: 9.5, top: 0, k: 3 } },
+      { name: "Rombos Fucsia",     cat: "anillos",     img: "anillo-rombos.jpg",     price: 14000, resena: "Dorado con rombos fucsia, liviano y cómodo. Pide tu talla por DM.", tipo: "anillo", desc: "Anillo tejido en mostacillas doradas con rombos fucsia. Liviano y cómodo; consulta tu talla por DM.", tag: "Nuevo" },
     ];
     // ===================================================
 
     const IG_PROFILE = `https://www.instagram.com/${INSTAGRAM}/`;
     const IG_DM = `https://ig.me/m/${INSTAGRAM}`;
     const fmt = (n) => CURRENCY + n.toLocaleString("es-CL");
+    // La mayoría son aros; un producto con tipo: "anillo" se nombra como anillo en textos y mensajes
+    const pieza = (p) => p.tipo === "anillo" ? "Anillo" : "Aros";
     // Cada aro tiene su página en /p/<nombre-de-la-foto>/ (la genera generar-productos.js al publicar).
     // Al pegar ese enlace en el chat, Instagram muestra la foto del aro como vista previa.
     const slug = (p) => p.img.replace(/\.[a-z]+$/i, "");
     const productUrl = (p) => `${SITE_URL}/p/${slug(p)}/`;
 
-    const orderMsg = (p) => `¡Hola! Me interesan los aros "${p.name}"${p.price ? ` (${p.oldPrice ? "oferta " : ""}${fmt(p.price)})` : ""}. ¿Están disponibles?\n${productUrl(p)}`;
+    const orderMsg = (p) => `¡Hola! ${p.tipo === "anillo" ? "Me interesa el anillo" : "Me interesan los aros"} "${p.name}"${p.price ? ` (${p.oldPrice ? "oferta " : ""}${fmt(p.price)})` : ""}. ${p.tipo === "anillo" ? "¿Está disponible?" : "¿Están disponibles?"}\n${productUrl(p)}`;
     const priceHtml = (p) => p.price ? `${p.oldPrice ? `<s>${fmt(p.oldPrice)}</s>` : ""}${fmt(p.price)}` : "";
     const CAM_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg>';
     const openOrder = (p) => KikaPedido.open({ ...p, img: `img/${p.img}`, msg: orderMsg(p), dm: IG_DM, currency: CURRENCY });
@@ -833,7 +856,7 @@
       itemListElement: PRODUCTS.map((p, i) => ({
         "@type": "ListItem", position: i + 1, url: productUrl(p),
         item: {
-          "@type": "Product", name: `Aros ${p.name}`, url: productUrl(p), image: `${SITE_URL}/img/${p.img}`,
+          "@type": "Product", name: `${pieza(p)} ${p.name}`, url: productUrl(p), image: `${SITE_URL}/img/${p.img}`,
           description: p.desc, brand: { "@type": "Brand", name: "Kika Miyuki" }, material: "Mostacillas Miyuki Delica 11/0",
           ...(p.price ? { offers: { "@type": "Offer", price: p.price, priceCurrency: "CLP", availability: "https://schema.org/InStock", url: productUrl(p) } } : {}),
         },
@@ -843,22 +866,23 @@
 
     // Probador virtual: los aros que tienen recorte en img/probador/ (ver probador.js)
     window.KIKA_TRYON = PRODUCTS.filter(p => p.tryon).map(p => ({
-      slug: slug(p), name: p.name, price: p.price ? fmt(p.price) : "", h: p.tryon,
+      slug: slug(p), name: p.name, price: p.price ? fmt(p.price) : "", h: p.tryon, centro: !!p.centro,
       img: `img/probador/${slug(p)}.png`, onOrder: () => window.KikaPedido && openOrder(p),
     }));
 
-    // Vitrina 3D y tejido en vivo: aros tejidos solo con Delicas que tienen recorte (ver vitrina.js).
-    // vitrina: { pitch: ancho de una mostacilla en px del recorte, top: dónde termina el gancho (0–1), k: cantidad de colores, tejido: true = el que se teje en vivo }
-    window.KIKA_VITRINA = PRODUCTS.filter(p => p.vitrina)
-      .sort((a, b) => (b.vitrina.tejido ? 1 : 0) - (a.vitrina.tejido ? 1 : 0))
+    // Vitrina 3D y tejido en vivo: todos los aros con recorte del probador se pueden girar (ver vitrina.js).
+    // vitrina: { pitch: ancho de una mostacilla en px del recorte, top: dónde termina el gancho (0–1), k: cantidad de colores,
+    //   fondo: dónde empieza lo que cuelga y no es tejido (perlas), tejido: true = el que se teje en vivo }; sin vitrina se estima solo
+    // vitrina: false lo saca de la vitrina
+    window.KIKA_VITRINA = PRODUCTS.filter(p => p.tryon && p.vitrina !== false)
       .map(p => ({
-        ...p.vitrina, slug: slug(p), name: p.name, price: p.price ? fmt(p.price) : "", tryon: !!p.tryon,
+        ...(p.vitrina || {}), slug: slug(p), name: p.name, price: p.price ? fmt(p.price) : "", tryon: !!p.tryon,
         img: `img/probador/${slug(p)}.png`, onOrder: () => window.KikaPedido && openOrder(p),
       }));
 
-    // Nuevos lanzamientos: solo los 6 más recientes (los aros nuevos se agregan ARRIBA en PRODUCTS);
+    // Nuevos lanzamientos: solo los 8 más recientes (los aros nuevos se agregan ARRIBA en PRODUCTS);
     // los lanzamientos más antiguos pasan solos a la colección.
-    const LAUNCH_MAX = 6;
+    const LAUNCH_MAX = 8;
     const LAUNCHES = PRODUCTS.filter(p => p.launch).slice(0, LAUNCH_MAX);
     if (LAUNCHES.length) {
       document.getElementById("launchList").innerHTML = LAUNCHES.map(p => `
@@ -866,14 +890,14 @@
           <div class="launch-media">
             <a class="launch-img" href="${productUrl(p)}" aria-label="Ver detalle de ${p.name}">
               ${p.tag ? `<span class="tag">${p.tag}</span>` : ""}
-              <img src="img/${p.img}" alt="Aros ${p.name} tejidos con mostacillas Miyuki" loading="lazy" data-lupa />
+              <img src="img/${p.img}" alt="${pieza(p)} ${p.name} tejidos con mostacillas Miyuki" loading="lazy" data-lupa />
             </a>
             ${p.tryon ? `<button class="try-btn" type="button" data-try="${slug(p)}" aria-label="Probarme los aros ${p.name} con la cámara">${CAM_ICON}Probar</button>` : ""}
           </div>
           <div class="launch-body">
-            <h3>${p.name}</h3>
+            <h3>${p.tipo === "anillo" ? "Anillo " : ""}${p.name}</h3>
             ${p.price ? `<div class="lp">${priceHtml(p)}</div>` : ""}
-            <p class="ld">${p.desc}</p>
+            <p class="ld">${p.resena || p.desc}</p>
             <a class="btn btn-light js-order" href="${productUrl(p)}" data-i="${PRODUCTS.indexOf(p)}" data-msg='${orderMsg(p).replace(/'/g, "&#39;")}'>Lo quiero</a>
           </div>
         </article>`).join("");
@@ -890,7 +914,7 @@
       const list = document.getElementById("launchList");
       const cards = list.children, n = cards.length;
       const w = innerWidth;
-      const options = w <= 640 ? [2] : w <= 960 ? [3, 2] : [5, 4, 3];
+      const options = w <= 640 ? [2] : [4, 3, 2];
       let cols = options[0], wide = false;
       const exact = options.find(c => n % c === 0);
       const withWide = options.find(c => n > 1 && (n + 1) % c === 0);
@@ -910,14 +934,15 @@
         <article class="card reveal" id="p-${slug(p)}" data-cat="${p.cat}">
           <div class="card-img">
             ${tag ? `<span class="tag">${tag}</span>` : ""}
-            <img src="img/${p.img}" alt="Aros ${p.name} tejidos con mostacillas Miyuki" loading="lazy" data-lupa />
+            <img src="img/${p.img}" alt="${pieza(p)} ${p.name} tejidos con mostacillas Miyuki" loading="lazy" data-lupa />
+            ${p.tryon ? `<button class="try-btn" type="button" data-try="${slug(p)}" aria-label="Probarme los aros ${p.name} con la cámara">${CAM_ICON}Probar</button>` : ""}
           </div>
           <div class="card-body">
             <div class="card-top">
-              <h3>${p.name}</h3>
+              <h3>${p.tipo === "anillo" ? "Anillo " : ""}${p.name}</h3>
               ${p.price ? `<span class="price">${p.oldPrice ? `<s>${fmt(p.oldPrice)}</s>` : ""}${fmt(p.price)}</span>` : ""}
             </div>
-            <p>${p.desc}</p>
+            <p>${p.resena || p.desc}</p>
             <a class="btn btn-primary js-order" href="${productUrl(p)}" data-i="${PRODUCTS.indexOf(p)}" data-msg='${msg.replace(/'/g, "&#39;")}'>Lo quiero</a>
           </div>
         </article>`;

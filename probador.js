@@ -1,6 +1,6 @@
 // Probador virtual: muestra los aros en las orejas de la clienta usando la cámara (o una foto).
 // El seguimiento facial (MediaPipe Face Landmarker) corre dentro del navegador: la imagen no sale del dispositivo.
-// Uso:  KikaProbador.open("perla-dorada")   — lista de aros en window.KIKA_TRYON = [{ slug, name, price, img, h, onOrder }]
+// Uso:  KikaProbador.open("perla-dorada")   — lista de aros en window.KIKA_TRYON = [{ slug, name, price, img, h, centro, onOrder }]
 (function () {
   const MP = "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14";
   const MODEL = "https://storage.googleapis.com/mediapipe-models/face_landmarker/face_landmarker/float16/1/face_landmarker.task";
@@ -124,7 +124,7 @@
     ctx.translate(at.x, at.y);
     ctx.rotate(angle);
     if (mirror) ctx.scale(-1, 1);
-    ctx.drawImage(img, -w / 2, -h * 0.05, w, h);
+    ctx.drawImage(img, -w / 2, -h * (item.centro ? 0.5 : 0.05), w, h);
     ctx.restore();
   }
 
