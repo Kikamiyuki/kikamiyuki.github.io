@@ -1,4 +1,4 @@
-// Vitrina 3D y "tejido en vivo": arma cada aro en 3D, mostacilla por mostacilla, a partir de su recorte (img/probador/<slug>.png).
+// Vitrina 3D: arma cada aro en 3D, mostacilla por mostacilla, a partir de su recorte (img/probador/<slug>.png).
 // Los datos vienen de window.KIKA_VITRINA (index.html: todos los aros con recorte del probador; `vitrina` ajusta cada uno).
 // Arma las mostacillas como Delicas; lo que no es tejido (gancho, poste arriba, perlas o flecos abajo con `fondo`) se muestra desde la foto.
 // three.js se descarga recién cuando la sección está por aparecer en pantalla.
@@ -167,59 +167,6 @@ function buildPiece(data) {
   };
 }
 
-/* ---------- Tejido en vivo ---------- */
-async function initTejido(section, item) {
-  const canvas = section.querySelector("canvas");
-  const nEl = section.querySelector("[data-n]"), totalEl = section.querySelector("[data-total]"), barEl = section.querySelector("[data-bar]");
-  const rowEl = section.querySelector("[data-row]"), doneEl = section.querySelector("[data-done]");
-  section.querySelector("[data-tname]").textContent = item.name;
-  await loadThree();
-  const data = await analyze(item);
-  const stage = makeStage(canvas), piece = buildPiece(data);
-  stage.set(piece);
-  const total = data.beads.length, born = new Float32Array(total).fill(-1);
-  totalEl.textContent = total.toLocaleString("es-CL");
-  const m = new THREE.Matrix4(), s = new THREE.Vector3(), p = new THREE.Vector3(), zero = new THREE.Vector3(0, 0, 0);
-  for (const b of piece.beads) { m.compose(b.pos, b.rot, zero); piece.setBead(b, m); }
-  piece.flush();
-  piece.hook.material.opacity = 0;
-  let shown = 0, visible = true, hookA = 0;
-  new IntersectionObserver(([en]) => { visible = en.isIntersecting; }).observe(section);
-  const pop = (t) => t >= 1 ? 1 : 1 + 2.2 * Math.pow(t - 1, 3) + 1.2 * Math.pow(t - 1, 2); // aparece con un pequeño rebote
-
-  function frame(now) {
-    requestAnimationFrame(frame);
-    if (!visible) return;
-    const r = section.getBoundingClientRect();
-    const prog = Math.min(1, Math.max(0, -r.top / (r.height - innerHeight)));
-    const target = Math.round(Math.min(1, prog / .88) * total);
-    // born: -1 sin tejer, -2 ya asentada, otro valor = momento en que se agregó
-    if (target > shown) { for (let i = shown; i < target; i++) born[i] = reduced ? now - 1000 : now - (target - i) * 4; }
-    if (target < shown) { for (let i = target; i < shown; i++) { born[i] = -1; m.compose(piece.beads[i].pos, piece.beads[i].rot, zero); piece.setBead(piece.beads[i], m); } }
-    shown = target;
-    for (let i = 0; i < shown; i++) {
-      if (born[i] === -2) continue;
-      const b = piece.beads[i], age = (now - born[i]) / 260;
-      if (age >= 1) { m.compose(b.pos, b.rot, s.set(1, 1, 1)); born[i] = -2; }
-      else { const k = Math.max(0, pop(Math.max(0, age))); p.copy(b.pos); p.z += (1 - Math.max(0, age)) * 2.5; m.compose(p, b.rot, s.set(k, k, k)); }
-      piece.setBead(b, m);
-    }
-    piece.flush();
-    const last = shown ? piece.beads[shown - 1] : null;
-    nEl.textContent = shown.toLocaleString("es-CL");
-    barEl.style.width = (shown / total * 100) + "%";
-    rowEl.textContent = last ? `Fila ${last.row + 1} de ${data.rows}` : "Fila 0";
-    const complete = shown === total;
-    doneEl.classList.toggle("on", complete);
-    hookA += ((complete ? 1 : 0) - hookA) * .08;
-    piece.hook.material.opacity = hookA; piece.hook.visible = hookA > .02;
-    stage.holder.rotation.y = reduced ? 0 : Math.sin(now / 2200) * (.18 + .25 * hookA);
-    stage.holder.rotation.x = reduced ? 0 : Math.sin(now / 3100) * .05;
-    stage.render();
-  }
-  requestAnimationFrame(frame);
-}
-
 /* ---------- Vitrina 3D ---------- */
 async function initVitrina(section) {
   const canvas = section.querySelector("canvas"), nameEl = section.querySelector("[data-name]"), priceEl = section.querySelector("[data-price]");
@@ -281,10 +228,6 @@ async function initVitrina(section) {
   requestAnimationFrame(frame);
 }
 
-const vSection = document.getElementById("vitrina"), tSection = document.getElementById("tejido");
-const tejidoItem = ITEMS.find((it) => it.tejido) || ITEMS[0];
-if (!ITEMS.length || !webglOK()) { vSection?.remove(); tSection?.remove(); }
-else {
-  if (vSection) whenNear(vSection, () => initVitrina(vSection).catch(() => vSection.remove()));
-  if (tSection) whenNear(tSection, () => initTejido(tSection, tejidoItem).catch(() => tSection.remove()));
-}
+const vSection = document.getElementById("vitrina");
+if (!ITEMS.length || !webglOK()) vSection?.remove();
+else if (vSection) whenNear(vSection, () => initVitrina(vSection).catch(() => vSection.remove()));

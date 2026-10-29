@@ -160,19 +160,6 @@ nav { background: var(--paper); backdrop-filter: none; border-bottom: 0; }
 .vt-buy b { font-family: var(--sans); font-weight: 750; font-stretch: 90%; letter-spacing: -.03em; font-size: 32px; }
 .vt-buy span { font-size: 18px; font-weight: 700; }
 
-/* ---------- tejido en vivo ---------- */
-.tejido { background: var(--ink); color: var(--paper); }
-.tejido .eyebrow { color: var(--yel); }
-.tejido .eyebrow::before { background: var(--yel); }
-.tejido-copy h2 { color: var(--paper); font-size: clamp(42px, 6vw, 84px); }
-.tejido-copy > p { color: #e3d8ea; font-size: 18px; }
-.tj-count b { font-family: var(--sans); font-weight: 750; font-stretch: 90%; letter-spacing: -.04em; color: var(--paper); }
-.tj-count span, .tj-row { color: #e3d8ea; font-size: 15px; }
-.tj-bar { height: 8px; border-radius: 8px; background: rgba(244,237,227,.14); }
-.tj-bar i { background: var(--yel); border-radius: 8px; }
-.tj-done { font-family: var(--serif); color: var(--lilac); font-size: 32px; }
-.tj-fine { color: #b9a9c4; font-size: 13px; }
-
 /* ---------- cómo se hacen ---------- */
 .story { background: var(--lilac); }
 .story-collage { gap: 26px; }
@@ -180,6 +167,11 @@ nav { background: var(--paper); backdrop-filter: none; border-bottom: 0; }
 .story-collage img:nth-child(1) { --c: var(--red); } .story-collage img:nth-child(2) { --c: var(--yel); }
 .story-collage img:nth-child(3) { --c: var(--blue); } .story-collage img:nth-child(4) { --c: var(--green); }
 .story-text p { color: var(--ink); font-size: 18px; }
+/* la cifra: cuántas mostacillas lleva un aro, en grande sobre una tarjeta amarilla */
+.story-text .story-cifra { display: flex; align-items: center; gap: 18px; margin-top: 28px; padding: 18px 24px; background: var(--yel); border-radius: 24px;
+  box-shadow: 8px 8px 0 var(--ink); max-width: 460px; }
+.story-cifra b { font: 750 clamp(52px, 6vw, 72px)/.85 var(--sans); font-stretch: 90%; letter-spacing: -.04em; }
+.story-cifra span { font-size: 16px; line-height: 1.35; }
 .step-num { border: 0; border-radius: 30%; background: var(--c); color: var(--ink); font: 800 18px var(--sans); width: 52px; height: 52px;
   box-shadow: inset 0 -6px 0 rgba(0,0,0,.18), inset 0 5px 0 rgba(255,255,255,.3); }
 .step:nth-child(1) .step-num { --c: var(--red); } .step:nth-child(2) .step-num { --c: var(--yel); } .step:nth-child(3) .step-num { --c: var(--green); }

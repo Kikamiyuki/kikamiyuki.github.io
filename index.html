@@ -253,24 +253,6 @@
     .vt-loading { position: absolute; inset: 0; display: grid; place-items: center; font-size: 14px; color: var(--ink-soft); pointer-events: none; }
     [data-gyro][hidden], [data-try][hidden] { display: none; }
 
-    /* Tejido en vivo (vitrina.js) */
-    .tejido { position: relative; height: 340vh; background: var(--ink); color: #ece7e1; }
-    .tejido-stage { position: sticky; top: 0; height: 100vh; height: 100svh; display: grid; grid-template-columns: 1.05fr 1fr; align-items: center; gap: 32px; overflow: hidden; }
-    .tejido canvas { width: 100%; height: 86vh; height: 86svh; display: block; }
-    .tejido .eyebrow { color: #d9b8f0; }
-    .tejido-copy { max-width: 470px; }
-    .tejido-copy h2 { font-size: clamp(40px, 5.6vw, 72px); color: var(--white); }
-    .tejido-copy > p { color: #aaa29c; font-size: 17px; margin-top: 20px; }
-    .tj-count { margin-top: 40px; display: flex; align-items: baseline; gap: 14px; }
-    .tj-count b { font-family: var(--serif); font-weight: 500; font-size: clamp(64px, 8vw, 104px); line-height: .9; font-variant-numeric: tabular-nums; color: var(--white); }
-    .tj-count span { color: #aaa29c; font-size: 15px; line-height: 1.35; }
-    .tj-bar { margin-top: 20px; height: 3px; background: rgba(255,255,255,.12); border-radius: 3px; overflow: hidden; }
-    .tj-bar i { display: block; height: 100%; width: 0; background: #c9a6e0; }
-    .tj-row { margin-top: 12px; font-size: 14px; color: #aaa29c; font-variant-numeric: tabular-nums; }
-    .tj-done { margin-top: 24px; font-family: var(--serif); font-style: italic; font-size: 26px; color: #e4d3f0; opacity: 0; transform: translateY(8px); transition: opacity .4s, transform .4s; }
-    .tj-done.on { opacity: 1; transform: none; }
-    .tj-fine { margin-top: 26px; font-size: 12.5px; color: #8a827c; }
-
     .story { background: var(--bg-alt); }
     .story-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center; }
     .story-collage { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
@@ -398,16 +380,6 @@
       .nav-links { display: none; }
       .vitrina-grid { grid-template-columns: 1fr; gap: 28px; }
       .vt-stage { height: 62svh; }
-      .tejido-stage { grid-template-columns: 1fr; grid-template-rows: 50svh auto; align-content: start; gap: 0; padding-top: 2svh; }
-      .tejido canvas { height: 50svh; }
-      .tejido-copy h2 { font-size: 38px; }
-      .tejido-copy > p { font-size: 15px; margin-top: 10px; }
-      .tejido .eyebrow { display: none; }
-      .tj-count { margin-top: 16px; }
-      .tj-count b { font-size: 58px; }
-      .tj-bar { margin-top: 12px; }
-      .tj-done { font-size: 21px; margin-top: 10px; }
-      .tj-fine { margin-top: 10px; }
     }
     @media (max-width: 640px) {
       .container { padding: 0 16px; }
@@ -435,7 +407,6 @@
       .vt-thumbs button { width: 58px; height: 58px; }
       .vt-actions .btn { flex: 1 1 auto; }
     }
-    @media (prefers-reduced-motion: reduce) { .tj-done { transition: none; } }
   </style>
   <link rel="stylesheet" href="diseno.css" />
 </head>
@@ -586,23 +557,6 @@
     </div>
   </section>
 
-  <!-- TEJIDO EN VIVO (vitrina.js; el aro se teje a medida que se baja por la página) -->
-  <section class="tejido" id="tejido">
-    <div class="container tejido-stage">
-      <canvas aria-label="Aro tejiéndose mostacilla por mostacilla"></canvas>
-      <div class="tejido-copy">
-        <span class="eyebrow">Tejido en vivo</span>
-        <h2>Una mostacilla<br />a la vez</h2>
-        <p>Así se tejen los aros <span data-tname></span>: fila por fila, a mano, con mostacillas Delica de 1,6&nbsp;mm. Sigue bajando y mira cómo toma forma.</p>
-        <div class="tj-count"><b data-n>0</b><span>de <em data-total>–</em><br />mostacillas</span></div>
-        <div class="tj-bar"><i data-bar></i></div>
-        <div class="tj-row" data-row>Fila 0</div>
-        <div class="tj-done" data-done>Lista para llegar a tus orejas.</div>
-        <div class="tj-fine">Recreación digital hecha desde la foto del aro; la cantidad es aproximada.</div>
-      </div>
-    </div>
-  </section>
-
   <!-- STORY / PROCESS -->
   <section class="section story" id="proceso">
     <div class="container story-grid">
@@ -616,6 +570,7 @@
         <span class="eyebrow">Cómo se hacen</span>
         <h2>Miles de mostacillas,<br />una sola aguja.</h2>
         <p>Desde Iquique, Chile, tejemos cada par con mostacillas Delicas Miyuki calibradas 11/0: cuentas cilíndricas de cristal japonés, todas del mismo tamaño. Eso permite tejidos precisos, planos y parejos, que mantienen su forma y su brillo.</p>
+        <p class="story-cifra"><b>400</b><span>mostacillas, más o menos, lleva un solo aro de Corazón Ojo Turco. Cada una puesta a mano.</span></p>
         <div class="steps">
           <div class="step"><div class="step-num">1</div><div><b>Diseño</b><span>Cada patrón se dibuja cuenta por cuenta antes de empezar.</span></div></div>
           <div class="step"><div class="step-num">2</div><div><b>Tejido a mano</b><span>Mostacilla por mostacilla, con paciencia y detalle.</span></div></div>
@@ -832,7 +787,7 @@
       { name: "Leopardo Fucsia",   cat: "geometricos", img: "leopardo-fucsia.jpg",   price: 16000, resena: "Animal print en fucsia y turquesa. Atrevido, pero fácil de combinar.", desc: "Aro de poste redondo en fucsia con manchas de leopardo turquesa, doradas y café.", tag: "Nuevo", tryon: 0.18, centro: true, vitrina: { pitch: 10, top: 0, k: 5 } },
       { name: "Leopardo Blanco",   cat: "geometricos", img: "leopardo-blanco.jpg",   price: 16000, resena: "Leopardo sobre blanco perla: el print de siempre en versión suave.", desc: "Aro de poste redondo en blanco perla con manchas de leopardo moradas, turquesa y doradas.", tag: "Nuevo", tryon: 0.18, centro: true, vitrina: { pitch: 8, top: 0, k: 5 } },
       { name: "Acróbatas Pop",     cat: "figuras",     img: "haring-acrobatas.jpg",  price: 28000, resena: "Figuritas que bailan, inspiradas en Keith Haring. Hay una sola.", desc: "Figuras acróbatas en azul, rojo y verde oliva, inspiradas en el arte pop de Keith Haring. Ganchos dorados.", tag: "Pieza única", tryon: 0.48, vitrina: { pitch: 6, top: 0.12, k: 7 } },
-      { name: "Corazón Ojo Turco", cat: "figuras",     img: "corazon-ojo-turco.jpg", price: 22000, resena: "Amor y buena suerte en un mismo aro: corazón fucsia y ojo turco.", desc: "Corazón fucsia y azul marino con cuentas de ojo turco, para llevar amor y buena suerte.", tryon: 0.44, vitrina: { pitch: 9.6, top: 0.355, k: 4, tejido: true } },
+      { name: "Corazón Ojo Turco", cat: "figuras",     img: "corazon-ojo-turco.jpg", price: 22000, resena: "Amor y buena suerte en un mismo aro: corazón fucsia y ojo turco.", desc: "Corazón fucsia y azul marino con cuentas de ojo turco, para llevar amor y buena suerte.", tryon: 0.44, vitrina: { pitch: 9.6, top: 0.355, k: 4 } },
       { name: "Flores Lavanda",    cat: "flores",      img: "flores-lavanda.jpg",    price: 15000, resena: "Una flor jaspeada en lila y azul que se queda pegadita a la oreja.", desc: "Flor de cinco pétalos en lila, azul y fucsia jaspeado, con centro dorado. Aro de poste.", tag: "Nuevo", tryon: 0.17, centro: true, vitrina: { pitch: 8, top: 0, k: 6 } },
       { name: "Ramillete",         cat: "flores",      img: "ramillete.jpg",         price: 13000, resena: "Un racimo de florcitas de colores, como un ramo en miniatura.", desc: "Racimo de florcitas fucsia, amarillas, turquesa y verde limón. Ganchos dorados.", tag: "Nuevo", tryon: 0.32, vitrina: { pitch: 8, top: 0.5, k: 7 } },
       { name: "Margaritas",        cat: "flores",      img: "margaritas.jpg",        price: 11000, resena: "Una margarita blanca con su tallito. Delicada, para todos los días.", desc: "Margarita blanca con centro amarillo y tallito verde. Delicada, para todos los días. Ganchos dorados.", tag: "Nuevo", tryon: 0.29, vitrina: { pitch: 6.5, top: 0.42, k: 5 } },
@@ -883,9 +838,9 @@
       img: `img/probador/${slug(p)}.png`, onOrder: () => window.KikaPedido && openOrder(p),
     }));
 
-    // Vitrina 3D y tejido en vivo: todos los aros con recorte del probador se pueden girar (ver vitrina.js).
+    // Vitrina 3D: todos los aros con recorte del probador se pueden girar (ver vitrina.js).
     // vitrina: { pitch: ancho de una mostacilla en px del recorte, top: dónde termina el gancho (0–1), k: cantidad de colores,
-    //   fondo: dónde empieza lo que cuelga y no es tejido (perlas), tejido: true = el que se teje en vivo }; sin vitrina se estima solo
+    //   fondo: dónde empieza lo que cuelga y no es tejido (perlas) }; sin vitrina se estima solo
     // vitrina: false lo saca de la vitrina
     window.KIKA_VITRINA = PRODUCTS.filter(p => p.tryon && p.vitrina !== false)
       .map(p => ({
