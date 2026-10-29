@@ -488,12 +488,12 @@
       </div>
       <div class="hero-visual reveal">
         <!-- Foto de la semana: cada lunes (hora de Chile) pasa a la siguiente de img/portada/ y al llegar a la última vuelve a la primera.
-             Para sumar fotos: agrégalas como semana-10.jpg, semana-11.jpg… y sube FOTOS. Sin script queda la primera. -->
+             Para sumar fotos: agrégalas como semana-11.jpg, semana-12.jpg… y sube FOTOS. Sin script queda la primera. -->
         <figure class="hero-foto">
-          <img src="img/portada/semana-1.jpg" width="900" height="1200" alt="Aros Kika Miyuki tejidos a mano con mostacillas, sobre su tarjeta" fetchpriority="high" />
+          <img src="img/portada/semana-1.jpg" width="900" height="1200" alt="Aros Kika Miyuki tejidos a mano con mostacillas" fetchpriority="high" />
           <script>
             (function () {
-              const FOTOS = 9, semana = Math.floor((Date.now() - Date.parse("2026-10-26T00:00:00-03:00")) / 604800000);
+              const FOTOS = 10, semana = Math.floor((Date.now() - Date.parse("2026-10-26T00:00:00-03:00")) / 604800000);
               document.currentScript.previousElementSibling.src = `img/portada/semana-${((semana % FOTOS) + FOTOS) % FOTOS + 1}.jpg`;
             })();
           </script>
