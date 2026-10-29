@@ -302,7 +302,21 @@ footer { color: var(--ink); font-size: 15px; }
 .story-text h2 { font-size: clamp(38px, 4.4vw, 62px); }
 @media (max-width: 640px) { .hero h1 em { white-space: normal; } }
 
-/* portada: el logo tejido en mostacillas (diseno.js lo teje en el canvas) */
-.telar-logo { position: relative; width: 100%; aspect-ratio: 1 / 1.1; border-radius: 48px; rotate: -1.5deg; overflow: hidden; background: var(--ink); box-shadow: 18px 18px 0 var(--yel); }
-.telar-logo canvas { display: block; width: 100%; height: 100%; }
-@media (max-width: 640px) { .telar-logo { border-radius: 36px; box-shadow: 12px 12px 0 var(--yel); } }
+/* portada: la foto de la semana en su marco, con la sombra amarilla */
+.hero-foto { position: relative; margin: 0; rotate: -1.5deg; }
+.hero-foto img { display: block; width: 100%; height: auto; aspect-ratio: 3 / 4; object-fit: cover; border-radius: 48px; background: var(--paper2); box-shadow: 18px 18px 0 var(--yel); }
+.hero-foto figcaption { position: absolute; left: 22px; bottom: 22px; background: var(--paper); color: var(--ink); font-size: 13px; font-weight: 700; padding: 7px 14px; border-radius: 999px; rotate: 1.5deg; }
+/* en computador la foto va a la derecha del texto; en celular, entre el título y el resto */
+.hero-grid { grid-template-areas: "top foto" "bottom foto"; row-gap: 0; }
+.hero-top { grid-area: top; align-self: end; }
+.hero-bottom { grid-area: bottom; align-self: start; }
+.hero-visual { grid-area: foto; justify-self: center; width: min(100%, 420px, (100vh - 230px) * .75); }
+@media (max-width: 960px) {
+  .hero-grid { grid-template-areas: "top" "foto" "bottom"; row-gap: 0; }
+  .hero-visual { margin: 4px auto 44px; }
+}
+@media (max-width: 640px) {
+  .hero-visual { max-width: 250px; margin-bottom: 36px; }
+  .hero-foto img { border-radius: 36px; box-shadow: 12px 12px 0 var(--yel); }
+  .hero-foto figcaption { left: 16px; bottom: 16px; font-size: 12px; }
+}

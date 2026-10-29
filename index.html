@@ -14,8 +14,10 @@
   <meta property="og:url" content="https://kikamiyuki.github.io/" />
   <meta property="og:title" content="Kika Miyuki · Aros Miyuki tejidos a mano en Iquique" />
   <meta property="og:description" content="Aros de mostacillas Miyuki con diseños exclusivos. Pruébatelos con tu cámara y pídelos por Instagram." />
-  <meta property="og:image" content="https://kikamiyuki.github.io/img/flor-de-loto.jpg" />
-  <meta property="og:image:alt" content="Aros Flor de Loto de mostacillas Miyuki" />
+  <meta property="og:image" content="https://kikamiyuki.github.io/img/compartir.jpg" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:alt" content="Kika Miyuki: aros de mostacillas Miyuki tejidos a mano en Iquique" />
   <meta name="twitter:card" content="summary_large_image" />
   <!-- Datos para Google: tienda, sitio y preguntas frecuentes (los aros se agregan solos desde PRODUCTS, más abajo) -->
   <script type="application/ld+json">
@@ -28,8 +30,8 @@
         "name": "Kika Miyuki",
         "description": "Aros artesanales tejidos a mano con mostacillas Miyuki Delica 11/0. Pedidos por mensaje directo de Instagram.",
         "url": "https://kikamiyuki.github.io/",
-        "logo": "https://kikamiyuki.github.io/img/flor-de-loto.jpg",
-        "image": "https://kikamiyuki.github.io/img/flor-de-loto.jpg",
+        "logo": "https://kikamiyuki.github.io/img/logo.png",
+        "image": "https://kikamiyuki.github.io/img/compartir.jpg",
         "priceRange": "$11.000 – $29.000",
         "currenciesAccepted": "CLP",
         "address": { "@type": "PostalAddress", "addressLocality": "Iquique", "addressRegion": "Tarapacá", "addressCountry": "CL" },
@@ -468,9 +470,12 @@
   <!-- HERO -->
   <header class="hero">
     <div class="container hero-grid">
-      <div class="reveal">
+      <!-- el texto va en dos partes para que en el celular la foto quede entre el título y el resto -->
+      <div class="reveal hero-top">
         <span class="eyebrow">Aros Miyuki artesanales · Iquique, Chile</span>
         <h1 class="kw"><span class="h-a">Pequeños detalles,</span> <em>tejidos a mano para ti.</em></h1>
+      </div>
+      <div class="reveal hero-bottom">
         <p class="lead">Cada par está tejido mostacilla por mostacilla con cristales Miyuki japoneses: livianos, llenos de color y con diseños exclusivos que no vas a encontrar en ninguna tienda.</p>
         <div class="hero-actions">
           <a href="#coleccion" class="btn btn-primary">Ver la colección</a>
@@ -482,10 +487,18 @@
         </div>
       </div>
       <div class="hero-visual reveal">
-        <!-- El logo tejido en mostacillas: diseno.js lo teje fila por fila en el canvas -->
-        <div class="telar-logo" role="img" aria-label="El logo de Kika Miyuki tejido en mostacillas">
-          <canvas width="720" height="792"></canvas>
-        </div>
+        <!-- Foto de la semana: cada lunes (hora de Chile) pasa a la siguiente de img/portada/ y al llegar a la última vuelve a la primera.
+             Para sumar fotos: agrégalas como semana-10.jpg, semana-11.jpg… y sube FOTOS. Sin script queda la primera. -->
+        <figure class="hero-foto">
+          <img src="img/portada/semana-1.jpg" width="900" height="1200" alt="Aros Kika Miyuki tejidos a mano con mostacillas, sobre su tarjeta" fetchpriority="high" />
+          <script>
+            (function () {
+              const FOTOS = 9, semana = Math.floor((Date.now() - Date.parse("2026-10-26T00:00:00-03:00")) / 604800000);
+              document.currentScript.previousElementSibling.src = `img/portada/semana-${((semana % FOTOS) + FOTOS) % FOTOS + 1}.jpg`;
+            })();
+          </script>
+          <figcaption>La foto de la semana</figcaption>
+        </figure>
         <span class="bead loose" style="--c:var(--red); --s:34px; left:-18px; top:14%"></span>
         <span class="bead loose" style="--c:var(--green); --s:26px; right:10%; top:-14px"></span>
         <span class="bead loose" style="--c:var(--blue); --s:42px; right:-12px; bottom:9%"></span>
