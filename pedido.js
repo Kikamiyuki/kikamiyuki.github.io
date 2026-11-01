@@ -145,9 +145,26 @@
       </div>`;
     document.body.appendChild(back);
 
-    const close = () => back.remove();
+    // Teclado: el foco entra al panel, no sale de él, Esc lo cierra y al cerrar vuelve al botón que lo abrió
+    const opener = document.activeElement;
+    const onKey = (e) => {
+      if (e.key === "Escape") return close();
+      if (e.key !== "Tab") return;
+      const foco = [...back.querySelectorAll("button:not(:disabled), a[href]")].filter(el => el.offsetParent !== null);
+      if (!foco.length) return;
+      const primero = foco[0], ultimo = foco[foco.length - 1];
+      if (e.shiftKey && document.activeElement === primero) { e.preventDefault(); ultimo.focus(); }
+      else if (!e.shiftKey && document.activeElement === ultimo) { e.preventDefault(); primero.focus(); }
+    };
+    const close = () => {
+      back.remove();
+      document.removeEventListener("keydown", onKey);
+      if (opener && opener.focus) opener.focus();
+    };
+    document.addEventListener("keydown", onKey);
     back.addEventListener("click", e => { if (e.target === back) close(); });
     back.querySelector(".kp-x").onclick = close;
+    back.querySelector(".kp-x").focus();
 
     const send = back.querySelector(".kp-send");
     const note = back.querySelector(".kp-note");

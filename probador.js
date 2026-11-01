@@ -185,10 +185,22 @@
       back.remove();
       document.documentElement.style.overflow = "";
       document.removeEventListener("keydown", onKey);
+      if (opener && opener.focus) opener.focus();
     }
-    const onKey = (e) => { if (e.key === "Escape") close(); };
+    // Teclado: el foco entra al probador, no sale de él y al cerrar vuelve al botón que lo abrió
+    const opener = document.activeElement;
+    const onKey = (e) => {
+      if (e.key === "Escape") return close();
+      if (e.key !== "Tab") return;
+      const foco = [...back.querySelectorAll("button:not(:disabled), a[href], input:not(:disabled)")].filter(el => el.offsetParent !== null);
+      if (!foco.length) return;
+      const primero = foco[0], ultimo = foco[foco.length - 1];
+      if (e.shiftKey && document.activeElement === primero) { e.preventDefault(); ultimo.focus(); }
+      else if (!e.shiftKey && document.activeElement === ultimo) { e.preventDefault(); primero.focus(); }
+    };
     document.addEventListener("keydown", onKey);
     $(".tr-x").onclick = close;
+    $(".tr-x").focus();
     back.addEventListener("click", e => { if (e.target === back) close(); });
     $(".tr-order").onclick = () => { const it = items[cur]; close(); if (it.onOrder) it.onOrder(); };
 

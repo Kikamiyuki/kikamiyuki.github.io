@@ -412,13 +412,14 @@
   <link rel="stylesheet" href="diseno.css" />
 </head>
 <body>
+  <a class="skip" href="#contenido">Saltar al contenido</a>
 
-
-  <div class="announce" id="announce" aria-live="off">
+  <div class="announce" id="announce" role="region" aria-label="Avisos" aria-live="off">
     <a class="ann-msg on js-dm" href="#" data-msg="¡Hola! Quiero encargar un diseño para Navidad."><strong>Navidad</strong><span>Stock navideño a fines de noviembre: encarga el tuyo con tiempo</span><u>Encargar por DM</u></a>
     <a class="ann-msg" href="#lanzamientos"><strong>Nuevo</strong><span>Pruébate los aros con tu cámara</span><u>Probar</u></a>
     <a class="ann-msg" href="#vitrina"><strong>3D</strong><span>Gira cada aro y míralo brillar</span><u>Ver</u></a>
     <a class="ann-msg js-ig" href="#"><strong>Iquique</strong><span>Tejidos a mano, uno a uno</span><u>Pedir por DM</u></a>
+    <button class="ann-pause" type="button" aria-pressed="false" aria-label="Pausar los avisos"><span aria-hidden="true">❚❚</span></button>
   </div>
 
   <nav>
@@ -439,6 +440,7 @@
     </div>
   </nav>
 
+  <main id="contenido" tabindex="-1">
   <!-- HERO -->
   <header class="hero">
     <div class="container hero-grid">
@@ -524,11 +526,11 @@
       </div>
 
       <div class="filters reveal">
-        <button class="filter active" data-filter="all">Todos</button>
-        <button class="filter" data-filter="figuras">Figuras</button>
-        <button class="filter" data-filter="flores">Flores</button>
-        <button class="filter" data-filter="geometricos">Geométricos</button>
-        <button class="filter" data-filter="anillos">Anillos</button>
+        <button class="filter active" aria-pressed="true" data-filter="all">Todos</button>
+        <button class="filter" aria-pressed="false" data-filter="figuras">Figuras</button>
+        <button class="filter" aria-pressed="false" data-filter="flores">Flores</button>
+        <button class="filter" aria-pressed="false" data-filter="geometricos">Geométricos</button>
+        <button class="filter" aria-pressed="false" data-filter="anillos">Anillos</button>
       </div>
 
       <div class="products" id="products"></div>
@@ -551,9 +553,11 @@
         </div>
       </div>
       <div class="vt-stage">
-        <canvas aria-label="Aro en 3D, se puede girar arrastrando"></canvas>
+        <canvas aria-label="Aro en 3D, se puede girar arrastrando o con los botones"></canvas>
         <div class="vt-loading">Cargando…</div>
         <div class="vt-hint">Arrastra para girar</div>
+        <button class="vt-girar izq" type="button" data-girar="-1" aria-label="Girar el aro a la izquierda"><span aria-hidden="true">←</span></button>
+        <button class="vt-girar der" type="button" data-girar="1" aria-label="Girar el aro a la derecha"><span aria-hidden="true">→</span></button>
       </div>
     </div>
   </section>
@@ -721,6 +725,7 @@
       </a>
     </div>
   </section>
+  </main>
 
   <footer>
     <div class="container">
@@ -748,9 +753,11 @@
     </div>
   </footer>
 
+  <aside aria-label="Contacto">
   <a href="#" class="ig-float js-dm" data-msg="¡Hola! Quiero hacer una consulta." aria-label="Escríbenos por Instagram">
     <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r=".8" fill="#fff"/></svg>
   </a>
+  </aside>
   <div class="toast" id="toast" role="status"></div>
 
   <script src="pedido.js"></script>
@@ -935,28 +942,46 @@
     // Filtros
     document.querySelectorAll(".filter").forEach(btn => {
       btn.addEventListener("click", () => {
-        document.querySelectorAll(".filter").forEach(b => b.classList.remove("active"));
+        document.querySelectorAll(".filter").forEach(b => { b.classList.remove("active"); b.setAttribute("aria-pressed", "false"); });
         btn.classList.add("active");
+        btn.setAttribute("aria-pressed", "true");
         const f = btn.dataset.filter;
         grid.querySelectorAll(".card").forEach(c => c.classList.toggle("hidden", f !== "all" && c.dataset.cat !== f));
       });
     });
 
-    // Banner superior: cambia de mensaje cada 5 s (se detiene con el mouse encima; quieto si se pidió menos movimiento)
+    // Banner superior: cambia de mensaje cada 5 s (se detiene con el mouse, el teclado o el botón de pausa; quieto si se pidió menos movimiento)
     (() => {
       const bar = document.getElementById("announce");
       const valid = (m) => { const h = m.getAttribute("href"); return !h.startsWith("#") || h === "#" || document.querySelector(h); };
-      let paused = false, i = 0;
-      bar.addEventListener("mouseenter", () => { paused = true; });
-      bar.addEventListener("mouseleave", () => { paused = false; });
-      if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+      let hover = false, foco = false, pausado = false, i = 0;
+      bar.addEventListener("mouseenter", () => { hover = true; });
+      bar.addEventListener("mouseleave", () => { hover = false; });
+      bar.addEventListener("focusin", () => { foco = true; });
+      bar.addEventListener("focusout", () => { foco = false; });
+      // Los avisos que no se ven quedan fuera del teclado y de los lectores de pantalla
+      const marcar = () => bar.querySelectorAll(".ann-msg").forEach(m => {
+        const on = m.classList.contains("on");
+        m.tabIndex = on ? 0 : -1;
+        m.setAttribute("aria-hidden", on ? "false" : "true");
+      });
+      marcar();
+      const pausa = bar.querySelector(".ann-pause");
+      if (matchMedia("(prefers-reduced-motion: reduce)").matches) { pausa.hidden = true; return; }
+      pausa.addEventListener("click", () => {
+        pausado = !pausado;
+        pausa.setAttribute("aria-pressed", pausado);
+        pausa.setAttribute("aria-label", pausado ? "Reanudar los avisos" : "Pausar los avisos");
+        pausa.firstElementChild.textContent = pausado ? "▶" : "❚❚";
+      });
       setInterval(() => {
-        if (paused || document.hidden) return;
+        if (hover || foco || pausado || document.hidden) return;
         const msgs = [...bar.querySelectorAll(".ann-msg")].filter(valid);
         if (msgs.length < 2) return;
         bar.querySelectorAll(".ann-msg").forEach(m => m.classList.remove("on"));
         i = (i + 1) % msgs.length;
         msgs[i].classList.add("on");
+        marcar();
       }, 5000);
     })();
 

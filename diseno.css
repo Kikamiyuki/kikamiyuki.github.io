@@ -312,3 +312,23 @@ footer { color: var(--ink); font-size: 15px; }
   .hero-foto img { border-radius: 36px; box-shadow: 12px 12px 0 var(--yel); }
   .hero-foto figcaption { left: 16px; bottom: 16px; font-size: 12px; }
 }
+
+/* ---------- accesibilidad ---------- */
+.skip { position: fixed; left: 12px; top: -80px; z-index: 200; padding: 12px 20px; border-radius: 999px; background: var(--ink); color: var(--paper); font-weight: 700; }
+.skip:focus { top: 12px; }
+main:focus { outline: 0; }
+.ann-pause { position: absolute; right: 0; top: 0; width: 44px; height: 44px; display: grid; place-items: center; padding: 0; border: 0; border-radius: 50%;
+  background: transparent; color: #fff; font-size: 13px; cursor: pointer; }
+.ann-pause:hover { background: rgba(255,255,255,.2); }
+.ann-pause:focus-visible, .vt-girar:focus-visible, .try-btn:focus-visible { outline: 3px solid var(--blue); outline-offset: 2px; }
+.ann-pause:focus-visible { outline-color: #fff; }
+.vt-girar { position: absolute; bottom: 16px; z-index: 2; width: 48px; height: 48px; display: grid; place-items: center; padding: 0; border: 0; border-radius: 50%;
+  background: var(--ink); color: var(--paper); font-size: 22px; cursor: pointer; box-shadow: 3px 3px 0 var(--plum); }
+.vt-girar:hover { background: var(--plum); }
+.vt-girar.izq { left: 16px; }
+.vt-girar.der { right: 16px; }
+/* botones de al menos 44 px de alto, para el dedo */
+.filter, .btn { min-height: 44px; }
+.btn { justify-content: center; }
+/* «Probar» se ve igual para no tapar el aro, pero su zona táctil llega a 44 px */
+.try-btn::after { content: ""; position: absolute; inset: -10px -6px; }

@@ -201,6 +201,11 @@ async function initVitrina(section) {
   const up = () => { dragging = false; };
   canvas.addEventListener("pointerup", up); canvas.addEventListener("pointercancel", up);
 
+  // botones para girar: la alternativa a arrastrar, para teclado y lectores de pantalla
+  section.querySelectorAll("[data-girar]").forEach((b) => {
+    b.onclick = () => { vel = +b.dataset.girar * .09; idle = 0; };
+  });
+
   // inclinar el teléfono también gira el aro
   const gyroBtn = section.querySelector("[data-gyro]");
   if ("DeviceOrientationEvent" in window && matchMedia("(pointer: coarse)").matches) gyroBtn.hidden = false;
