@@ -338,10 +338,6 @@
       border-top: 1px solid var(--line); margin-top: 40px; padding-top: 24px; font-size: 13px;
       display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap;
     }
-    .views { display: inline-flex; align-items: center; gap: 6px; }
-    .views[hidden] { display: none; }
-    .views svg { width: 16px; height: 16px; stroke: var(--accent); }
-    .views b { color: var(--ink); font-weight: 600; }
 
     /* ---------- Floating Instagram + toast ---------- */
     .ig-float {
@@ -415,10 +411,10 @@
   <a class="skip" href="#contenido">Saltar al contenido</a>
 
   <div class="announce" id="announce" role="region" aria-label="Avisos" aria-live="off">
-    <a class="ann-msg on js-dm" href="#" data-msg="¡Hola! Quiero encargar un diseño para Navidad."><strong>Navidad</strong><span>Stock navideño a fines de noviembre: encarga el tuyo con tiempo</span><u>Encargar por DM</u></a>
+    <a class="ann-msg on js-dm" href="#" data-msg="¡Hola! Quiero encargar un diseño para Navidad."><strong>Navidad</strong><span>Stock navideño a fines de noviembre<span class="ann-largo">: encarga el tuyo con tiempo</span></span><u>Encargar<span class="ann-largo"> por DM</span></u></a>
     <a class="ann-msg" href="#lanzamientos"><strong>Nuevo</strong><span>Pruébate los aros con tu cámara</span><u>Probar</u></a>
     <a class="ann-msg" href="#vitrina"><strong>3D</strong><span>Gira cada aro y míralo brillar</span><u>Ver</u></a>
-    <a class="ann-msg js-ig" href="#"><strong>Iquique</strong><span>Tejidos a mano, uno a uno</span><u>Pedir por DM</u></a>
+    <a class="ann-msg js-ig" href="#"><strong>Iquique</strong><span>Tejidos a mano, uno a uno</span><u>Pedir<span class="ann-largo"> por DM</span></u></a>
     <button class="ann-pause" type="button" aria-pressed="false" aria-label="Pausar los avisos"><span aria-hidden="true">❚❚</span></button>
   </div>
 
@@ -428,7 +424,7 @@
         <span class="k">k<span class="i">&#305;<span class="dots"><i></i><i></i><i></i><i></i></span></span>ka</span>
         <span class="m">miyuki</span>
       </a>
-      <div class="nav-links">
+      <div class="nav-links" id="navLinks">
         <a href="#lanzamientos" id="navLaunch">Lanzamientos</a>
         <a href="#coleccion">Colección</a>
         <a href="#proceso">Cómo se hacen</a>
@@ -436,6 +432,9 @@
         <a href="#cuidados">Cuidados</a>
         <a href="#faq">Preguntas</a>
       </div>
+      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="navLinks">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>Menú
+      </button>
       <a href="#coleccion" class="btn btn-primary nav-cta">Ver colección</a>
     </div>
   </nav>
@@ -450,7 +449,7 @@
         <h1 class="kw"><span class="h-a">Pequeños detalles,</span> <em>tejidos a mano para ti.</em></h1>
       </div>
       <div class="reveal hero-bottom">
-        <p class="lead">Cada par está tejido mostacilla por mostacilla con cristales Miyuki japoneses: livianos, llenos de color y con diseños exclusivos que no vas a encontrar en ninguna tienda.</p>
+        <p class="lead">Cada par está tejido mostacilla por mostacilla con cristales Miyuki japoneses<span class="lead-mas">: livianos, llenos de color y con diseños exclusivos que no vas a encontrar en ninguna tienda</span>.</p>
         <div class="hero-actions">
           <a href="#coleccion" class="btn btn-primary">Ver la colección</a>
           <a href="#" class="btn btn-ghost js-dm" data-msg="¡Hola! Quiero consultar por un diseño personalizado.">Pedir un diseño a medida</a>
@@ -533,7 +532,8 @@
         <button class="filter" aria-pressed="false" data-filter="anillos">Anillos</button>
       </div>
 
-      <div class="products" id="products"></div>
+      <div class="products" id="products" role="group" tabindex="-1"></div>
+      <div class="paginas" id="paginas" role="navigation" aria-label="Páginas de la colección" hidden></div>
     </div>
   </section>
 
@@ -645,31 +645,26 @@
         <p>El cristal Miyuki es muy resistente. Lo más delicado es el hilo y los acabados metálicos, así que estos hábitos simples hacen toda la diferencia.</p>
       </div>
       <div class="care-grid">
-        <div class="care-item reveal">
-          <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3h6v3H9zM8 6h8l1 3v10a2 2 0 01-2 2H9a2 2 0 01-2-2V9z"/><path d="M10 13h4"/></svg>
-          <b>Primero el perfume</b>
+        <details class="care-item reveal" open>
+          <summary><svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3h6v3H9zM8 6h8l1 3v10a2 2 0 01-2 2H9a2 2 0 01-2-2V9z"/><path d="M10 13h4"/></svg><b>Primero el perfume</b></summary>
           <span>Aplica perfume, cremas y laca antes, deja que sequen y recién ahí ponte los aros. Los químicos pueden opacar los acabados dorados y mate.</span>
-        </div>
-        <div class="care-item reveal">
-          <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3s6 6.5 6 11a6 6 0 01-12 0c0-4.5 6-11 6-11z"/><path d="M4 4l16 16"/></svg>
-          <b>Lejos del agua</b>
+        </details>
+        <details class="care-item reveal" open>
+          <summary><svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3s6 6.5 6 11a6 6 0 01-12 0c0-4.5 6-11 6-11z"/><path d="M4 4l16 16"/></svg><b>Lejos del agua</b></summary>
           <span>Sácatelos para ducharte, ir a la piscina o al mar. El cloro, la sal y el jabón desgastan el hilo y le quitan brillo a las mostacillas.</span>
-        </div>
-        <div class="care-item reveal">
-          <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 18c3-1 5-4 6-8l4 4c-4 1-7 3-8 6"/><path d="M14 4l6 6-3 3-6-6z"/></svg>
-          <b>Limpieza suave</b>
+        </details>
+        <details class="care-item reveal" open>
+          <summary><svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 18c3-1 5-4 6-8l4 4c-4 1-7 3-8 6"/><path d="M14 4l6 6-3 3-6-6z"/></svg><b>Limpieza suave</b></summary>
           <span>Pásales un paño suave seco o apenas húmedo. Nunca los remojes ni uses productos químicos, vapor o limpiadores ultrasónicos.</span>
-        </div>
-        <div class="care-item reveal">
-          <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M3 11h18M9 7V5a3 3 0 016 0v2"/></svg>
-          <b>Guárdalos planos</b>
+        </details>
+        <details class="care-item reveal" open>
+          <summary><svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M3 11h18M9 7V5a3 3 0 016 0v2"/></svg><b>Guárdalos planos</b></summary>
           <span>En su bolsita o en una caja, por separado y estirados, en un lugar seco y lejos del sol directo para que no se deformen ni se enreden.</span>
-        </div>
-        <div class="care-item reveal">
-          <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v6M12 9a4 4 0 104 4"/><path d="M8 21h8"/></svg>
-          <b>Tómalos del gancho</b>
+        </details>
+        <details class="care-item reveal" open>
+          <summary><svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v6M12 9a4 4 0 104 4"/><path d="M8 21h8"/></svg><b>Tómalos del gancho</b></summary>
           <span>Al ponértelos y sacártelos, sujétalos del gancho y no del tejido. Así no estiras el hilo ni doblas la pieza.</span>
-        </div>
+        </details>
       </div>
     </div>
   </section>
@@ -745,10 +740,6 @@
       </div>
       <div class="copy">
         <span>© <span id="year"></span> Kika Miyuki · Hecho a mano con amor.</span>
-        <span class="views" id="views" hidden>
-          <svg viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg>
-          <b></b> visitas
-        </span>
       </div>
     </div>
   </footer>
@@ -781,7 +772,7 @@
     // tryon: alto del aro en el probador virtual, como fracción del ancho de la cara (necesita el recorte en img/probador/<slug>.png)
     // centro: true → aro de poste sin colgante: en el probador va centrado en el lóbulo en vez de colgar
     // launch: true → aparece destacado en "Nuevos lanzamientos" (y no se repite en la colección).
-    //   Agrega los aros nuevos AL PRINCIPIO de la lista: se muestran los 8 lanzamientos más recientes y el resto pasa a la colección.
+    //   Agrega los aros nuevos AL PRINCIPIO de la lista: se muestran los 10 lanzamientos más recientes (una tanda completa) y el resto pasa a la colección.
     // gancho: "plata" o "oro" → aros con gancho; los de poste y el anillo no lo llevan
     const GANCHOS = { plata: "Ganchos de plata 925", oro: "Ganchos con baño de oro" };
     const PRODUCTS = [
@@ -860,14 +851,15 @@
 
     // Nuevos lanzamientos: solo los 8 más recientes (los aros nuevos se agregan ARRIBA en PRODUCTS);
     // los lanzamientos más antiguos pasan solos a la colección.
-    const LAUNCH_MAX = 8;
+    const LAUNCH_MAX = 10;
+    const NUEVOS_MAX = 6;   // cuántos lanzamientos, partiendo por el primero de la lista, llevan la etiqueta «Nuevo»
     const LAUNCHES = PRODUCTS.filter(p => p.launch).slice(0, LAUNCH_MAX);
     if (LAUNCHES.length) {
-      document.getElementById("launchList").innerHTML = LAUNCHES.map(p => `
+      document.getElementById("launchList").innerHTML = LAUNCHES.map((p, i) => `
         <article class="launch reveal" id="p-${slug(p)}">
           <div class="launch-media">
             <a class="launch-img" href="${productUrl(p)}" aria-label="Ver detalle de ${p.name}">
-              ${p.tag ? `<span class="tag">${p.tag}</span>` : ""}
+              ${p.tag && (p.tag !== "Nuevo" || i < NUEVOS_MAX) ? `<span class="tag">${p.tag}</span>` : ""}
               <img src="img/${p.img}" alt="${pieza(p)} ${p.name} tejidos con mostacillas Miyuki" loading="lazy" data-lupa />
             </a>
             ${p.tryon ? `<button class="try-btn" type="button" data-try="${slug(p)}" aria-label="Probarme los aros ${p.name} con la cámara">${CAM_ICON}Probar</button>` : ""}
@@ -893,7 +885,7 @@
       const list = document.getElementById("launchList");
       const cards = list.children, n = cards.length;
       const w = innerWidth;
-      const options = w <= 640 ? [2] : [4, 3, 2];
+      const options = w <= 640 ? [2] : w < 900 ? [4, 3, 2] : [5, 4, 3, 2];
       let cols = options[0], wide = false;
       const exact = options.find(c => n % c === 0);
       const withWide = options.find(c => n > 1 && (n + 1) % c === 0);
@@ -943,14 +935,49 @@
       `<a href="${IG_PROFILE}" target="_blank" rel="noopener" aria-label="Ver ${p.name} en Instagram">
          <img src="img/${p.img}" alt="" loading="lazy" /></a>`).join("");
 
+    // Colección por páginas: 8 aros en computador (4 columnas) y 6 en tablet y celular. Los filtros buscan entre todos los aros.
+    const paginas = document.getElementById("paginas");
+    const tarjetas = [...grid.querySelectorAll(".card")];
+    const enComputador = matchMedia("(min-width: 961px)");
+    let filtro = "all", pagina = 1;
+    function mostrarPagina() {
+      const elegidas = tarjetas.filter(c => filtro === "all" || c.dataset.cat === filtro);
+      const porPagina = enComputador.matches ? 8 : 6;
+      const total = Math.max(1, Math.ceil(elegidas.length / porPagina));
+      pagina = Math.min(pagina, total);
+      const visibles = elegidas.slice((pagina - 1) * porPagina, pagina * porPagina);
+      tarjetas.forEach(c => c.classList.toggle("hidden", !visibles.includes(c)));
+      grid.setAttribute("aria-label", `Colección, página ${pagina} de ${total}`);
+      paginas.hidden = total < 2;
+      paginas.innerHTML = `<button type="button" data-p="${pagina - 1}" aria-label="Página anterior"${pagina === 1 ? " disabled" : ""}>← <span class="pag-anterior">Anterior</span></button>`
+        + Array.from({ length: total }, (_, i) => `<button type="button" data-p="${i + 1}" aria-label="Página ${i + 1}"${i + 1 === pagina ? ' aria-current="page"' : ""}>${i + 1}</button>`).join("")
+        + `<button type="button" data-p="${pagina + 1}" aria-label="Página siguiente"${pagina === total ? " disabled" : ""}>Siguiente →</button>`;
+    }
+    if (tarjetas.length) {
+      paginas.addEventListener("click", e => {
+        const b = e.target.closest("button");
+        if (!b || b.disabled) return;
+        pagina = +b.dataset.p;
+        mostrarPagina();
+        document.querySelector(".filters").scrollIntoView({ block: "start" });
+        grid.focus({ preventScroll: true });
+      });
+      enComputador.addEventListener("change", mostrarPagina);
+      // un enlace directo a un aro (#p-nombre) abre la página donde está
+      const directo = tarjetas.indexOf(document.getElementById(location.hash.slice(1)));
+      if (directo >= 0) pagina = Math.floor(directo / (enComputador.matches ? 8 : 6)) + 1;
+      mostrarPagina();
+    }
+
     // Filtros
     document.querySelectorAll(".filter").forEach(btn => {
       btn.addEventListener("click", () => {
         document.querySelectorAll(".filter").forEach(b => { b.classList.remove("active"); b.setAttribute("aria-pressed", "false"); });
         btn.classList.add("active");
         btn.setAttribute("aria-pressed", "true");
-        const f = btn.dataset.filter;
-        grid.querySelectorAll(".card").forEach(c => c.classList.toggle("hidden", f !== "all" && c.dataset.cat !== f));
+        filtro = btn.dataset.filter;
+        pagina = 1;
+        mostrarPagina();
       });
     });
 
@@ -1038,7 +1065,31 @@
 
     document.getElementById("year").textContent = new Date().getFullYear();
 
-    // Contador de visitas (GoatCounter): registra la visita y muestra el total en el pie de página
+    // Menú del celular: se cierra al elegir una sección, con Esc o tocando fuera
+    (function () {
+      const boton = document.querySelector(".nav-toggle"), links = document.getElementById("navLinks");
+      const abrir = (si) => { links.classList.toggle("open", si); boton.setAttribute("aria-expanded", si); };
+      boton.addEventListener("click", () => abrir(!links.classList.contains("open")));
+      links.addEventListener("click", (e) => { if (e.target.closest("a")) abrir(false); });
+      document.addEventListener("click", (e) => { if (!e.target.closest("nav")) abrir(false); });
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape" && links.classList.contains("open")) { abrir(false); boton.focus(); }
+      });
+    })();
+
+    // Cuidados: en computador se ven todos; en celular son desplegables, con el primero abierto
+    (function () {
+      const celular = matchMedia("(max-width: 640px)"), items = [...document.querySelectorAll(".care-item")];
+      const aplicar = () => items.forEach((d, i) => {
+        d.open = !celular.matches || i === 0;
+        d.querySelector("summary").tabIndex = celular.matches ? 0 : -1;
+      });
+      items.forEach((d) => d.querySelector("summary").addEventListener("click", (e) => { if (!celular.matches) e.preventDefault(); }));
+      celular.addEventListener("change", aplicar);
+      aplicar();
+    })();
+
+    // Estadísticas de visitas (GoatCounter): registra la visita; el total se ve solo en el panel de goatcounter.com
     if (GOATCOUNTER) {
       const gc = `https://${GOATCOUNTER}.goatcounter.com`;
       const s = document.createElement("script");
@@ -1046,17 +1097,6 @@
       s.src = "https://gc.zgo.at/count.js";
       s.dataset.goatcounter = `${gc}/count`;
       document.body.appendChild(s);
-
-      fetch(`${gc}/counter/TOTAL.json`, { cache: "no-store" })
-        .then(r => r.ok ? r.json() : Promise.reject())
-        .then(d => {
-          const n = parseInt(String(d.count).replace(/\D/g, ""), 10);
-          if (!n) return;
-          const box = document.getElementById("views");
-          box.querySelector("b").textContent = n.toLocaleString("es-CL");
-          box.hidden = false;
-        })
-        .catch(() => {});  // si falla, el contador simplemente no se muestra
     }
   </script>
 </body>
