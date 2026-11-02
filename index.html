@@ -188,6 +188,7 @@
     .card:hover { transform: translateY(-4px); box-shadow: 0 20px 40px rgba(31, 28, 27, .08); }
     .card.hidden { display: none; }
     .card-img { position: relative; aspect-ratio: 1 / 1; overflow: hidden; background: var(--bg-alt); }
+    .card-foto { display: block; height: 100%; }
     .card-img img { width: 100%; height: 100%; object-fit: cover; transition: transform .6s ease; }
     .card:hover .card-img img { transform: scale(1.05); }
     .tag {
@@ -920,8 +921,10 @@
       return `
         <article class="card reveal" id="p-${slug(p)}" data-cat="${p.cat}">
           <div class="card-img">
-            ${tag ? `<span class="tag">${tag}</span>` : ""}
-            <img src="img/${p.img}" alt="${pieza(p)} ${p.name} tejidos con mostacillas Miyuki" loading="lazy" data-lupa />
+            <a class="card-foto" href="${productUrl(p)}" aria-label="Ver detalle de ${p.name}">
+              ${tag ? `<span class="tag">${tag}</span>` : ""}
+              <img src="img/${p.img}" alt="${pieza(p)} ${p.name} tejidos con mostacillas Miyuki" loading="lazy" data-lupa />
+            </a>
             ${p.tryon ? `<button class="try-btn" type="button" data-try="${slug(p)}" aria-label="Probarme los aros ${p.name} con la cámara">${CAM_ICON}Probar</button>` : ""}
           </div>
           <div class="card-body">
