@@ -525,7 +525,7 @@
       <div class="section-head reveal">
         <span class="eyebrow">La colección</span>
         <h2>Encuentra tu par favorito</h2>
-        <p>Al ser piezas hechas a mano, cada diseño se produce en pequeñas cantidades. Pasa el mouse o mantén el dedo sobre una foto para ver cada mostacilla de cerca.</p>
+        <p>Al ser piezas hechas a mano, cada diseño se produce en pequeñas cantidades. Toca una foto para verla más grande.</p>
       </div>
 
       <div class="filters reveal">
@@ -770,7 +770,6 @@
 
   <script src="pedido.js"></script>
   <script src="probador.js"></script>
-  <script src="lupa.js"></script>
   <script type="module" src="vitrina.js"></script>
   <script src="diseno.js"></script>
   <script>
@@ -877,7 +876,7 @@
           <div class="launch-media">
             <a class="launch-img" href="${productUrl(p)}" aria-label="Ver detalle de ${p.name}">
               ${p.tag && (p.tag !== "Nuevo" || i < NUEVOS_MAX) ? `<span class="tag">${p.tag}</span>` : ""}
-              <img src="img/${p.img}" alt="${pieza(p)} ${p.name} tejidos con mostacillas Miyuki" loading="lazy" data-lupa />
+              <img src="img/${p.img}" alt="${pieza(p)} ${p.name} tejidos con mostacillas Miyuki" loading="lazy" />
             </a>
             ${p.tryon ? `<button class="try-btn" type="button" data-try="${slug(p)}" aria-label="Probarme los aros ${p.name} con la cámara">${CAM_ICON}Probar</button>` : ""}
           </div>
@@ -923,7 +922,7 @@
           <div class="card-img">
             <a class="card-foto" href="${productUrl(p)}" aria-label="Ver detalle de ${p.name}">
               ${tag ? `<span class="tag">${tag}</span>` : ""}
-              <img src="img/${p.img}" alt="${pieza(p)} ${p.name} tejidos con mostacillas Miyuki" loading="lazy" data-lupa />
+              <img src="img/${p.img}" alt="${pieza(p)} ${p.name} tejidos con mostacillas Miyuki" loading="lazy" />
             </a>
             ${p.tryon ? `<button class="try-btn" type="button" data-try="${slug(p)}" aria-label="Probarme los aros ${p.name} con la cámara">${CAM_ICON}Probar</button>` : ""}
           </div>
