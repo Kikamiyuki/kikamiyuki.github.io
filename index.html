@@ -790,6 +790,8 @@
     // launch: true → aparece destacado en "Nuevos lanzamientos" (y no se repite en la colección).
     //   Agrega los aros nuevos AL PRINCIPIO de la lista: se muestran los 10 lanzamientos más recientes (una tanda completa) y el resto pasa a la colección.
     // gancho: "plata" o "oro" → aros con gancho; los de poste y el anillo no lo llevan
+    // agotado: true → lleva la etiqueta «Agotado», sale de Nuevos y del probador, pasa al final de la colección y ya no se puede pedir.
+    //   Revisa su reseña: frases como «Quedan pocas» o «Hay una sola» ya no corresponden.
     const GANCHOS = { plata: "Ganchos de plata 925", oro: "Ganchos con baño de oro" };
     const PRODUCTS = [
       { name: "Alien Lunar",       cat: "figuras",     img: "alien-lunar.jpg",       price: 20000, resena: "Un alien verde lima colgando de la luna. Para las que miran al cielo.", desc: "Alienígenas verde lima de ojos negros, colgando de un poste plateado en forma de luna.", tag: "Nuevo", launch: true, tryon: 0.32, vitrina: { pitch: 8.5, top: 0.21, k: 4 } },
@@ -816,7 +818,28 @@
       { name: "Hexágono Bruma",    cat: "geometricos", img: "hexagono-bruma.jpg",    price: 13000, resena: "Lila y gris grafito con brillo metálico. Discreto para el día a día.", desc: "Hexágono mini en lila y gris grafito con brillo metálico. Aro de poste discreto.", tag: "Nuevo", tryon: 0.11, centro: true, vitrina: { pitch: 9.5, top: 0, k: 3 } },
       { name: "Rombos Fucsia",     cat: "anillos",     img: "anillo-rombos.jpg",     price: 14000, resena: "Dorado con rombos fucsia, liviano y cómodo. Pide tu talla por DM.", tipo: "anillo", desc: "Anillo tejido en mostacillas doradas con rombos fucsia. Liviano y cómodo; consulta tu talla por DM.", tag: "Nuevo" },
     ];
+    // Descuento programado en toda la tienda (horas de Chile). Entre `desde` y `hasta` cada precio baja `pct` % solo, con el precio
+    // normal tachado y un aviso arriba; antes y después la web muestra los precios normales, sin tener que publicar nada.
+    // Las páginas de cada aro (generar-productos.js) leen este mismo PROMO. Para no tener descuento, PROMO vale null.
+    // Para verlo antes en la vista previa local: http://localhost:5173/?promo
+    const PROMO = { nombre: "Black Friday", pct: 15, desde: "2026-11-27T00:00:00-03:00", hasta: "2026-12-01T00:00:00-03:00", aviso: "15% en toda la tienda", hastaTxt: "hasta el lunes 30", fechas: "27 al 30 de noviembre" };
     // ===================================================
+
+    const promoActiva = PROMO && ((location.hostname === "localhost" && new URLSearchParams(location.search).has("promo")) ||
+      (Date.now() >= Date.parse(PROMO.desde) && Date.now() < Date.parse(PROMO.hasta)));
+    if (promoActiva) {
+      for (const p of PRODUCTS) if (p.price && !p.oldPrice && !p.agotado) { p.oldPrice = p.price; p.price = Math.round(p.price * (100 - PROMO.pct) / 1000) * 10; p.enPromo = true; }
+      // mientras dura, el aviso del descuento queda solo y fijo arriba, y la foto de la portada lleva un sello
+      const bar = document.getElementById("announce");
+      bar.querySelectorAll(".ann-msg").forEach(m => m.remove());
+      bar.querySelector(".ann-pause").style.display = "none";   // con un solo aviso no hay nada que pausar
+      bar.insertAdjacentHTML("afterbegin", `<a class="ann-msg on bf" href="#coleccion"><strong>${PROMO.nombre}</strong><span><span class="bf-largo">${PROMO.aviso} ${PROMO.hastaTxt}</span><span class="bf-corto">${PROMO.pct}% en todo</span></span><u>Ver aros</u></a>`);
+      document.querySelector('.hero-visual .bead[style*="--green"]')?.remove();   // la mostacilla de esa esquina taparía el sello
+      document.querySelector(".hero-foto").insertAdjacentHTML("afterbegin", `<a class="bf-sello" href="#coleccion" aria-label="${PROMO.nombre}: ${PROMO.aviso}"><b>−${PROMO.pct}%</b><span>${PROMO.nombre}</span></a>`);
+      // y un pop up que lo anuncia una vez por visitante (promo-popup.js)
+      window.KIKA_PROMO = PROMO;
+      document.body.appendChild(Object.assign(document.createElement("script"), { src: "promo-popup.js" }));
+    }
 
     const IG_PROFILE = `https://www.instagram.com/${INSTAGRAM}/`;
     const IG_DM = `https://ig.me/m/${INSTAGRAM}`;
@@ -829,6 +852,9 @@
     const productUrl = (p) => `${SITE_URL}/p/${slug(p)}/`;
 
     const orderMsg = (p) => `¡Hola! ${p.tipo === "anillo" ? "Me interesa el anillo" : "Me interesan los aros"} "${p.name}"${p.price ? ` (${p.oldPrice ? "oferta " : ""}${fmt(p.price)})` : ""}. ${p.tipo === "anillo" ? "¿Está disponible?" : "¿Están disponibles?"}\n${productUrl(p)}`;
+    const parecidoMsg = (p) => `¡Hola! Vi que ${p.tipo === "anillo" ? "el anillo" : "los aros"} "${p.name}" ${p.tipo === "anillo" ? "está agotado" : "están agotados"}. ¿Podrías tejerme ${p.tipo === "anillo" ? "uno parecido" : "unos parecidos"}?\n${productUrl(p)}`;
+    // sello del descuento sobre la foto de cada aro (solo mientras dura el PROMO)
+    const promoSello = (p) => p.enPromo ? `<span class="bf-mini" aria-label="${PROMO.nombre}: −${PROMO.pct}%"><b>−${PROMO.pct}%</b><i>${PROMO.nombre}</i></span>` : "";
     const priceHtml = (p) => p.price ? `${p.oldPrice ? `<s>${fmt(p.oldPrice)}</s>` : ""}${fmt(p.price)}` : "";
     const CAM_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg>';
     const openOrder = (p) => KikaPedido.open({ ...p, img: `img/${p.img}`, msg: orderMsg(p), dm: IG_DM, currency: CURRENCY });
@@ -843,14 +869,14 @@
         item: {
           "@type": "Product", name: `${pieza(p)} ${p.name}`, url: productUrl(p), image: `${SITE_URL}/img/${p.img}`,
           description: p.desc, brand: { "@type": "Brand", name: "Kika Miyuki" }, material: "Mostacillas Miyuki Delica 11/0",
-          ...(p.price ? { offers: { "@type": "Offer", price: p.price, priceCurrency: "CLP", availability: "https://schema.org/InStock", url: productUrl(p), hasMerchantReturnPolicy: { "@type": "MerchantReturnPolicy", applicableCountry: "CL", returnPolicyCategory: "https://schema.org/MerchantReturnNotPermitted" } } } : {}),
+          ...(p.price ? { offers: { "@type": "Offer", price: p.price, priceCurrency: "CLP", availability: `https://schema.org/${p.agotado ? "SoldOut" : "InStock"}`, url: productUrl(p), hasMerchantReturnPolicy: { "@type": "MerchantReturnPolicy", applicableCountry: "CL", returnPolicyCategory: "https://schema.org/MerchantReturnNotPermitted" } } } : {}),
         },
       })),
     });
     document.head.appendChild(ld);
 
     // Probador virtual: los aros que tienen recorte en img/probador/ (ver probador.js)
-    window.KIKA_TRYON = PRODUCTS.filter(p => p.tryon).map(p => ({
+    window.KIKA_TRYON = PRODUCTS.filter(p => p.tryon && !p.agotado).map(p => ({
       slug: slug(p), name: p.name, price: p.price ? fmt(p.price) : "", h: p.tryon, centro: !!p.centro,
       img: `img/probador/${slug(p)}.png`, onOrder: () => window.KikaPedido && openOrder(p),
     }));
@@ -859,23 +885,23 @@
     // vitrina: { pitch: ancho de una mostacilla en px del recorte, top: dónde termina el gancho (0–1), k: cantidad de colores,
     //   fondo: dónde empieza lo que cuelga y no es tejido (perlas) }; sin vitrina se estima solo
     // vitrina: false lo saca de la vitrina
-    window.KIKA_VITRINA = PRODUCTS.filter(p => p.tryon && p.vitrina !== false)
+    window.KIKA_VITRINA = PRODUCTS.filter(p => p.tryon && !p.agotado && p.vitrina !== false)
       .map(p => ({
         ...(p.vitrina || {}), slug: slug(p), name: p.name, price: p.price ? fmt(p.price) : "", tryon: !!p.tryon,
         img: `img/probador/${slug(p)}.png`, onOrder: () => window.KikaPedido && openOrder(p),
       }));
 
-    // Nuevos lanzamientos: solo los 8 más recientes (los aros nuevos se agregan ARRIBA en PRODUCTS);
+    // Nuevos lanzamientos: solo los 10 más recientes y disponibles (los aros nuevos se agregan ARRIBA en PRODUCTS);
     // los lanzamientos más antiguos pasan solos a la colección.
     const LAUNCH_MAX = 10;
     const NUEVOS_MAX = 6;   // cuántos lanzamientos, partiendo por el primero de la lista, llevan la etiqueta «Nuevo»
-    const LAUNCHES = PRODUCTS.filter(p => p.launch).slice(0, LAUNCH_MAX);
+    const LAUNCHES = PRODUCTS.filter(p => p.launch && !p.agotado).slice(0, LAUNCH_MAX);
     if (LAUNCHES.length) {
       document.getElementById("launchList").innerHTML = LAUNCHES.map((p, i) => `
         <article class="launch reveal" id="p-${slug(p)}">
           <div class="launch-media">
             <a class="launch-img" href="${productUrl(p)}" aria-label="Ver detalle de ${p.name}">
-              ${p.tag && (p.tag !== "Nuevo" || i < NUEVOS_MAX) ? `<span class="tag">${p.tag}</span>` : ""}
+              ${p.tag && (p.tag !== "Nuevo" || i < NUEVOS_MAX) ? `<span class="tag">${p.tag}</span>` : ""}${promoSello(p)}
               <img src="img/${p.img}" alt="${pieza(p)} ${p.name} tejidos con mostacillas Miyuki" loading="lazy" />
             </a>
             ${p.tryon ? `<button class="try-btn" type="button" data-try="${slug(p)}" aria-label="Probarme los aros ${p.name} con la cámara">${CAM_ICON}Probar</button>` : ""}
@@ -912,19 +938,20 @@
       [...cards].forEach((c, i) => c.classList.toggle("wide", wide && i === 0));
     }
 
-    // Productos (los lanzamientos ya se muestran arriba)
+    // Productos (los lanzamientos ya se muestran arriba; los agotados van al final)
     const grid = document.getElementById("products");
-    grid.innerHTML = PRODUCTS.filter(p => !LAUNCHES.includes(p)).map(p => {
+    const enColeccion = PRODUCTS.filter(p => !LAUNCHES.includes(p));
+    grid.innerHTML = [...enColeccion.filter(p => !p.agotado), ...enColeccion.filter(p => p.agotado)].map(p => {
       const msg = orderMsg(p);
-      const tag = p.tag === "Nuevo" ? "" : p.tag; // ya no es novedad
+      const tag = p.agotado ? "Agotado" : p.tag === "Nuevo" ? "" : p.tag; // ya no es novedad
       return `
-        <article class="card reveal" id="p-${slug(p)}" data-cat="${p.cat}">
+        <article class="card reveal${p.agotado ? " agotado" : ""}" id="p-${slug(p)}" data-cat="${p.cat}">
           <div class="card-img">
             <a class="card-foto" href="${productUrl(p)}" aria-label="Ver detalle de ${p.name}">
-              ${tag ? `<span class="tag">${tag}</span>` : ""}
+              ${tag ? `<span class="tag${p.agotado ? " tag-agotado" : ""}">${tag}</span>` : ""}${promoSello(p)}
               <img src="img/${p.img}" alt="${pieza(p)} ${p.name} tejidos con mostacillas Miyuki" loading="lazy" />
             </a>
-            ${p.tryon ? `<button class="try-btn" type="button" data-try="${slug(p)}" aria-label="Probarme los aros ${p.name} con la cámara">${CAM_ICON}Probar</button>` : ""}
+            ${p.tryon && !p.agotado ? `<button class="try-btn" type="button" data-try="${slug(p)}" aria-label="Probarme los aros ${p.name} con la cámara">${CAM_ICON}Probar</button>` : ""}
           </div>
           <div class="card-body">
             <div class="card-top">
@@ -933,7 +960,9 @@
             </div>
             <p>${p.resena || p.desc}</p>
             ${p.gancho ? `<p class="gancho">${GANCHOS[p.gancho]}</p>` : ""}
-            <a class="btn btn-primary js-order" href="${productUrl(p)}" data-i="${PRODUCTS.indexOf(p)}" data-msg='${msg.replace(/'/g, "&#39;")}'>Lo quiero</a>
+            ${p.agotado
+              ? `<a class="btn btn-ghost js-dm" href="${IG_DM}" data-msg='${parecidoMsg(p).replace(/'/g, "&#39;")}'>Pedir ${p.tipo === "anillo" ? "uno parecido" : "unos parecidos"}</a>`
+              : `<a class="btn btn-primary js-order" href="${productUrl(p)}" data-i="${PRODUCTS.indexOf(p)}" data-msg='${msg.replace(/'/g, "&#39;")}'>Lo quiero</a>`}
           </div>
         </article>`;
     }).join("");
@@ -949,7 +978,7 @@
     }
 
     // Feed de Instagram (6 fotos)
-    document.getElementById("igGrid").innerHTML = PRODUCTS.slice(0, 6).map(p =>
+    document.getElementById("igGrid").innerHTML = PRODUCTS.filter(p => !p.agotado).slice(0, 6).map(p =>
       `<a href="${IG_PROFILE}" target="_blank" rel="noopener" aria-label="Ver ${p.name} en Instagram">
          <img src="img/${p.img}" alt="" loading="lazy" /></a>`).join("");
 
