@@ -82,16 +82,31 @@ a { color: var(--plum); }
 .btn[disabled] { opacity: .45; cursor: not-allowed; transform: none; }
 
 /* ---------- mesa ---------- */
-.app { max-width: 1440px; margin: 0 auto; display: grid; grid-template-columns: minmax(0, 1fr) 400px; gap: 18px; align-items: start; }
-.bench { background: var(--card); border-radius: var(--r); padding: 14px; min-width: 0; display: flex; flex-direction: column; gap: 12px; }
-.tools { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
-.tool { width: 42px; height: 42px; border-radius: 14px; border: 2px solid transparent; background: var(--paper2); cursor: pointer; display: grid; place-items: center; color: var(--ink); }
+.app { max-width: 1520px; margin: 0 auto; display: grid; grid-template-columns: 58px minmax(0, 1fr) 400px; gap: 14px; align-items: start; }
+/* barra de herramientas: vertical a la izquierda (en el celular, abajo) */
+.rail { position: sticky; top: calc(env(safe-area-inset-top, 0px) + 12px); background: var(--card); border-radius: var(--r); padding: 8px; display: flex; flex-direction: column; align-items: center; gap: 5px; }
+.rail .sep { width: 28px; height: 2px; margin: 3px 0; }
+.bench { background: var(--card); border-radius: var(--r); padding: 12px 14px 14px; min-width: 0; display: flex; flex-direction: column; gap: 10px; }
+.benchtop { display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; }
+.bt-acts { display: flex; align-items: center; gap: 5px; }
+.tool { width: 42px; height: 42px; flex: none; border-radius: 14px; border: 2px solid transparent; background: var(--paper2); cursor: pointer; display: grid; place-items: center; color: var(--ink); padding: 0; }
+.tool.sm { width: 36px; height: 36px; border-radius: 12px; }
 .tool svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.tool.sm svg { width: 20px; height: 20px; }
 .tool:hover { border-color: var(--line); }
 .tool[aria-pressed="true"] { background: var(--btn-bg); color: var(--btn-fg); box-shadow: 3px 3px 0 var(--yel); }
-.sep { width: 2px; height: 28px; background: var(--line); margin: 0 4px; border-radius: 2px; }
-.zoomlbl { font-size: 13px; color: var(--ink-soft); min-width: 44px; text-align: center; }
-
+.sep { width: 2px; height: 26px; background: var(--line); margin: 0 3px; border-radius: 2px; flex: none; }
+.zoomlbl { font-size: 13px; color: var(--ink-soft); min-width: 50px; text-align: center; border: 0; background: none; cursor: pointer; padding: 6px 2px; border-radius: 8px; }
+.zoomlbl:hover { background: var(--paper2); }
+/* opciones de la herramienta elegida */
+.opts { display: flex; align-items: center; flex-wrap: wrap; gap: 8px 14px; min-height: 40px; padding: 6px 10px; background: var(--paper); border-radius: 14px; font-size: 14px; }
+.opts:empty { display: none; }
+.opts .ot { font-weight: 700; }
+.opts .seg { padding: 3px; border-radius: 11px; }
+.opts .seg button { padding: 5px 10px; font-size: 13px; }
+.opts input[type="text"] { background: var(--card); border: 2px solid var(--line); border-radius: 10px; padding: 6px 10px; min-width: 0; width: 180px; }
+.opts .btn.small { padding: 6px 12px; font-size: 13px; box-shadow: 2px 2px 0 var(--lilac); }
+.opts .hint { flex-basis: 100%; }
 .swatches { display: flex; gap: 7px; overflow-x: auto; padding: 8px 2px 8px; scrollbar-width: thin; align-items: center; }
 .sw { flex: none; position: relative; width: 34px; height: 30px; border-radius: 9px; border: 0; cursor: pointer; background: var(--c); padding: 0;
   box-shadow: inset 0 -5px 0 rgba(0,0,0,.18), inset 0 4px 0 rgba(255,255,255,.28), 0 0 0 1px var(--line); }
@@ -224,12 +239,20 @@ dialog::backdrop { background: rgba(36, 18, 46, .6); }
   .side { position: static; }
   .pane { max-height: none; min-height: 0; }
   .wrap { height: 58vh; }
+  /* en el celular las herramientas van abajo, al alcance del pulgar */
+  body { padding-bottom: calc(96px + env(safe-area-inset-bottom, 0px)); }
+  .rail { position: fixed; z-index: 40; top: auto; left: 0; right: 0; bottom: 0; flex-direction: row; border-radius: 22px 22px 0 0; overflow-x: auto;
+    padding: 8px max(12px, env(safe-area-inset-right, 0px)) calc(8px + env(safe-area-inset-bottom, 0px)) max(12px, env(safe-area-inset-left, 0px));
+    box-shadow: 0 -6px 20px rgba(36, 18, 46, .12); scrollbar-width: none; }
+  .rail::-webkit-scrollbar { display: none; }
+  .rail .sep { width: 2px; height: 26px; margin: 0 3px; }
+  .toast { bottom: calc(96px + env(safe-area-inset-bottom, 0px)); }
 }
 @media (max-width: 520px) {
   .brand h1 { font-size: 24px; }
   .meta, .meta input { width: 100%; }
-  .meta .btn { flex: 1; }
-  .tool { width: 38px; height: 38px; }
+  .meta #dCliente { display: none; }
+  .meta .btn { flex: 1; padding: 9px 10px; }
   .bench { padding: 10px; }
   #prev { height: 190px; }
 }
@@ -262,27 +285,39 @@ dialog::backdrop { background: rgba(36, 18, 46, .6); }
 </header>
 
 <main class="app">
+  <nav class="rail" role="toolbar" aria-label="Herramientas">
+    <button class="tool" data-tool="select" title="Seleccionar, copiar y mover (V)" aria-label="Seleccionar"><svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="1" stroke-dasharray="3 2.5"/><path d="M11 11l7 3-3 1-1 3z"/></svg></button>
+    <button class="tool" data-tool="hand" title="Mover el lienzo (H o barra espaciadora)" aria-label="Mover el lienzo"><svg viewBox="0 0 24 24"><path d="M8 12V6a1.5 1.5 0 013 0v5"/><path d="M11 11V4.5a1.5 1.5 0 013 0V11"/><path d="M14 11V6a1.5 1.5 0 013 0v7c0 4-2.5 7-6 7-2.5 0-4-1.3-5.5-3.5L4 14a1.5 1.5 0 012.5-1.6L8 14"/></svg></button>
+    <span class="sep" aria-hidden="true"></span>
+    <button class="tool" data-tool="pencil" title="Pintar (P)" aria-label="Pintar"><svg viewBox="0 0 24 24"><path d="M4 20l4-1 11-11-3-3L5 16l-1 4z"/><path d="M14 6l3 3"/></svg></button>
+    <button class="tool" data-tool="line" title="Línea recta (L)" aria-label="Línea"><svg viewBox="0 0 24 24"><path d="M6 18L18 6"/><circle cx="5" cy="19" r="2"/><circle cx="19" cy="5" r="2"/></svg></button>
+    <button class="tool" data-tool="rect" title="Rectángulo (R)" aria-label="Rectángulo"><svg viewBox="0 0 24 24"><rect x="4" y="6" width="16" height="12" rx="1.5"/></svg></button>
+    <button class="tool" data-tool="ellipse" title="Círculo o elipse (O)" aria-label="Elipse"><svg viewBox="0 0 24 24"><ellipse cx="12" cy="12" rx="8.5" ry="6.5"/></svg></button>
+    <button class="tool" data-tool="fill" title="Rellenar (B)" aria-label="Rellenar"><svg viewBox="0 0 24 24"><path d="M5 12l7-7 7 7-7 7-7-7z"/><path d="M5 12h14"/><path d="M20 16c0 1.5-1 3-2 3s-2-1.5-2-3 2-3 2-3 2 1.5 2 3z"/></svg></button>
+    <button class="tool" data-tool="text" title="Texto con mostacillas (T)" aria-label="Texto"><svg viewBox="0 0 24 24"><path d="M5 6V4h14v2"/><path d="M12 4v16"/><path d="M9 20h6"/></svg></button>
+    <button class="tool" data-tool="eraser" title="Borrar (E)" aria-label="Borrar"><svg viewBox="0 0 24 24"><path d="M8 20h12"/><path d="M5 15l9-9 5 5-8 8H8l-3-3z"/><path d="M10 10l5 5"/></svg></button>
+    <button class="tool" data-tool="picker" title="Tomar un color del diseño (I)" aria-label="Cuentagotas"><svg viewBox="0 0 24 24"><path d="M14 4l6 6"/><path d="M17 3l4 4-3 3-4-4 3-3z"/><path d="M14 7L5 16v3h3l9-9"/></svg></button>
+    <span class="sep" aria-hidden="true"></span>
+    <button class="tool" id="tSym" title="Simetría: lo que pintas a un lado se copia al otro (S)" aria-label="Simetría"><svg viewBox="0 0 24 24"><path d="M12 3v18" stroke-dasharray="2 2.5"/><path d="M9 7L4 12l5 5V7z"/><path d="M15 7l5 5-5 5V7z"/></svg></button>
+    <button class="tool" id="tGrid" title="Mostrar la grilla vacía (G)" aria-label="Grilla"><svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M4 9.3h16M4 14.6h16M9.3 4v16M14.6 4v16"/></svg></button>
+    <button class="tool" id="tLet" title="Letras del patrón en cada mostacilla" aria-label="Letras"><svg viewBox="0 0 24 24"><path d="M5 19L10 5l5 14"/><path d="M7 14h6"/><path d="M16 19v-6h2.5a1.7 1.7 0 010 3.4H16"/></svg></button>
+    <button class="tool" id="tReal" title="Vista realista de las mostacillas" aria-label="Vista realista"><svg viewBox="0 0 24 24"><rect x="4" y="7" width="7" height="6" rx="2"/><rect x="13" y="7" width="7" height="6" rx="2"/><rect x="8.5" y="14" width="7" height="6" rx="2"/><path d="M6 8.5h3M15 8.5h3M10.5 15.5h3"/></svg></button>
+  </nav>
+
   <section class="bench" aria-label="Mesa de trabajo">
-    <div class="tools" role="toolbar" aria-label="Herramientas">
-      <button class="tool" data-tool="pencil" title="Pintar (P)" aria-label="Pintar"><svg viewBox="0 0 24 24"><path d="M4 20l4-1 11-11-3-3L5 16l-1 4z"/><path d="M14 6l3 3"/></svg></button>
-      <button class="tool" data-tool="line" title="Línea recta (L)" aria-label="Línea"><svg viewBox="0 0 24 24"><path d="M6 18L18 6"/><circle cx="5" cy="19" r="2"/><circle cx="19" cy="5" r="2"/></svg></button>
-      <button class="tool" data-tool="fill" title="Rellenar una zona (B)" aria-label="Rellenar"><svg viewBox="0 0 24 24"><path d="M5 12l7-7 7 7-7 7-7-7z"/><path d="M5 12h14"/><path d="M20 16c0 1.5-1 3-2 3s-2-1.5-2-3 2-3 2-3 2 1.5 2 3z"/></svg></button>
-      <button class="tool" data-tool="eraser" title="Borrar (E)" aria-label="Borrar"><svg viewBox="0 0 24 24"><path d="M8 20h12"/><path d="M5 15l9-9 5 5-8 8H8l-3-3z"/><path d="M10 10l5 5"/></svg></button>
-      <button class="tool" data-tool="picker" title="Tomar un color del diseño (I)" aria-label="Cuentagotas"><svg viewBox="0 0 24 24"><path d="M14 4l6 6"/><path d="M17 3l4 4-3 3-4-4 3-3z"/><path d="M14 7L5 16v3h3l9-9"/></svg></button>
-      <span class="sep" aria-hidden="true"></span>
-      <button class="tool" id="tSym" title="Simetría: lo que pintas a un lado se copia al otro (S)" aria-label="Simetría"><svg viewBox="0 0 24 24"><path d="M12 3v18" stroke-dasharray="2 2.5"/><path d="M9 7L4 12l5 5V7z"/><path d="M15 7l5 5-5 5V7z"/></svg></button>
-      <button class="tool" id="tGrid" title="Mostrar la grilla vacía" aria-label="Grilla"><svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M4 9.3h16M4 14.6h16M9.3 4v16M14.6 4v16"/></svg></button>
-      <button class="tool" id="tLet" title="Mostrar las letras del patrón en cada mostacilla" aria-label="Letras"><svg viewBox="0 0 24 24"><path d="M5 19L10 5l5 14"/><path d="M7 14h6"/><path d="M16 19v-6h2.5a1.7 1.7 0 010 3.4H16"/></svg></button>
-      <span class="sep" aria-hidden="true"></span>
-      <button class="tool" id="tUndo" title="Deshacer (Ctrl+Z)" aria-label="Deshacer"><svg viewBox="0 0 24 24"><path d="M9 14L4 9l5-5"/><path d="M4 9h11a5 5 0 010 10h-3"/></svg></button>
-      <button class="tool" id="tRedo" title="Rehacer (Ctrl+Y)" aria-label="Rehacer"><svg viewBox="0 0 24 24"><path d="M15 14l5-5-5-5"/><path d="M20 9H9a5 5 0 000 10h3"/></svg></button>
-      <span class="sep" aria-hidden="true"></span>
-      <button class="tool" id="tZo" title="Alejar" aria-label="Alejar"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="6"/><path d="M8 11h6M20 20l-4.5-4.5"/></svg></button>
-      <span class="zoomlbl num" id="zoomLbl">100%</span>
-      <button class="tool" id="tZi" title="Acercar" aria-label="Acercar"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="6"/><path d="M8 11h6M11 8v6M20 20l-4.5-4.5"/></svg></button>
+    <div class="benchtop">
+      <div class="cur" id="cur"></div>
+      <div class="bt-acts">
+        <button class="tool sm" id="tUndo" title="Deshacer (Ctrl+Z)" aria-label="Deshacer"><svg viewBox="0 0 24 24"><path d="M9 14L4 9l5-5"/><path d="M4 9h11a5 5 0 010 10h-3"/></svg></button>
+        <button class="tool sm" id="tRedo" title="Rehacer (Ctrl+Y)" aria-label="Rehacer"><svg viewBox="0 0 24 24"><path d="M15 14l5-5-5-5"/><path d="M20 9H9a5 5 0 000 10h3"/></svg></button>
+        <span class="sep" aria-hidden="true"></span>
+        <button class="tool sm" id="tZo" title="Alejar (−)" aria-label="Alejar"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="6"/><path d="M8 11h6M20 20l-4.5-4.5"/></svg></button>
+        <button class="zoomlbl num" id="zoomLbl" type="button" title="Ajustar a la pantalla">100%</button>
+        <button class="tool sm" id="tZi" title="Acercar (+)" aria-label="Acercar"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="6"/><path d="M8 11h6M11 8v6M20 20l-4.5-4.5"/></svg></button>
+      </div>
     </div>
-    <div class="cur" id="cur"></div>
     <div class="swatches" id="swatches" aria-label="Colores de este diseño"></div>
+    <div class="opts" id="opts"></div>
     <div class="wrap" id="wrap"><canvas id="cv"></canvas></div>
     <div class="status num" id="status"></div>
   </section>
@@ -409,7 +444,7 @@ dialog::backdrop { background: rgba(36, 18, 46, .6); }
 
       <!-- FOTO -->
       <div class="pane" data-pane="foto" hidden>
-        <p class="hint">Sube una foto, un dibujo o una captura y lo paso a mostacillas con los colores Delica más parecidos. Funciona mejor con imágenes simples y fondo liso. También puedes pegar una imagen con Ctrl+V.</p>
+        <p class="hint">Sube una foto, un dibujo o una captura y lo paso a mostacillas con los colores Delica más parecidos. Cuento las mostacillas de la foto y, si viene el par, uso un solo aro. Funciona mejor con la pieza de frente y un fondo que no sea del mismo color de las mostacillas. También puedes pegar una imagen con Ctrl+V.</p>
         <label class="drop" id="drop">
           <input id="fileImg" type="file" accept="image/*" hidden />
           <img id="imgThumb" alt="Imagen de referencia" hidden />
@@ -425,8 +460,9 @@ dialog::backdrop { background: rgba(36, 18, 46, .6); }
           </div>
           <label class="field"><span>Ancho: <b id="phWLbl" class="num"></b> mostacillas</span><input id="phW" type="range" min="8" max="60" value="18" /></label>
           <label class="field"><span>Cantidad de colores: <b id="phKLbl" class="num"></b></span><input id="phK" type="range" min="2" max="16" value="6" /></label>
-          <label class="check"><input id="phBg" type="checkbox" checked /> Quitar el fondo (el color de las esquinas)</label>
+          <label class="check"><input id="phBg" type="checkbox" checked /> Quitar el fondo, los ganchos y el otro aro del par</label>
           <label class="field">Tolerancia del fondo<input id="phTol" type="range" min="4" max="40" value="16" /></label>
+          <label class="check"><input id="phFr" type="checkbox" checked /> Detectar flecos (las tiras que cuelgan abajo)</label>
           <label class="check"><input id="phMatte" type="checkbox" /> Evitar mates, metálicos y tornasol</label>
         </div>
         <button class="btn wide" id="bPhoto" type="button" disabled>Pasar a mostacillas</button>
@@ -485,6 +521,7 @@ dialog::backdrop { background: rgba(36, 18, 46, .6); }
         </div>
         <div class="grp">
           <span class="lbl">Notas</span>
+          <label class="field">Pedido o clienta<input id="dCliente2" type="text" placeholder="Opcional" /></label>
           <textarea id="dNotas" placeholder="Ideas, variaciones, lo que pidió la clienta, fecha de entrega…"></textarea>
         </div>
         <div class="grp">
@@ -1858,7 +1895,7 @@ const K_CUR = "kika-disenador-actual", K_LIB = "kika-disenador-biblioteca", K_UI
 const load = (k, def) => { try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : def; } catch (e) { return def; } };
 const store = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); return true; } catch (e) { return false; } };
 
-const UI = Object.assign({ tool: "pencil", color: "DB1371", sym: true, grid: true, letters: false, zoom: 15, tab: "colores", cardPrice: false, phSrc: "todos" }, load(K_UI, {}));
+const UI = Object.assign({ tool: "pencil", color: "DB1371", sym: true, grid: true, letters: false, real: false, brush: 1, shapeFill: false, fillAll: false, txt: "", zoom: 15, tab: "colores", cardPrice: false, phSrc: "todos" }, load(K_UI, {}));
 let tool = UI.tool;
 let STOCK = new Set(load(K_STOCK, []));
 
@@ -1937,6 +1974,7 @@ function fringeLayout(d) {
     if (d.fringe.forma === "v") len = mn + (L - mn) * (1 - Math.abs(t));
     else if (d.fringe.forma === "redondo") len = mn + (L - mn) * Math.sqrt(Math.max(0, 1 - t * t));
     else if (d.fringe.forma === "u") len = mn + (L - mn) * Math.abs(t);
+    if (d.fringe.lens && d.fringe.lens.length === n) len = d.fringe.lens[i];   // largos medidos en una foto
     return { i, x: a.x, y0: a.y + bh / 2 + .1, len: Math.max(1, Math.round(len)), anchor: a.v };
   });
 }
@@ -2068,7 +2106,7 @@ D = D && Array.isArray(D.cells) && D.v === 2 ? normalize(D) : null;
 const undoS = [], redoS = [];
 const snap = () => JSON.stringify({ W: D.W, H: D.H, puntada: D.puntada, cells: D.cells, fringe: D.fringe, paleta: D.paleta });
 function pushUndo() { undoS.push(snap()); if (undoS.length > 80) undoS.shift(); redoS.length = 0; }
-function restore(s) { Object.assign(D, JSON.parse(s)); changed(); }
+function restore(s) { Object.assign(D, JSON.parse(s)); sel = null; changed(); renderOpts(); }
 function doUndo() { if (!undoS.length) return; redoS.push(snap()); restore(undoS.pop()); }
 function doRedo() { if (!redoS.length) return; undoS.push(snap()); restore(redoS.pop()); }
 
@@ -2076,6 +2114,9 @@ function doRedo() { if (!redoS.length) return; undoS.push(snap()); restore(redoS
 const cv = $("#cv"), g = cv.getContext("2d"), wrap = $("#wrap");
 const PAD = { l: 34, t: 24, r: 14, b: 16 };
 let lay = [];
+let sel = null;    // selección: Set de índices r * W + c
+let clip = null;   // portapapeles: { items: [[dr, dc, v]], par } (par: paridad de la fila de origen en ladrillo, de la columna en peyote)
+let lastCell = null;
 
 function draw() {
   const z = UI.zoom, dpr = window.devicePixelRatio || 1;
@@ -2094,16 +2135,33 @@ function draw() {
     const px = PAD.l + x * z, py = PAD.t + y * z, pw = w * z * .9, ph = h * z * .88;
     const X = px - pw / 2, Y = py - ph / 2, rad = Math.min(pw, ph) * .26;
     if (!v) { if (UI.grid) { rr(g, X, Y, pw, ph, rad); g.strokeStyle = cellC; g.lineWidth = 1; g.stroke(); } return; }
-    const hex = pal(v).hex;
-    rr(g, X, Y, pw, ph, rad); g.fillStyle = hex; g.fill();
-    if (pw > 7) {
-      g.fillStyle = "rgba(255,255,255,.28)"; rr(g, X + pw * .12, Y + ph * .1, pw * .76, ph * .16, ph * .08); g.fill();
-      g.fillStyle = "rgba(0,0,0,.16)"; rr(g, X + pw * .1, Y + ph * .78, pw * .8, ph * .12, ph * .06); g.fill();
+    const p = pal(v), hex = p.hex;
+    if (UI.real) beadReal(g, px, py, w * z, h * z, p);
+    else {
+      rr(g, X, Y, pw, ph, rad); g.fillStyle = hex; g.fill();
+      if (pw > 7) {
+        g.fillStyle = "rgba(255,255,255,.28)"; rr(g, X + pw * .12, Y + ph * .1, pw * .76, ph * .16, ph * .08); g.fill();
+        g.fillStyle = "rgba(0,0,0,.16)"; rr(g, X + pw * .1, Y + ph * .78, pw * .8, ph * .12, ph * .06); g.fill();
+      }
     }
     if (leg && pw > 11) { g.fillStyle = lum(hex) > .55 ? "#24122e" : "#ffffff"; g.font = `700 ${Math.round(Math.min(pw, ph) * .55)}px ${sans}`; g.textAlign = "center"; g.textBaseline = "middle"; g.fillText(leg[v], px, py + 1); }
   };
   eachCell(D, (r, c, v) => { const [x, y] = center(D, r, c); bead(x, y, bw, bh, v); });
   for (const s of lay) for (let k = 0; k < s.len; k++) bead(s.x, s.y0 + (k + .5) * FR.bh, FR.bw, FR.bh, frColor(D, s, k));
+
+  // selección: celdas marcadas y un marco punteado alrededor
+  if (sel && sel.size) {
+    let x0 = 1e9, y0 = 1e9, x1 = -1e9, y1 = -1e9;
+    g.fillStyle = plum; g.globalAlpha = .22;
+    for (const k of sel) {
+      const r = Math.floor(k / D.W), c = k % D.W; if (!valid(D, r, c)) continue;
+      const [x, y] = center(D, r, c);
+      g.fillRect(PAD.l + (x - bw / 2) * z, PAD.t + (y - bh / 2) * z, bw * z, bh * z);
+      x0 = Math.min(x0, x - bw / 2); x1 = Math.max(x1, x + bw / 2); y0 = Math.min(y0, y - bh / 2); y1 = Math.max(y1, y + bh / 2);
+    }
+    g.globalAlpha = 1; g.strokeStyle = plum; g.lineWidth = 2; g.setLineDash([6, 4]);
+    g.strokeRect(PAD.l + x0 * z - 2, PAD.t + y0 * z - 2, (x1 - x0) * z + 4, (y1 - y0) * z + 4); g.setLineDash([]);
+  }
 
   // numeración de filas (o columnas en peyote)
   g.fillStyle = soft; g.font = `600 10px ${sans}`; g.textBaseline = "middle";
@@ -2124,18 +2182,35 @@ function draw() {
 }
 
 function toMM(e) { const b = cv.getBoundingClientRect(); return [(e.clientX - b.left - PAD.l) / UI.zoom, (e.clientY - b.top - PAD.t) / UI.zoom]; }
-
-function paintAt(x, y, erase) {
+const keyRC = k => [Math.floor(k / D.W), k % D.W];
+function withMirror(list) {
+  if (!UI.sym) return list;
+  const out = list.slice();
+  for (const [r, c] of list) { const m = mirrorRC(D, r, c); if (valid(D, m[0], m[1])) out.push(m); }
+  return out;
+}
+// celdas que toca el pincel: la celda y sus vecinas hasta el grosor elegido
+function brushCells(r, c) {
+  const out = [[r, c]], seen = new Set([r * D.W + c]);
+  let front = [[r, c]];
+  for (let d = 1; d < (UI.brush || 1); d++) {
+    const nf = [];
+    for (const [a, b] of front) for (const nb of neighbors(D, a, b)) { const k = nb[0] * D.W + nb[1]; if (!seen.has(k)) { seen.add(k); out.push(nb); nf.push(nb); } }
+    front = nf;
+  }
+  return out;
+}
+function setCells(list, val) {
   let did = false;
+  for (const [r, c] of list) { const i = r * D.W + c; if (D.cells[i] !== val) { D.cells[i] = val; did = true; } }
+  return did;
+}
+function paintAt(x, y, erase) {
   const val = erase ? null : UI.color;
   const h = hitCell(D, x, y);
-  if (h) {
-    const pts = [h];
-    if (UI.sym) { const m = mirrorRC(D, h[0], h[1]); if (valid(D, m[0], m[1])) pts.push(m); }
-    for (const [r, c] of pts) { const i = r * D.W + c; if (D.cells[i] !== val) { D.cells[i] = val; did = true; } }
-    return did;
-  }
+  if (h) return setCells(withMirror(brushCells(h[0], h[1])), val);
   const f = hitFringe(lay, x, y);
+  let did = false;
   if (f) {
     const n = lay.length, pts = [f];
     if (UI.sym && n) pts.push([n - 1 - f[0], f[1]]);
@@ -2151,6 +2226,12 @@ function fillAt(x, y) {
   if (h) {
     const target = getC(D, h[0], h[1]);
     if (target === UI.color) return false;
+    if (UI.fillAll && target) {
+      // reemplazar ese color en todo el diseño, flecos incluidos
+      D.cells = D.cells.map(v => v === target ? UI.color : v);
+      D.fringe.cells = D.fringe.cells.map(a => a && a.map(v => v === target ? UI.color : v));
+      return true;
+    }
     const seen = new Set(), stack = [h];
     if (UI.sym) { const m = mirrorRC(D, h[0], h[1]); if (valid(D, m[0], m[1]) && getC(D, m[0], m[1]) === target) stack.push(m); }
     while (stack.length) {
@@ -2175,29 +2256,153 @@ function pickAt(x, y) {
   if (!h) { const f = hitFringe(lay, x, y); if (f) v = frColor(D, lay[f[0]], f[1]); }
   if (v) { selectColor(v); setTool("pencil"); }
 }
+// rectángulo o elipse entre dos puntos (en mm): las celdas de adentro, o solo el borde
+function shapeCells(x0, y0, x1, y1, kind, fill) {
+  const { bw, bh } = bd(D);
+  const ax = Math.min(x0, x1) - bw * .2, bx = Math.max(x0, x1) + bw * .2, ay = Math.min(y0, y1) - bh * .2, by = Math.max(y0, y1) + bh * .2;
+  const inside = new Set(), cx = (ax + bx) / 2, cy = (ay + by) / 2, rx = (bx - ax) / 2, ry = (by - ay) / 2;
+  eachCell(D, (r, c) => {
+    const [x, y] = center(D, r, c);
+    const ok = kind === "ellipse" ? ((x - cx) / rx) ** 2 + ((y - cy) / ry) ** 2 <= 1 : x >= ax && x <= bx && y >= ay && y <= by;
+    if (ok) inside.add(r * D.W + c);
+  });
+  if (fill) return [...inside].map(keyRC);
+  const full = D.puntada === "telar" ? 4 : 6;
+  return [...inside].map(keyRC).filter(([r, c]) => { const nb = neighbors(D, r, c); return nb.length < full || nb.some(([a, b]) => !inside.has(a * D.W + b)); });
+}
 
-// trazos con el dedo o el mouse; con dos dedos se mueve la grilla
+/* ---------- texto con letras de 5 × 7 mostacillas ---------- */
+const FONT = {
+  A: "01110 10001 10001 11111 10001 10001 10001", B: "11110 10001 10001 11110 10001 10001 11110", C: "01110 10001 10000 10000 10000 10001 01110",
+  D: "11110 10001 10001 10001 10001 10001 11110", E: "11111 10000 10000 11110 10000 10000 11111", F: "11111 10000 10000 11110 10000 10000 10000",
+  G: "01110 10001 10000 10111 10001 10001 01111", H: "10001 10001 10001 11111 10001 10001 10001", I: "01110 00100 00100 00100 00100 00100 01110",
+  J: "00111 00010 00010 00010 00010 10010 01100", K: "10001 10010 10100 11000 10100 10010 10001", L: "10000 10000 10000 10000 10000 10000 11111",
+  M: "10001 11011 10101 10101 10001 10001 10001", N: "10001 10001 11001 10101 10011 10001 10001", "Ñ": "01110 00000 10001 11001 10101 10011 10001",
+  O: "01110 10001 10001 10001 10001 10001 01110", P: "11110 10001 10001 11110 10000 10000 10000", Q: "01110 10001 10001 10001 10101 10010 01101",
+  R: "11110 10001 10001 11110 10100 10010 10001", S: "01111 10000 10000 01110 00001 00001 11110", T: "11111 00100 00100 00100 00100 00100 00100",
+  U: "10001 10001 10001 10001 10001 10001 01110", V: "10001 10001 10001 10001 10001 01010 00100", W: "10001 10001 10001 10101 10101 10101 01010",
+  X: "10001 10001 01010 00100 01010 10001 10001", Y: "10001 10001 01010 00100 00100 00100 00100", Z: "11111 00001 00010 00100 01000 10000 11111",
+  0: "01110 10001 10011 10101 11001 10001 01110", 1: "00100 01100 00100 00100 00100 00100 01110", 2: "01110 10001 00001 00010 00100 01000 11111",
+  3: "11111 00010 00100 00010 00001 10001 01110", 4: "00010 00110 01010 10010 11111 00010 00010", 5: "11111 10000 11110 00001 00001 10001 01110",
+  6: "00110 01000 10000 11110 10001 10001 01110", 7: "11111 00001 00010 00100 01000 01000 01000", 8: "01110 10001 10001 01110 10001 10001 01110",
+  9: "01110 10001 10001 01111 00001 00010 01100", "!": "00100 00100 00100 00100 00100 00000 00100", "?": "01110 10001 00001 00010 00100 00000 00100",
+  ".": "00000 00000 00000 00000 00000 01100 01100", "-": "00000 00000 00000 11111 00000 00000 00000", "+": "00000 00100 00100 11111 00100 00100 00000",
+  "&": "01100 10010 10100 01000 10101 10010 01101", "♥": "00000 01010 11111 11111 01110 00100 00000", "*": "00000 10101 01110 11111 01110 10101 00000",
+};
+function textCells(r0, c0, text) {
+  const out = [];
+  const chars = [...text.toUpperCase().replace(/Ñ/g, "\u0001").normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/\u0001/g, "Ñ").replace(/<3/g, "♥")];
+  let cx = 0;
+  for (const ch of chars) {
+    if (ch === " ") { cx += 3; continue; }
+    const gl = FONT[ch]; if (!gl) continue;
+    gl.split(" ").forEach((row, j) => { for (let i = 0; i < 5; i++) if (row[i] === "1") out.push([r0 + j, c0 + cx + i]); });
+    cx += 6;
+  }
+  return out.filter(([r, c]) => valid(D, r, c));
+}
+
+/* ---------- selección ---------- */
+function selBox(s = sel) {
+  let r0 = 1e9, c0 = 1e9, r1 = -1, c1 = -1;
+  for (const k of s) { const [r, c] = keyRC(k); r0 = Math.min(r0, r); r1 = Math.max(r1, r); c0 = Math.min(c0, c); c1 = Math.max(c1, c); }
+  return { r0, c0, r1, c1 };
+}
+// en ladrillo se mueve de a 2 filas y en peyote de a 2 columnas, para no deformar el tejido
+const snapMove = (dr, dc) => [D.puntada === "brick" ? 2 * Math.round(dr / 2) : dr, D.puntada === "peyote" ? 2 * Math.round(dc / 2) : dc];
+function selCopy(cut) {
+  if (!sel || !sel.size) { toast("Primero selecciona una parte del diseño"); return; }
+  const { r0, c0 } = selBox();
+  clip = { items: [...sel].map(k => { const [r, c] = keyRC(k); return [r - r0, c - c0, D.cells[k]]; }).filter(it => it[2]), par: D.puntada === "peyote" ? c0 & 1 : r0 & 1 };
+  if (cut) { pushUndo(); for (const k of sel) D.cells[k] = null; changed(); toast("Cortado: toca «Pegar» para ponerlo en otro lugar"); }
+  else toast(`Copiadas ${clip.items.length} mostacillas`);
+  renderOpts();
+}
+function selPaste() {
+  if (!clip || !clip.items.length) { toast("No hay nada copiado"); return; }
+  let r0 = 0, c0 = 0;
+  if (sel && sel.size) ({ r0, c0 } = selBox()); else if (lastCell) [r0, c0] = lastCell;
+  if (D.puntada === "brick" && ((r0 & 1) !== clip.par)) r0 += 1;
+  if (D.puntada === "peyote" && ((c0 & 1) !== clip.par)) c0 += 1;
+  pushUndo();
+  const keys = new Set();
+  for (const [dr, dc, v] of clip.items) { const r = r0 + dr, c = c0 + dc; if (valid(D, r, c)) { D.cells[r * D.W + c] = v; keys.add(r * D.W + c); } }
+  sel = keys.size ? keys : null;
+  setTool("select"); changed();
+  toast("Pegado: arrástralo para moverlo");
+}
+function selClear(fillColor) {
+  if (!sel || !sel.size) return;
+  pushUndo(); for (const k of sel) D.cells[k] = fillColor || null; changed();
+}
+function selMove(dr, dc) {
+  if (!sel || !sel.size) return false;
+  [dr, dc] = snapMove(dr, dc);
+  if (!dr && !dc) return false;
+  const items = [...sel].map(k => [...keyRC(k), D.cells[k]]);
+  if (items.some(([r, c]) => !valid(D, r + dr, c + dc))) { toast("No cabe: agranda la grilla o mueve hacia el otro lado"); return false; }
+  pushUndo();
+  for (const k of sel) D.cells[k] = null;
+  const keys = new Set();
+  for (const [r, c, v] of items) { const k = (r + dr) * D.W + c + dc; D.cells[k] = v; keys.add(k); }
+  sel = keys; changed(); return true;
+}
+function selFlip(vertical) {
+  if (!sel || !sel.size) return;
+  let x0 = 1e9, x1 = -1e9, y0 = 1e9, y1 = -1e9;
+  for (const k of sel) { const [x, y] = center(D, ...keyRC(k)); x0 = Math.min(x0, x); x1 = Math.max(x1, x); y0 = Math.min(y0, y); y1 = Math.max(y1, y); }
+  pushUndo();
+  const moved = [];
+  for (const k of sel) { const [x, y] = center(D, ...keyRC(k)); const t = hitCell(D, vertical ? x : x0 + x1 - x, vertical ? y0 + y1 - y : y); if (t) moved.push([t[0] * D.W + t[1], D.cells[k]]); }
+  for (const k of sel) D.cells[k] = null;
+  sel = new Set();
+  for (const [k, v] of moved) { D.cells[k] = v; sel.add(k); }
+  changed();
+}
+
+/* ---------- puntero: dedo, lápiz o mouse ---------- */
 const ptrs = new Map();
-let stroke = null, pan = null;
+let stroke = null, pan = null, spaceDown = false;
 cv.addEventListener("pointerdown", e => {
   cv.setPointerCapture(e.pointerId);
   ptrs.set(e.pointerId, [e.clientX, e.clientY]);
   if (ptrs.size === 2) {
-    if (stroke && stroke.did) restore(undoS.pop()); else if (stroke) undoS.pop();
+    // con dos dedos se mueve el lienzo: se deshace lo que el primer dedo alcanzó a pintar
+    if (stroke && stroke.did && stroke.undoable) restore(undoS.pop()); else if (stroke && stroke.undoable) undoS.pop();
     stroke = null;
     const pts = [...ptrs.values()];
     pan = { x: (pts[0][0] + pts[1][0]) / 2, y: (pts[0][1] + pts[1][1]) / 2 };
     return;
   }
   if (ptrs.size > 2) return;
-  const [x, y] = toMM(e);
+  const [x, y] = toMM(e), h = hitCell(D, x, y);
+  if (h) lastCell = h;
+  if (tool === "hand" || spaceDown || e.button === 1) { stroke = { hand: true, cx: e.clientX, cy: e.clientY, sl: wrap.scrollLeft, st: wrap.scrollTop }; return; }
   if (tool === "picker") { pickAt(x, y); return; }
+  if (tool === "select") {
+    if (h && sel && sel.has(h[0] * D.W + h[1])) {
+      pushUndo();
+      const items = [...sel].map(k => [...keyRC(k), D.cells[k]]);
+      const base = D.cells.slice(); for (const k of sel) base[k] = null;
+      stroke = { move: true, start: [x, y], items, base, dr: 0, dc: 0, undoable: true };
+    } else { sel = null; stroke = { marquee: true, start: [x, y] }; draw(); }
+    return;
+  }
+  if (tool === "text") {
+    const txt = (UI.txt || "").trim();
+    if (!txt) { toast("Escribe el texto arriba de la grilla"); $("#txtIn") && $("#txtIn").focus(); return; }
+    if (!h) return;
+    pushUndo();
+    if (setCells(textCells(h[0], h[1], txt), UI.color)) changed(); else undoS.pop();
+    return;
+  }
   const erase = tool === "eraser" || e.button === 2;
   pushUndo();
   if (tool === "fill" && !erase) { if (fillAt(x, y)) changed(); else undoS.pop(); return; }
-  if (tool === "line" && !erase) {
-    stroke = { line: true, start: [x, y], base: D.cells.slice(), baseFr: JSON.stringify(D.fringe.cells), did: paintAt(x, y, false) };
-  } else stroke = { last: [x, y], erase, did: paintAt(x, y, erase) };
+  if ((tool === "line" || tool === "rect" || tool === "ellipse") && !erase) {
+    stroke = { shape: tool, start: [x, y], base: D.cells.slice(), baseFr: JSON.stringify(D.fringe.cells), did: false, undoable: true };
+    stroke.did = tool === "line" ? paintAt(x, y, false) : setCells(withMirror(shapeCells(x, y, x, y, tool, UI.shapeFill)), UI.color);
+  } else stroke = { last: [x, y], erase, did: paintAt(x, y, erase), undoable: true };
   if (stroke.did) changed();
 });
 function paintLine(x0, y0, x1, y1, erase) {
@@ -2215,12 +2420,25 @@ cv.addEventListener("pointermove", e => {
     return;
   }
   if (!stroke) return;
+  if (stroke.hand) { wrap.scrollLeft = stroke.sl - (e.clientX - stroke.cx); wrap.scrollTop = stroke.st - (e.clientY - stroke.cy); return; }
   const [x, y] = toMM(e);
-  if (stroke.line) {
+  if (stroke.marquee) { const s = shapeCells(stroke.start[0], stroke.start[1], x, y, "rect", true); sel = new Set(s.map(([r, c]) => r * D.W + c)); draw(); return; }
+  if (stroke.move) {
+    const { bw, bh } = bd(D);
+    let [dr, dc] = snapMove(Math.round((y - stroke.start[1]) / bh), Math.round((x - stroke.start[0]) / bw));
+    if (stroke.items.some(([r, c]) => !valid(D, r + dr, c + dc))) return;   // no se sale de la grilla
+    if (dr === stroke.dr && dc === stroke.dc) return;
+    stroke.dr = dr; stroke.dc = dc;
+    D.cells = stroke.base.slice();
+    for (const [r, c, v] of stroke.items) if (v) D.cells[(r + dr) * D.W + c + dc] = v;
+    sel = new Set(stroke.items.map(([r, c]) => (r + dr) * D.W + c + dc));
+    changed(); return;
+  }
+  if (stroke.shape) {
     D.cells = stroke.base.slice(); D.fringe.cells = JSON.parse(stroke.baseFr);
-    stroke.did = paintLine(stroke.start[0], stroke.start[1], x, y, false);
-    changed();
-    return;
+    stroke.did = stroke.shape === "line" ? paintLine(stroke.start[0], stroke.start[1], x, y, false)
+      : setCells(withMirror(shapeCells(stroke.start[0], stroke.start[1], x, y, stroke.shape, UI.shapeFill)), UI.color);
+    changed(); return;
   }
   const [lx, ly] = stroke.last;
   stroke.last = [x, y];
@@ -2229,7 +2447,12 @@ cv.addEventListener("pointermove", e => {
 const endPtr = e => {
   ptrs.delete(e.pointerId);
   if (ptrs.size < 2) pan = null;
-  if (stroke && ptrs.size === 0) { if (!stroke.did) undoS.pop(); stroke = null; }
+  if (stroke && ptrs.size === 0) {
+    if (stroke.marquee) { if (sel && !sel.size) sel = null; renderOpts(); draw(); }
+    else if (stroke.move) { if (!stroke.dr && !stroke.dc) undoS.pop(); }
+    else if (stroke.undoable && !stroke.did) undoS.pop();
+    stroke = null;
+  }
 };
 cv.addEventListener("pointerup", endPtr);
 cv.addEventListener("pointercancel", endPtr);
@@ -2245,24 +2468,79 @@ function fitZoom() {
 }
 
 /* ================== herramientas ================== */
-function setTool(t) { tool = t; UI.tool = t; document.querySelectorAll("[data-tool]").forEach(b => b.setAttribute("aria-pressed", b.dataset.tool === t)); saveUI(); }
+const CURSOR = { hand: "grab", select: "cell", picker: "copy", text: "text" };
+function setTool(t) {
+  tool = t; UI.tool = t;
+  if (t !== "select" && sel) { sel = null; draw(); }
+  document.querySelectorAll("[data-tool]").forEach(b => b.setAttribute("aria-pressed", b.dataset.tool === t));
+  cv.style.cursor = CURSOR[t] || "crosshair";
+  saveUI(); renderOpts();
+}
 document.querySelectorAll("[data-tool]").forEach(b => b.addEventListener("click", () => setTool(b.dataset.tool)));
-function toggles() { $("#tSym").setAttribute("aria-pressed", UI.sym); $("#tGrid").setAttribute("aria-pressed", UI.grid); $("#tLet").setAttribute("aria-pressed", UI.letters); }
+function toggles() { $("#tSym").setAttribute("aria-pressed", UI.sym); $("#tGrid").setAttribute("aria-pressed", UI.grid); $("#tLet").setAttribute("aria-pressed", UI.letters); $("#tReal").setAttribute("aria-pressed", !!UI.real); }
 $("#tSym").onclick = () => { UI.sym = !UI.sym; toggles(); saveUI(); draw(); };
 $("#tGrid").onclick = () => { UI.grid = !UI.grid; toggles(); saveUI(); draw(); };
 $("#tLet").onclick = () => { UI.letters = !UI.letters; toggles(); saveUI(); draw(); };
+$("#tReal").onclick = () => { UI.real = !UI.real; toggles(); saveUI(); draw(); };
 $("#tUndo").onclick = doUndo; $("#tRedo").onclick = doRedo;
 $("#tZi").onclick = () => setZoom(UI.zoom * 1.2); $("#tZo").onclick = () => setZoom(UI.zoom / 1.2);
+$("#zoomLbl").onclick = fitZoom;
+
+// barra de opciones de la herramienta elegida
+const segHTML = (key, opts) => `<div class="seg">${opts.map(([v, t]) => `<button type="button" data-opt="${key}" data-v="${v}" aria-pressed="${String(UI[key]) === String(v)}">${t}</button>`).join("")}</div>`;
+function renderOpts() {
+  const o = $("#opts"); if (!o) return;
+  let h = "";
+  const touch = matchMedia("(pointer: coarse)").matches;
+  if (tool === "pencil" || tool === "eraser" || tool === "line") h = `<span class="ot">Grosor</span>${segHTML("brush", [[1, "1"], [2, "2"], [3, "3"]])}<span class="hint">${touch ? "Con dos dedos mueves y acercas el lienzo." : tool === "eraser" ? "Con el botón derecho del mouse también borras." : "Con el botón derecho del mouse borras."}</span>`;
+  else if (tool === "rect" || tool === "ellipse") h = segHTML("shapeFill", [[false, "Solo el borde"], [true, "Relleno"]]) + `<span class="hint">Arrastra sobre la grilla para dibujar${tool === "ellipse" ? " un círculo o una elipse" : " el rectángulo"}.</span>`;
+  else if (tool === "fill") h = segHTML("fillAll", [[false, "Zona"], [true, "Todo ese color"]]) + `<span class="hint">${UI.fillAll ? "Cambia ese color por el elegido en todo el diseño." : "Rellena la zona del mismo color que tocas."}</span>`;
+  else if (tool === "text") h = `<label class="ot" for="txtIn">Texto</label><input id="txtIn" type="text" maxlength="24" value="${esc(UI.txt || "")}" placeholder="Ej. MAMÁ, ♥, 2026" /><span class="hint">Toca la grilla donde empieza el texto (letras de 5 × 7 mostacillas). Escribe &lt;3 para un corazón.</span>`;
+  else if (tool === "select") h = sel && sel.size
+    ? `<span class="ot num">${sel.size} seleccionadas</span><button class="btn small soft" data-act="copy" type="button">Copiar</button><button class="btn small soft" data-act="cut" type="button">Cortar</button><button class="btn small soft" data-act="paste" type="button"${clip ? "" : " disabled"}>Pegar</button><button class="btn small soft" data-act="fill" type="button">Pintar del color</button><button class="btn small soft" data-act="del" type="button">Borrar</button><button class="btn small soft" data-act="fh" type="button">Voltear ↔</button><button class="btn small soft" data-act="fv" type="button">Voltear ↕</button><button class="btn small soft" data-act="none" type="button">Quitar selección</button><span class="hint">Arrastra la selección para moverla${touch ? "" : ". Con las flechas del teclado también se mueve"}.</span>`
+    : `<button class="btn small soft" data-act="all" type="button">Seleccionar todo</button><button class="btn small soft" data-act="paste" type="button"${clip ? "" : " disabled"}>Pegar</button><span class="hint">Arrastra sobre la grilla para seleccionar una parte. Después la puedes mover, copiar, voltear o pintar.</span>`;
+  else if (tool === "picker") h = `<span class="hint">Toca una mostacilla del diseño para usar su color.</span>`;
+  else if (tool === "hand") h = `<span class="hint">Arrastra para moverte por el diseño. Con dos dedos, o con la barra espaciadora apretada, también se mueve.</span>`;
+  o.innerHTML = h;
+}
+$("#opts").addEventListener("click", e => {
+  const b = e.target.closest("button"); if (!b) return;
+  if (b.dataset.opt) { const k = b.dataset.opt, v = b.dataset.v; UI[k] = v === "true" ? true : v === "false" ? false : +v; saveUI(); renderOpts(); return; }
+  const a = b.dataset.act;
+  if (a === "copy") selCopy(false); else if (a === "cut") selCopy(true); else if (a === "paste") selPaste();
+  else if (a === "fill") selClear(UI.color); else if (a === "del") selClear(null);
+  else if (a === "fh") selFlip(false); else if (a === "fv") selFlip(true);
+  else if (a === "none") { sel = null; draw(); }
+  else if (a === "all") { sel = new Set(); eachCell(D, (r, c, v) => { if (v) sel.add(r * D.W + c); }); if (!sel.size) sel = null; draw(); }
+  renderOpts();
+});
+$("#opts").addEventListener("input", e => { if (e.target.id === "txtIn") { UI.txt = e.target.value; saveUI(); } });
+
 document.addEventListener("keydown", e => {
   if (e.target.matches("input, textarea, select")) return;
-  const k = e.key.toLowerCase();
-  if ((e.ctrlKey || e.metaKey) && k === "z") { e.preventDefault(); e.shiftKey ? doRedo() : doUndo(); return; }
-  if ((e.ctrlKey || e.metaKey) && k === "y") { e.preventDefault(); doRedo(); return; }
-  if (e.ctrlKey || e.metaKey || e.altKey) return;
-  const map = { p: "pencil", l: "line", b: "fill", e: "eraser", i: "picker" };
+  const k = e.key.toLowerCase(), mod = e.ctrlKey || e.metaKey;
+  if (mod && k === "z") { e.preventDefault(); e.shiftKey ? doRedo() : doUndo(); return; }
+  if (mod && k === "y") { e.preventDefault(); doRedo(); return; }
+  if (mod && k === "c") { e.preventDefault(); selCopy(false); return; }
+  if (mod && k === "x") { e.preventDefault(); selCopy(true); return; }
+  if (mod && k === "v") { if (clip) { e.preventDefault(); selPaste(); } return; }
+  if (mod && k === "a") { e.preventDefault(); setTool("select"); sel = new Set(); eachCell(D, (r, c, v) => { if (v) sel.add(r * D.W + c); }); if (!sel.size) sel = null; draw(); renderOpts(); return; }
+  if (mod || e.altKey) return;
+  if (k === " ") { spaceDown = true; cv.style.cursor = "grab"; e.preventDefault(); return; }
+  if (sel && sel.size && (k === "delete" || k === "backspace")) { e.preventDefault(); selClear(null); renderOpts(); return; }
+  if (k === "escape") { sel = null; draw(); renderOpts(); return; }
+  if (sel && sel.size && k.startsWith("arrow")) {
+    e.preventDefault();
+    const step = D.puntada === "brick" ? 2 : 1, cstep = D.puntada === "peyote" ? 2 : 1;
+    selMove(k === "arrowup" ? -step : k === "arrowdown" ? step : 0, k === "arrowleft" ? -cstep : k === "arrowright" ? cstep : 0);
+    return;
+  }
+  const map = { v: "select", h: "hand", p: "pencil", l: "line", r: "rect", o: "ellipse", b: "fill", t: "text", e: "eraser", i: "picker" };
   if (map[k]) setTool(map[k]);
-  else if (k === "s") $("#tSym").click(); else if (k === "+" || k === "=") setZoom(UI.zoom * 1.2); else if (k === "-") setZoom(UI.zoom / 1.2);
+  else if (k === "s") $("#tSym").click(); else if (k === "g") $("#tGrid").click();
+  else if (k === "+" || k === "=") setZoom(UI.zoom * 1.2); else if (k === "-") setZoom(UI.zoom / 1.2);
 });
+document.addEventListener("keyup", e => { if (e.key === " ") { spaceDown = false; cv.style.cursor = CURSOR[tool] || "crosshair"; } });
 
 /* ================== colores ================== */
 function selectColor(id) {
@@ -2441,7 +2719,7 @@ function seg(id, get, setv) {
 const segUpd = [
   seg("#segPieza", () => D.pieza, v => { D.pieza = v; changed(); }),
   seg("#segPuntada", () => D.puntada, v => { if (v === D.puntada) return; pushUndo(); D.puntada = v; changed(); fitZoom(); }),
-  seg("#segFr", () => D.fringe.forma, v => { pushUndo(); D.fringe.forma = v; changed(); }),
+  seg("#segFr", () => D.fringe.forma, v => { pushUndo(); D.fringe.forma = v; D.fringe.lens = null; changed(); }),
   seg("#segPar", () => D.par, v => { D.par = v; changed(); }),
   seg("#segPhSrc", () => UI.phSrc, v => { UI.phSrc = v; saveUI(); segUpd.forEach(f => f()); if (photo && phLive) convertPhoto(false); }),
 ];
@@ -2466,7 +2744,7 @@ $("#bFitCm").onclick = () => {
 };
 $("#frOn").addEventListener("change", e => { pushUndo(); D.fringe.on = e.target.checked; changed(); fitZoom(); });
 $("#frLen").addEventListener("pointerdown", () => pushUndo());
-$("#frLen").addEventListener("input", e => { D.fringe.largo = +e.target.value; changed(); });
+$("#frLen").addEventListener("input", e => { D.fringe.largo = +e.target.value; D.fringe.lens = null; changed(); });
 $("#bFrGrad").onclick = () => {
   const L = fringeLayout(D); if (!L.length) { toast("Pinta la pieza primero: los flecos cuelgan de la última fila"); return; }
   pushUndo();
@@ -2497,12 +2775,22 @@ function loadPhoto(file) {
   const base = (file.name || "").replace(/\.[^.]+$/, "").replace(/[-_]+/g, " ").replace(/\s+/g, " ").trim();
   photoName = /^(image|img|photo|foto|captura|screenshot|imagen)?[\s\d]*$/i.test(base) ? "" : base.charAt(0).toUpperCase() + base.slice(1);
   const url = URL.createObjectURL(file), img = new Image();
-  img.onload = () => { photo = img; phLive = false; $("#imgThumb").src = url; $("#imgThumb").hidden = false; $("#dropTxt").textContent = "Cambiar imagen"; $("#bPhoto").disabled = false; $("#phInfo").textContent = ""; };
+  img.onload = () => {
+    photo = img; phLive = false; photoP = null; anMemo = {};
+    $("#imgThumb").src = url; $("#imgThumb").hidden = false; $("#dropTxt").textContent = "Cambiar imagen"; $("#bPhoto").disabled = false;
+    // cuenta las mostacillas de la foto y deja ese ancho listo
+    const an = analyzePhotoMemo(img, $("#phBg").checked, +$("#phTol").value, +$("#phW").value);
+    const par = an && an.pair ? " La foto tiene el par: uso un solo aro." : "";
+    if (an && an.beads) {
+      $("#phW").value = Math.max(+$("#phW").min, Math.min(+$("#phW").max, an.beads)); phLabels();
+      $("#phInfo").textContent = `Conté unas ${an.beads} mostacillas de ancho.${par} Toca «Pasar a mostacillas»; si no calza, ajusta el ancho.`;
+    } else $("#phInfo").textContent = `No pude contar las mostacillas de la foto: ajusta el ancho a mano.${par}`;
+  };
   img.onerror = () => toast("No pude abrir esa imagen. Prueba con JPG o PNG");
   img.src = url;
 }
 for (const id of ["#phW", "#phK", "#phTol"]) $(id).addEventListener("input", () => { phLabels(); if (photo && phLive) convertPhoto(false); });
-for (const id of ["#phBg", "#phMatte"]) $(id).addEventListener("change", () => photo && phLive && convertPhoto(false));
+for (const id of ["#phBg", "#phMatte", "#phFr"]) $(id).addEventListener("change", () => photo && phLive && convertPhoto(false));
 function phLabels() { $("#phWLbl").textContent = $("#phW").value; $("#phKLbl").textContent = $("#phK").value; }
 $("#bPhoto").onclick = () => convertPhoto(true);
 function photoPalette() {
@@ -2510,23 +2798,251 @@ function photoPalette() {
   if ($("#phMatte").checked) { const f = list.filter(c => !c.matte && !c.metal && !c.ab); if (f.length) list = f; }
   return list;
 }
-// rectángulo de la foto que ocupa la figura (sin el fondo transparente ni, si se pide, el color de las esquinas)
-function contentBox(img, useBg, tol) {
-  const S = Math.min(1, 400 / Math.max(img.width, img.height)), w = Math.max(1, Math.round(img.width * S)), h = Math.max(1, Math.round(img.height * S));
+// ---------- foto a patrón ----------
+// La foto se reduce a 800 px y se pasa a Lab una sola vez; después se arma una máscara de la pieza:
+//  1. fondo = todo lo que se alcanza desde el borde de la foto pasando por píxeles parecidos entre sí y parecidos al fondo
+//     (o casi sin color), así sirven fondos con sombras, telas o papel;
+//  2. se borran las partes delgadas (ganchos, alambres, hilos) con una apertura del tamaño de media mostacilla;
+//  3. si hay dos aros, se queda con el más grande (y con los flecos que cuelgan de él).
+// El ancho en mostacillas se estima por el brillo que se repite en cada mostacilla de una fila (autocorrelación).
+let photoP = null;
+function prepPhoto(img, deg = 0) {
+  // deg: gira la foto para enderezar la pieza (las esquinas que quedan vacías son transparentes, o sea fondo)
+  const S = Math.min(1, 800 / Math.max(img.width, img.height)), iw = img.width * S, ih = img.height * S, t = deg * Math.PI / 180;
+  const w = Math.max(1, Math.round(Math.abs(iw * Math.cos(t)) + Math.abs(ih * Math.sin(t)))), h = Math.max(1, Math.round(Math.abs(iw * Math.sin(t)) + Math.abs(ih * Math.cos(t))));
   const c = document.createElement("canvas"); c.width = w; c.height = h;
-  const x = c.getContext("2d", { willReadFrequently: true }); x.drawImage(img, 0, 0, w, h);
-  const d = x.getImageData(0, 0, w, h).data, at = (i, j) => (j * w + i) * 4;
-  const cs = Math.max(1, Math.round(Math.min(w, h) * .05)), corner = [];
-  for (const [i0, j0] of [[0, 0], [w - cs, 0], [0, h - cs], [w - cs, h - cs]]) for (let j = j0; j < j0 + cs; j++) for (let i = i0; i < i0 + cs; i++) { const p = at(i, j); if (d[p + 3] > 128) corner.push([d[p], d[p + 1], d[p + 2]]); }
-  const bg = useBg && corner.length > cs * cs * 2 ? lab([0, 1, 2].map(k => corner.reduce((t, c) => t + c[k], 0) / corner.length)) : null;
-  let x0 = w, y0 = h, x1 = -1, y1 = -1;
-  for (let j = 0; j < h; j++) for (let i = 0; i < w; i++) {
-    const p = at(i, j); if (d[p + 3] < 128) continue;
-    if (bg && dE(lab([d[p], d[p + 1], d[p + 2]]), bg) < tol) continue;
-    if (i < x0) x0 = i; if (i > x1) x1 = i; if (j < y0) y0 = j; if (j > y1) y1 = j;
+  const x = c.getContext("2d", { willReadFrequently: true });
+  x.translate(w / 2, h / 2); x.rotate(-t); x.drawImage(img, -iw / 2, -ih / 2, iw, ih);
+  const d = x.getImageData(0, 0, w, h).data, N = w * h, L = new Float32Array(N * 3), A = new Uint8Array(N);
+  for (let i = 0; i < N; i++) { const l = lab([d[i * 4], d[i * 4 + 1], d[i * 4 + 2]]); L[i * 3] = l[0]; L[i * 3 + 1] = l[1]; L[i * 3 + 2] = l[2]; A[i] = d[i * 4 + 3] >= 128 ? 1 : 0; }
+  return { w, h, L, A };
+}
+function photoMask(P, useBg, tol) {
+  const { w, h, L, A } = P, N = w * h, bg = new Uint8Array(N);
+  for (let i = 0; i < N; i++) if (!A[i]) bg[i] = 1;
+  if (!useBg) { const m = new Uint8Array(N); for (let i = 0; i < N; i++) m[i] = bg[i] ? 0 : 1; return m; }
+  const d3 = (i, j) => Math.hypot(L[i * 3] - L[j * 3], L[i * 3 + 1] - L[j * 3 + 1], L[i * 3 + 2] - L[j * 3 + 2]);
+  const chroma = i => Math.hypot(L[i * 3 + 1], L[i * 3 + 2]);
+  const far = tol * 2.2, step = 3 + tol * .3;
+  const q = new Int32Array(N);
+  // inunda desde unos píxeles semilla hacia los vecinos parecidos entre sí y parecidos al color de las semillas (o casi sin color)
+  const flood = (seeds, into) => {
+    if (!seeds.length) return 0;
+    // color de referencia: la mediana de las semillas (un borde mezclado con sombra o con otro fondo no la corre)
+    const med = k => { const a = seeds.map(i => L[i * 3 + k]).sort((u, v) => u - v); return a[a.length >> 1]; };
+    const m = [med(0), med(1), med(2)];
+    // fondo: parecido al de referencia, o sin color y con una luz parecida (así una mostacilla negra junto a una sombra no se borra)
+    const near = i => Math.hypot(L[i * 3] - m[0], L[i * 3 + 1] - m[1], L[i * 3 + 2] - m[2]) < far || (chroma(i) < 9 + tol * .3 && Math.abs(L[i * 3] - m[0]) < 30);
+    let qh = 0, qt = 0, added = 0;
+    for (const i of seeds) if (!into[i] && near(i)) { into[i] = 1; q[qt++] = i; added++; }
+    while (qh < qt) {
+      const p = q[qh++], x = p % w;
+      for (const nb of [p - w, p + w, x > 0 ? p - 1 : -1, x < w - 1 ? p + 1 : -1]) {
+        if (nb < 0 || nb >= N || into[nb] || !A[nb]) continue;
+        if (d3(nb, p) < step && near(nb)) { into[nb] = 1; q[qt++] = nb; added++; }
+      }
+    }
+    return added;
+  };
+  const border = [];
+  for (let x = 0; x < w; x++) border.push(x, (h - 1) * w + x);
+  for (let y = 1; y < h - 1; y++) border.push(y * w, y * w + w - 1);
+  flood(border.filter(i => A[i]), bg);
+  // segunda capa: si lo que queda es una superficie lisa grande (una tarjeta, un papel, una mano), también es fondo
+  for (let pass = 0; pass < 2; pass++) {
+    const mask = new Uint8Array(N); for (let i = 0; i < N; i++) mask[i] = bg[i] ? 0 : 1;
+    const cc = components(mask, w, h); if (!cc.comps.length) break;
+    const big = cc.comps.reduce((a, b) => b.n > a.n ? b : a);
+    const edge = [];
+    for (let y = big.y0; y <= big.y1; y++) for (let x = big.x0; x <= big.x1; x++) {
+      const i = y * w + x; if (cc.lab[i] !== big.id) continue;
+      if ((x > 0 && bg[i - 1]) || (x < w - 1 && bg[i + 1]) || (y > 0 && bg[i - w]) || (y < h - 1 && bg[i + w])) edge.push(i);
+    }
+    const trial = bg.slice();
+    const added = flood(edge, trial);
+    if (added < big.n * .25) break;   // no era una superficie lisa: era la pieza
+    bg.set(trial);
   }
-  if (x1 < x0 || (x1 - x0) < w * .05 || (y1 - y0) < h * .05) return [0, 0, img.width, img.height];
-  return [x0 / S, y0 / S, (x1 - x0 + 1) / S, (y1 - y0 + 1) / S];
+  const mask = new Uint8Array(N); for (let i = 0; i < N; i++) mask[i] = bg[i] ? 0 : 1;
+  return mask;
+}
+// erosión y dilatación con un cuadrado de lado 2r+1 (separables)
+function morph(mask, w, h, r, grow) {
+  const tmp = new Uint8Array(w * h), out = new Uint8Array(w * h);
+  for (let y = 0; y < h; y++) { const o = y * w; for (let x = 0; x < w; x++) { let v = grow ? 0 : 1; for (let k = Math.max(0, x - r); k <= Math.min(w - 1, x + r); k++) { if (grow ? mask[o + k] : !mask[o + k]) { v = grow ? 1 : 0; break; } } tmp[o + x] = v; } }
+  for (let x = 0; x < w; x++) for (let y = 0; y < h; y++) { let v = grow ? 0 : 1; for (let k = Math.max(0, y - r); k <= Math.min(h - 1, y + r); k++) { if (grow ? tmp[k * w + x] : !tmp[k * w + x]) { v = grow ? 1 : 0; break; } } out[y * w + x] = v; }
+  return out;
+}
+function components(mask, w, h) {
+  const lab_ = new Int32Array(w * h), comps = []; let id = 0;
+  const q = new Int32Array(w * h);
+  for (let s = 0; s < w * h; s++) {
+    if (!mask[s] || lab_[s]) continue;
+    id++; let qh = 0, qt = 0, x0 = w, x1 = -1, y0 = h, y1 = -1, n = 0; q[qt++] = s; lab_[s] = id;
+    while (qh < qt) {
+      const p = q[qh++], x = p % w, y = (p / w) | 0; n++;
+      if (x < x0) x0 = x; if (x > x1) x1 = x; if (y < y0) y0 = y; if (y > y1) y1 = y;
+      for (const nb of [p - w, p + w, x > 0 ? p - 1 : -1, x < w - 1 ? p + 1 : -1]) if (nb >= 0 && nb < w * h && mask[nb] && !lab_[nb]) { lab_[nb] = id; q[qt++] = nb; }
+    }
+    comps.push({ id, n, x0, x1, y0, y1 });
+  }
+  return { lab: lab_, comps };
+}
+// Red de mostacillas de la foto: autocorrelación 2D (con FFT) de la pieza. Las mostacillas forman una red regular, así
+// que la autocorrelación tiene picos en los vectores que van de una mostacilla a sus vecinas. El vecino de la misma fila
+// (en ladrillo y telar) o de la misma columna (en peyote) da el tamaño de la mostacilla y la inclinación de la foto.
+function fft(re, im, inv) {
+  const n = re.length;
+  for (let i = 1, j = 0; i < n; i++) { let bit = n >> 1; for (; j & bit; bit >>= 1) j ^= bit; j ^= bit; if (i < j) { [re[i], re[j]] = [re[j], re[i]]; [im[i], im[j]] = [im[j], im[i]]; } }
+  for (let len = 2; len <= n; len <<= 1) {
+    const ang = (inv ? 2 : -2) * Math.PI / len, wr = Math.cos(ang), wi = Math.sin(ang);
+    for (let i = 0; i < n; i += len) {
+      let cr = 1, ci = 0;
+      for (let k = 0; k < len / 2; k++) {
+        const a = i + k, b = a + len / 2, tr = re[b] * cr - im[b] * ci, ti = re[b] * ci + im[b] * cr;
+        re[b] = re[a] - tr; im[b] = im[a] - ti; re[a] += tr; im[a] += ti;
+        const nr = cr * wr - ci * wi; ci = cr * wi + ci * wr; cr = nr;
+      }
+    }
+  }
+  if (inv) for (let i = 0; i < n; i++) { re[i] /= n; im[i] /= n; }
+}
+function fft2(re, im, N, inv) {
+  const r = new Float64Array(N), m = new Float64Array(N);
+  for (let y = 0; y < N; y++) { const o = y * N; for (let x = 0; x < N; x++) { r[x] = re[o + x]; m[x] = im[o + x]; } fft(r, m, inv); for (let x = 0; x < N; x++) { re[o + x] = r[x]; im[o + x] = m[x]; } }
+  for (let x = 0; x < N; x++) { for (let y = 0; y < N; y++) { r[y] = re[y * N + x]; m[y] = im[y * N + x]; } fft(r, m, inv); for (let y = 0; y < N; y++) { re[y * N + x] = r[y]; im[y * N + x] = m[y]; } }
+}
+function autocorr2(f, N) {
+  const re = Float64Array.from(f), im = new Float64Array(N * N);
+  fft2(re, im, N, false);
+  for (let i = 0; i < N * N; i++) { re[i] = re[i] * re[i] + im[i] * im[i]; im[i] = 0; }
+  fft2(re, im, N, true);
+  return re;
+}
+function beadLattice(P, mask, c, puntada) {
+  const N = 512, bwp = c.x1 - c.x0 + 1, bhp = c.y1 - c.y0 + 1, S = Math.min(1, 240 / Math.max(bwp, bhp));
+  const f = new Float64Array(N * N), m = new Float64Array(N * N);
+  let mean = 0, cnt = 0;
+  const pw = Math.round(bwp * S), ph = Math.round(bhp * S);
+  const idx = [];
+  for (let j = 0; j < ph; j++) for (let i = 0; i < pw; i++) {
+    const X = Math.min(P.w - 1, Math.round(c.x0 + i / S)), Y = Math.min(P.h - 1, Math.round(c.y0 + j / S)), s = Y * P.w + X;
+    if (!mask[s]) continue;
+    const k = j * N + i; f[k] = P.L[s * 3]; m[k] = 1; mean += f[k]; cnt++; idx.push(k);
+  }
+  if (cnt < 400) return null;
+  mean /= cnt; let vr = 0;
+  for (const k of idx) { f[k] -= mean; vr += f[k] * f[k]; }
+  vr /= cnt; if (vr < 4) return null;
+  const AF = autocorr2(f, N), AM = autocorr2(m, N);
+  const R = Math.min(90, Math.floor(Math.min(pw, ph) / 2.5));
+  const val = (dx, dy) => { const k = ((dy + N) % N) * N + ((dx + N) % N); return AM[k] > cnt * .25 ? AF[k] / AM[k] / vr : -1; };
+  // picos en medio plano (la autocorrelación es simétrica)
+  const peaks = [];
+  for (let dy = 0; dy <= R; dy++) for (let dx = -R; dx <= R; dx++) {
+    if (dy === 0 && dx <= 0) continue;
+    const r = Math.hypot(dx, dy); if (r < 3 || r > R) continue;
+    const v = val(dx, dy); if (v < .08) continue;
+    let isMax = true;
+    for (let ey = -1; ey <= 1 && isMax; ey++) for (let ex = -1; ex <= 1; ex++) if ((ex || ey) && val(dx + ex, dy + ey) > v) { isMax = false; break; }
+    if (isMax) peaks.push({ dx, dy, r, v });
+  }
+  if (!peaks.length) return null;
+  const top = Math.max(...peaks.map(p => p.v));
+  const strong = peaks.filter(p => p.v >= top * .45).sort((a, b) => a.r - b.r);
+  const r1 = strong[0].r;
+  // el vecino de la misma fila (o columna en peyote) entre los vecinos más cercanos
+  const want = puntada === "peyote" ? 90 : 0;
+  const ring = strong.filter(p => p.r <= r1 * 1.3);
+  const ang = p => { let a = Math.atan2(p.dy, p.dx) * 180 / Math.PI; a = ((a - want) % 180 + 180) % 180; return a > 90 ? a - 180 : a; };
+  const axis = ring.reduce((a, b) => Math.abs(ang(b)) < Math.abs(ang(a)) ? b : a);
+  let tilt = ang(axis); if (Math.abs(tilt) > 22) tilt = 0;
+  // tamaño de la mostacilla (ancho, en píxeles de la foto)
+  let pitch;
+  if (Math.abs(ang(axis)) <= 22) pitch = puntada === "peyote" ? axis.r * 1.3 / 1.6 : axis.r;
+  else pitch = puntada === "peyote" ? r1 * 1.3 / 1.53 : puntada === "telar" ? r1 : r1 * 1.6 / 1.526;
+  return { pitch: pitch / S, tilt, conf: axis.v };
+}
+function analyzePhoto(img, useBg, tol, Wslider) {
+  if (!photoP || photoP.img !== img) photoP = { img, byAngle: {} };
+  const prep = deg => photoP.byAngle[deg] || (photoP.byAngle[deg] = prepPhoto(img, deg));
+  let P = prep(0);
+  let mask = photoMask(P, useBg, tol);
+  // medir la red de mostacillas en la pieza (con textura) y, si está inclinada, enderezar la foto
+  let lat = null;
+  {
+    const c0 = components(mask, P.w, P.h);
+    if (c0.comps.length) {
+      const tex = c => { let s = 0, n = 0; for (let y = c.y0; y <= c.y1; y += 2) for (let x = c.x0; x < c.x1; x += 2) { const i = y * P.w + x; if (c0.lab[i] !== c.id || c0.lab[i + 1] !== c.id) continue; s += Math.abs(P.L[i * 3] - P.L[(i + 1) * 3]); n++; } return n ? s / n : 0; };
+      const b0 = c0.comps.filter(c => c.n > P.w * P.h * .002).map(c => ({ c, s: c.n * Math.min(1, tex(c) / 5) ** 2 })).reduce((a, b) => !a || b.s > a.s ? b : a, null);
+      if (b0) {
+        const one = new Uint8Array(P.w * P.h); for (let i = 0; i < one.length; i++) if (c0.lab[i] === b0.c.id) one[i] = 1;
+        lat = beadLattice(P, one, b0.c, D.puntada);
+        const deg = lat ? Math.round(lat.tilt) : 0;
+        if (Math.abs(deg) >= 2) { P = prep(deg); mask = photoMask(P, useBg, tol); }
+      }
+    }
+  }
+  const { w, h } = P;
+  // la pieza más grande antes de limpiar, para medir sus mostacillas
+  let cc = components(mask, w, h);
+  if (!cc.comps.length) return null;
+  // la pieza: la más grande entre las que tienen textura de mostacillas (brillos y bordes); un logo impreso o una
+  // sombra son lisos aunque sean grandes
+  const texture = c => {
+    let s = 0, n = 0;
+    for (let y = c.y0; y <= c.y1; y += 2) for (let x = c.x0; x < c.x1; x += 2) {
+      const i = y * w + x; if (cc.lab[i] !== c.id || cc.lab[i + 1] !== c.id) continue;
+      s += Math.abs(P.L[i * 3] - P.L[(i + 1) * 3]); n++;
+    }
+    return n ? s / n : 0;
+  };
+  const pick = list => list.filter(c => c.n > w * h * .002).map(c => ({ c, score: c.n * Math.min(1, texture(c) / 5) ** 2 })).reduce((a, b) => !a || b.score > a.score ? b : a, null);
+  let big = (pick(cc.comps) || { c: cc.comps.reduce((a, b) => b.n > a.n ? b : a) }).c;
+  const pit = lat && lat.pitch >= 4 && lat.pitch <= (big.x1 - big.x0 + 1) / 3 ? lat : null;
+  const beadPx = pit ? pit.pitch : Math.max(2, (big.x1 - big.x0 + 1) / Wslider);
+  // borrar ganchos y alambres: apertura de un tercio de mostacilla
+  const r = Math.max(1, Math.round(beadPx * .33));
+  if (useBg && w * h > 0) mask = morph(morph(mask, w, h, r, false), w, h, r, true);
+  cc = components(mask, w, h);
+  if (!cc.comps.length) return null;
+  big = (pick(cc.comps) || { c: cc.comps.reduce((a, b) => b.n > a.n ? b : a) }).c;
+  // el aro más grande y lo que cuelga o está pegado a él (flecos sueltos), pero no el otro aro del par
+  const keep = new Set([big.id]);
+  let x0 = big.x0, x1 = big.x1, y0 = big.y0, y1 = big.y1;
+  for (const c of cc.comps) {
+    if (c === big || c.n < beadPx * beadPx * .3) continue;
+    const insideX = c.x0 >= big.x0 - beadPx && c.x1 <= big.x1 + beadPx, nearY = c.y0 <= big.y1 + beadPx * 3 && c.y1 >= big.y0 - beadPx;
+    if (insideX && nearY) { keep.add(c.id); x0 = Math.min(x0, c.x0); x1 = Math.max(x1, c.x1); y0 = Math.min(y0, c.y0); y1 = Math.max(y1, c.y1); }
+  }
+  const final = new Uint8Array(w * h); for (let i = 0; i < w * h; i++) if (keep.has(cc.lab[i])) final[i] = 1;
+  const pair = cc.comps.some(c => !keep.has(c.id) && c.n > big.n * .4);
+  // luz: estira el brillo de la pieza (las fotos de celular suelen quedar oscuras frente a las fotos oficiales de Miyuki)
+  let light = null;
+  const Ls = []; for (let i = 0; i < w * h; i++) if (final[i]) Ls.push(P.L[i * 3]);
+  if (Ls.length > 50) {
+    Ls.sort((a, b) => a - b);
+    const p10 = Ls[Math.floor(Ls.length * .1)], p97 = Ls[Math.floor(Ls.length * .97)];
+    if (p97 - p10 > 8 && (p10 > 22 || p97 < 85)) {
+      const sc = (88 - 20) / (p97 - p10);
+      light = new Float32Array(P.L.length);
+      for (let i = 0; i < w * h; i++) {
+        light[i * 3] = Math.max(0, Math.min(100, 20 + (P.L[i * 3] - p10) * sc));
+        light[i * 3 + 1] = P.L[i * 3 + 1] * 1.25; light[i * 3 + 2] = P.L[i * 3 + 2] * 1.25;
+      }
+    }
+  }
+  return { P, mask: final, light, x0, y0, x1, y1, pitch: pit && pit.pitch, beads: pit ? Math.round((x1 - x0 + 1) / pit.pitch) : null, pair };
+}
+let anMemo = {};
+function analyzePhotoMemo(img, useBg, tol, W) {
+  const k1 = `${useBg}|${tol}`;
+  if (anMemo[k1]) return anMemo[k1];
+  if (anMemo[k1 + "|" + W]) return anMemo[k1 + "|" + W];
+  const an = analyzePhoto(img, useBg, tol, W);
+  // si se pudo medir la mostacilla, el resultado no depende del ancho elegido
+  if (an && an.pitch) anMemo[k1] = an; else anMemo[k1 + "|" + W] = an;
+  return an;
 }
 function convertPhoto(withUndo) {
   if (!photo) return;
@@ -2534,34 +3050,88 @@ function convertPhoto(withUndo) {
   if (!palList.length) { toast(UI.phSrc === "tengo" ? "Todavía no marcas colores que tienes (estrella en la pestaña Colores)" : "No hay colores para usar"); return; }
   const { bw, bh } = bd(D);
   const tol = +$("#phTol").value, useBg = $("#phBg").checked;
-  // recorta el fondo sobrante: el ancho elegido es el ancho de la figura, no el de la foto
-  const [sx, sy, sw, sh] = contentBox(photo, useBg, tol);
   const W = +$("#phW").value, wmm = W * bw;
-  const H = Math.max(3, Math.min(120, Math.round(wmm * sh / sw / bh)));
-  const k = 8, cw = Math.ceil(wmm * k), ch = Math.ceil(H * bh * k);
-  const oc = document.createElement("canvas"); oc.width = cw; oc.height = ch;
-  const og = oc.getContext("2d", { willReadFrequently: true });
-  og.drawImage(photo, sx, sy, sw, sh, 0, 0, cw, ch);
-  const px = og.getImageData(0, 0, cw, ch).data;
-  const avg = (x0, y0, x1, y1) => {
-    let r = 0, gg = 0, b = 0, a = 0, n = 0;
-    x0 = Math.max(0, x0 | 0); y0 = Math.max(0, y0 | 0); x1 = Math.min(cw, Math.ceil(x1)); y1 = Math.min(ch, Math.ceil(y1));
-    for (let y = y0; y < y1; y++) for (let x = x0; x < x1; x++) { const i = (y * cw + x) * 4, al = px[i + 3] / 255; r += px[i] * al; gg += px[i + 1] * al; b += px[i + 2] * al; a += al; n++; }
-    return a ? [r / a, gg / a, b / a, a / n] : [255, 255, 255, 0];
+  const an = analyzePhotoMemo(photo, useBg, tol, W);
+  if (!an) { $("#phInfo").textContent = "No encontré la pieza: baja la tolerancia del fondo o desmarca «Quitar el fondo»."; return; }
+  const { P, mask } = an, cwPx = an.x1 - an.x0 + 1, chPx = an.y1 - an.y0 + 1;
+  // si el ancho elegido es el que se contó, la grilla usa el tamaño medido de la mostacilla (sin acumular corrimiento)
+  const exact = an.pitch && W === an.beads, k = exact ? an.pitch / bw : cwPx / wmm;   // píxeles por mm
+  // ¿flecos? el tejido se ensancha hasta su base y debajo cuelgan tiras casi del mismo ancho hasta el final
+  let fr = null;
+  if ($("#phFr").checked) {
+    const rowsW = [];
+    for (let y = an.y0; y <= an.y1; y++) { let a = -1, b = -1; for (let x = an.x0; x <= an.x1; x++) if (mask[y * P.w + x]) { if (a < 0) a = x; b = x; } rowsW.push(a < 0 ? 0 : b - a + 1); }
+    const maxW = Math.max(...rowsW), base = rowsW.findIndex(v => v >= maxW * .95), below = rowsW.length - base;
+    const plateau = rowsW.slice(base).filter(v => v >= maxW * .85).length;
+    // en los flecos se ve el fondo entre las tiras: varias entradas y salidas de la pieza en cada fila
+    const gaps = [];
+    for (let y = an.y0 + base; y <= an.y1; y++) {
+      let t = 0, prev = 0, a = -1, b = -1;
+      for (let x = an.x0; x <= an.x1; x++) if (mask[y * P.w + x]) { if (a < 0) a = x; b = x; }
+      for (let x = a; x <= b && a >= 0; x++) { const on = mask[y * P.w + x]; if (prev && !on) t++; prev = on; }
+      gaps.push(t);
+    }
+    gaps.sort((u, v) => u - v);
+    const gapMed = gaps.length ? gaps[gaps.length >> 1] : 0;
+    if (base > 0 && below > rowsW.length * .2 && plateau >= below * .45 && below > FR.bh * k * 3 && gapMed >= 2) {
+      const colEnd = x => { for (let y = an.y1; y >= an.y0 + base; y--) if (mask[y * P.w + x]) return y; return an.y0 + base; };
+      const endNear = x => { let m = 0; for (let d = -3; d <= 3; d++) m = Math.max(m, colEnd(Math.min(an.x1, Math.max(an.x0, Math.round(x) + d)))); return m; };
+      const edge = (endNear(an.x0 + (an.x1 - an.x0) * .12) + endNear(an.x0 + (an.x1 - an.x0) * .88)) / 2, mid = endNear((an.x0 + an.x1) / 2);
+      const lenPx = Math.max(mid, edge) - (an.y0 + base), diff = (mid - edge) / Math.max(1, lenPx);
+      fr = { base, largo: Math.max(3, Math.min(45, Math.round(lenPx / (FR.bh * k)))), forma: diff > .2 ? "v" : diff > .07 ? "redondo" : diff < -.15 ? "u" : "recto" };
+    }
+  }
+  const bodyPx = fr ? fr.base + bh * k * .5 : chPx;
+  const H = Math.max(3, Math.min(120, Math.round(bodyPx / k / bh) + (exact && !fr ? 1 : 0)));
+  const nd = { ...D, W, H }, cells = Array(W * H).fill(null);
+  const LL = an.light || P.L;   // colores con la luz corregida
+  const geo = []; eachCell(nd, (r, c) => geo.push([r, c, ...center(nd, r, c)]));
+  const pixelsAt = (x, y, dx, dy, f, cw_ = bw, ch_ = bh) => {
+    const out = []; let tot = 0;
+    const X0 = Math.round(an.x0 + dx + (x - cw_ * f) * k), X1 = Math.round(an.x0 + dx + (x + cw_ * f) * k);
+    const Y0 = Math.round(an.y0 + dy + (y - ch_ * f) * k), Y1 = Math.round(an.y0 + dy + (y + ch_ * f) * k);
+    for (let py = Math.max(0, Y0); py <= Math.min(P.h - 1, Y1); py++) for (let px = Math.max(0, X0); px <= Math.min(P.w - 1, X1); px++) {
+      tot++; const i = py * P.w + px; if (mask[i]) out.push(i);
+    }
+    return { out, tot };
   };
-  // color del fondo: promedio de las 4 esquinas
-  const s = Math.max(2, Math.round(Math.min(cw, ch) * .05));
-  const corners = [avg(0, 0, s, s), avg(cw - s, 0, cw, s), avg(0, ch - s, s, ch), avg(cw - s, ch - s, cw, ch)].filter(c => c[3] > .5);
-  const bgLab = corners.length ? lab([0, 1, 2].map(j => corners.reduce((t, c) => t + c[j], 0) / corners.length)) : null;
-  const nd ={ ...D, W, H }, cells = Array(W * H).fill(null), pts = [];
-  eachCell(nd, (r, c) => {
-    const [x, y] = center(nd, r, c);
-    const col = avg((x - bw * .4) * k, (y - bh * .4) * k, (x + bw * .4) * k, (y + bh * .4) * k);
-    if (col[3] < .5) return;
-    const L = lab(col);
-    if (useBg && bgLab && dE(L, bgLab) < tol) return;
-    pts.push({ i: r * W + c, L });
-  });
+  // alineación: la posición de la grilla en que cada celda cae sobre una sola mostacilla (menos mezcla de color dentro de cada celda)
+  let off = [0, 0];
+  if (exact) {
+    let bestV = Infinity;
+    const px = bw * k, py = bh * k;
+    for (let sx = -3; sx < 3; sx++) for (let sy = -3; sy < 3; sy++) {
+      const dx = sx / 6 * px, dy = sy / 3 * py;   // media mostacilla a cada lado y una fila arriba o abajo
+      let v = 0, n = 0;
+      for (const [, , x, y] of geo) {
+        const { out, tot } = pixelsAt(x, y, dx, dy, .3);
+        if (out.length < 3 || out.length < tot * .6) continue;
+        let m0 = 0, m1 = 0, m2 = 0; for (const i of out) { m0 += LL[i * 3]; m1 += LL[i * 3 + 1]; m2 += LL[i * 3 + 2]; }
+        m0 /= out.length; m1 /= out.length; m2 /= out.length;
+        let s = 0; for (const i of out) s += (LL[i * 3] - m0) ** 2 + (LL[i * 3 + 1] - m1) ** 2 + (LL[i * 3 + 2] - m2) ** 2;
+        v += s / out.length; n++;
+      }
+      if (n && v / n < bestV) { bestV = v / n; off = [dx, dy]; }
+    }
+  }
+  // color de una mostacilla: sin las sombras entre mostacillas (lo más oscuro), y de lo que queda, la mitad con más color:
+  // el reflejo blanco de la luz agrisa el promedio, pero el tinte del vidrio está en los píxeles más saturados
+  const beadColor = out => {
+    out.sort((u, v) => LL[u * 3] - LL[v * 3]);
+    const lit = out.slice(Math.floor(out.length * .3));
+    const chr = q => LL[q * 3 + 1] ** 2 + LL[q * 3 + 2] ** 2;
+    lit.sort((u, v) => chr(v) - chr(u));
+    const top = lit.slice(0, Math.max(1, Math.ceil(lit.length * .5)));
+    let sL = 0, sA = 0, sB = 0;
+    for (const q of top) { sL += LL[q * 3]; sA += LL[q * 3 + 1]; sB += LL[q * 3 + 2]; }
+    return [sL / top.length, sA / top.length, sB / top.length];
+  };
+  const pts = [];
+  for (const [r, c, x, y] of geo) {
+    const { out, tot } = pixelsAt(x, y, off[0], off[1], .36);
+    if (!tot || out.length < tot * .45) continue;
+    pts.push({ i: r * W + c, L: beadColor(out) });
+  }
   if (!pts.length) { $("#phInfo").textContent = "No quedó nada: baja la tolerancia del fondo o desmarca «Quitar el fondo»."; return; }
   if (withUndo || !phLive) pushUndo();
   // cada mostacilla a su Delica más parecida; después el color menos usado se funde con el más parecido que queda,
@@ -2576,15 +3146,50 @@ function convertPhoto(withUndo) {
     const rest = [...counts.keys()];
     for (const p of pts) if (p.c === least) { p.c = nearest(p.L, rest); counts.set(p.c, counts.get(p.c) + 1); }
   }
+  // colores casi iguales (dos morados que a la vista son el mismo) se funden: la cantidad pedida es un máximo
+  for (;;) {
+    const cs = [...counts.keys()]; if (cs.length < 2) break;
+    let pair = null, pd = 1e9;
+    for (let a = 0; a < cs.length; a++) for (let b = a + 1; b < cs.length; b++) { const e = dE00(labOf(cs[a]), labOf(cs[b])); if (e < pd) { pd = e; pair = [cs[a], cs[b]]; } }
+    if (pd >= 10) break;
+    const [keepC, dropC] = counts.get(pair[0]) >= counts.get(pair[1]) ? pair : [pair[1], pair[0]];
+    counts.delete(dropC);
+    const rest = [...counts.keys()];
+    for (const p of pts) if (p.c === dropC) { p.c = nearest(p.L, rest); counts.set(p.c, counts.get(p.c) + 1); }
+    void keepC;
+  }
   for (const p of pts) cells[p.i] = p.c.id;
   D.W = W; D.H = H; D.cells = cells; phLive = true;
   D.fringe.on = false; D.fringe.cells = [];
+  if (fr) {
+    // los flecos: largo y forma medidos en la foto, y el color de cada mostacilla de cada tira
+    D.fringe = { on: true, forma: fr.forma, largo: fr.largo, cells: [], lens: null };
+    // largo de cada tira: hasta dónde llega la pieza en la foto bajo esa mostacilla
+    const strands = fringeLayout(D);
+    D.fringe.lens = strands.map(st => {
+      const cx = an.x0 + off[0] + st.x * k, y0px = an.y0 + off[1] + st.y0 * k;
+      let end = y0px;
+      for (let x = Math.round(cx - FR.bw * k * .3); x <= Math.round(cx + FR.bw * k * .3); x++) {
+        if (x < 0 || x >= P.w) continue;
+        for (let y = Math.min(P.h - 1, an.y1 + 2); y > end; y--) if (mask[y * P.w + x]) { end = y; break; }
+      }
+      return Math.max(1, Math.min(60, Math.round((end - y0px) / (FR.bh * k))));
+    });
+    D.fringe.largo = Math.max(3, Math.min(45, Math.max(...D.fringe.lens)));
+    const chosen = [...counts.keys()];
+    for (const st of fringeLayout(D)) {
+      D.fringe.cells[st.i] = Array.from({ length: st.len }, (_, kk) => {
+        const { out, tot } = pixelsAt(st.x, st.y0 + (kk + .5) * FR.bh, off[0], off[1], .3, FR.bw, FR.bh);
+        return tot && out.length >= tot * .3 ? nearest(beadColor(out), chosen).id : null;
+      });
+    }
+  }
   if (/^(Diseño nuevo|Sin nombre)$|\(ejemplo\)$/.test(D.name)) D.name = photoName || "Diseño desde foto";
   const usados = {}; for (const v of cells) if (v) usados[v] = (usados[v] || 0) + 1;
   const ids = Object.keys(usados).sort((a, b) => usados[b] - usados[a]);
   D.paleta = ids.concat(D.paleta.filter(id => !usados[id]));
   if (!usados[UI.color]) UI.color = ids[0];
-  $("#phInfo").textContent = `Quedó de ${W} × ${H} mostacillas con ${ids.length} colores: ${ids.map(codeTxt).join(", ")}. Retócalo con el lápiz o cambia colores en la pestaña Colores.`;
+  $("#phInfo").textContent = `Quedó de ${W} × ${H} mostacillas con ${ids.length} colores: ${ids.map(codeTxt).join(", ")}.${an.pair ? " Usé un solo aro del par." : ""} Retócalo con el lápiz o cambia colores en la pestaña Colores.`;
   changed(); fitZoom();
 }
 
@@ -2714,7 +3319,7 @@ $("#selGancho").onchange = e => { D.gancho = e.target.value; changed(); };
 $("#inPerlas").onchange = e => { D.perlas = Math.max(0, +e.target.value | 0); changed(); };
 $("#inCuentas").onchange = e => { D.cuentas = Math.max(0, +e.target.value | 0); changed(); };
 $("#dName").addEventListener("input", e => { D.name = e.target.value || "Sin nombre"; scheduleSave(); });
-$("#dCliente").addEventListener("input", e => { D.cliente = e.target.value; scheduleSave(); });
+for (const id of ["#dCliente", "#dCliente2"]) $(id).addEventListener("input", e => { D.cliente = e.target.value; const o = $(id === "#dCliente" ? "#dCliente2" : "#dCliente"); o.value = D.cliente; scheduleSave(); });
 $("#dNotas").addEventListener("input", e => { D.notas = e.target.value; scheduleSave(); });
 $("#cardPrice").addEventListener("change", e => { UI.cardPrice = e.target.checked; saveUI(); });
 
@@ -2965,6 +3570,7 @@ document.querySelectorAll(".tab").forEach(b => b.onclick = () => showTab(b.datas
 function syncForm() {
   if (document.activeElement !== $("#dName")) $("#dName").value = D.name;
   if (document.activeElement !== $("#dCliente")) $("#dCliente").value = D.cliente;
+  if (document.activeElement !== $("#dCliente2")) $("#dCliente2").value = D.cliente;
   if (document.activeElement !== $("#dNotas")) $("#dNotas").value = D.notas;
   $("#inW").value = D.W; $("#inH").value = D.H;
   const [wmm, hmm] = gridMM(D);
