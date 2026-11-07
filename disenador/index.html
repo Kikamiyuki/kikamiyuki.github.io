@@ -167,6 +167,8 @@ input[type="range"] { width: 100%; accent-color: var(--plum); }
 .drop { border: 2px dashed var(--line); border-radius: 16px; padding: 18px; text-align: center; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 8px; }
 .drop:hover, .drop.over { border-color: var(--plum); background: var(--paper); }
 .drop img { max-height: 150px; border-radius: 10px; }
+#phCrop { width: 100%; max-height: 360px; display: block; border-radius: 14px; background: var(--stage); touch-action: none; cursor: crosshair; }
+.tool[disabled] { opacity: .3; cursor: not-allowed; }
 .drop b { font-size: 16px; }
 
 /* catálogo */
@@ -232,6 +234,37 @@ dialog::backdrop { background: rgba(36, 18, 46, .6); }
 .empty { text-align: center; color: var(--ink-soft); padding: 30px 10px; }
 .toast { position: fixed; left: 50%; bottom: calc(18px + env(safe-area-inset-bottom, 0px)); transform: translateX(-50%); background: var(--btn-bg); color: var(--btn-fg);
   padding: 12px 20px; border-radius: 999px; font-weight: 700; box-shadow: 4px 4px 0 var(--yel); z-index: 50; max-width: calc(100vw - 32px); text-align: center; }
+/* modo tejer: pantalla completa en el celular */
+dialog.tejer { width: min(980px, calc(100vw - 32px)); }
+.tj { padding: 18px 20px 20px; display: flex; flex-direction: column; gap: 14px; }
+.tj-h { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; }
+.tj-h h2 { font-size: 30px; margin-top: 4px; }
+.tj-prog { display: flex; align-items: center; gap: 12px; font-size: 14px; color: var(--ink-soft); }
+.tj-bar { flex: 1; height: 10px; border-radius: 6px; background: var(--paper2); overflow: hidden; }
+.tj-bar i { display: block; height: 100%; width: 0; background: var(--plum); border-radius: 6px; transition: width .25s; }
+.tj-main { display: grid; grid-template-columns: minmax(0, 1fr) 220px; gap: 16px; align-items: start; }
+.tj-now { background: var(--paper); border-radius: 20px; padding: 16px; display: flex; flex-direction: column; gap: 10px; min-width: 0; }
+.tj-title { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; }
+.tj-title b { font-size: 34px; font-weight: 750; letter-spacing: -.03em; }
+.tj-title span { font-size: 14px; font-weight: 700; color: var(--plum); }
+.tj-rowwrap { overflow-x: auto; }
+#tjRow { display: block; }
+.tj-runs { display: flex; flex-wrap: wrap; gap: 8px; }
+.tj-run { display: inline-flex; align-items: center; gap: 8px; background: var(--card); border-radius: 12px; padding: 6px 10px 6px 6px; font-size: 15px; }
+.tj-run i { display: inline-grid; place-items: center; width: 30px; height: 26px; border-radius: 7px; font-style: normal; font-weight: 750; font-size: 13px; box-shadow: inset 0 -4px 0 rgba(0,0,0,.18), 0 0 0 1px var(--line); }
+.tj-run b { font-size: 20px; }
+.tj-mapbox { display: flex; flex-direction: column; gap: 6px; }
+#tjMap { width: 100%; border-radius: 14px; background: var(--stage); cursor: pointer; touch-action: manipulation; }
+.tj-nav { display: grid; grid-template-columns: 1fr 2fr; gap: 12px; }
+.tj-nav .btn { padding: 18px; font-size: 17px; }
+@media (max-width: 640px) {
+  dialog.tejer { width: 100vw; max-width: 100vw; height: 100dvh; max-height: 100dvh; margin: 0; border-radius: 0; box-shadow: none; }
+  .tj { min-height: 100%; padding: calc(14px + env(safe-area-inset-top, 0px)) 16px calc(16px + env(safe-area-inset-bottom, 0px)); }
+  .tj-main { grid-template-columns: minmax(0, 1fr) 96px; gap: 10px; }
+  .tj-title b { font-size: 28px; }
+  .tj-h h2 { font-size: 24px; }
+  .tj-nav { margin-top: auto; }
+}
 #printArea { display: none; }
 
 @media (max-width: 1020px) {
@@ -280,6 +313,7 @@ dialog::backdrop { background: rgba(36, 18, 46, .6); }
     <input id="dCliente" type="text" aria-label="Pedido o clienta" placeholder="Pedido o clienta (opcional)" />
     <button class="btn soft" id="bLib" type="button">Mis diseños</button>
     <button class="btn soft" id="bNew" type="button">Nuevo</button>
+    <button class="btn soft" id="bTejer" type="button">Tejer</button>
     <button class="btn" id="bSave" type="button">Guardar</button>
   </div>
 </header>
@@ -301,6 +335,7 @@ dialog::backdrop { background: rgba(36, 18, 46, .6); }
     <button class="tool" id="tSym" title="Simetría: lo que pintas a un lado se copia al otro (S)" aria-label="Simetría"><svg viewBox="0 0 24 24"><path d="M12 3v18" stroke-dasharray="2 2.5"/><path d="M9 7L4 12l5 5V7z"/><path d="M15 7l5 5-5 5V7z"/></svg></button>
     <button class="tool" id="tGrid" title="Mostrar la grilla vacía (G)" aria-label="Grilla"><svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M4 9.3h16M4 14.6h16M9.3 4v16M14.6 4v16"/></svg></button>
     <button class="tool" id="tLet" title="Letras del patrón en cada mostacilla" aria-label="Letras"><svg viewBox="0 0 24 24"><path d="M5 19L10 5l5 14"/><path d="M7 14h6"/><path d="M16 19v-6h2.5a1.7 1.7 0 010 3.4H16"/></svg></button>
+    <button class="tool" id="tTrace" title="Calcar: la foto convertida, transparente sobre la grilla" aria-label="Calcar foto" disabled><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="9" cy="10" r="1.8"/><path d="M21 16l-5-5-8 8"/></svg></button>
     <button class="tool" id="tReal" title="Vista realista de las mostacillas" aria-label="Vista realista"><svg viewBox="0 0 24 24"><rect x="4" y="7" width="7" height="6" rx="2"/><rect x="13" y="7" width="7" height="6" rx="2"/><rect x="8.5" y="14" width="7" height="6" rx="2"/><path d="M6 8.5h3M15 8.5h3M10.5 15.5h3"/></svg></button>
   </nav>
 
@@ -447,10 +482,14 @@ dialog::backdrop { background: rgba(36, 18, 46, .6); }
         <p class="hint">Sube una foto, un dibujo o una captura y lo paso a mostacillas con los colores Delica más parecidos. Cuento las mostacillas de la foto y, si viene el par, uso un solo aro. Funciona mejor con la pieza de frente y un fondo que no sea del mismo color de las mostacillas. También puedes pegar una imagen con Ctrl+V.</p>
         <label class="drop" id="drop">
           <input id="fileImg" type="file" accept="image/*" hidden />
-          <img id="imgThumb" alt="Imagen de referencia" hidden />
           <b id="dropTxt">Elegir imagen o arrastrarla aquí</b>
           <span class="hint">JPG, PNG o captura de pantalla</span>
         </label>
+        <div class="grp" id="cropBox" hidden>
+          <span class="lbl">Elige el aro</span>
+          <canvas id="phCrop" aria-label="Foto: arrastra un recuadro alrededor del aro"></canvas>
+          <div class="row"><span class="hint" id="cropHint" style="flex:1">Arrastra un recuadro alrededor del aro que quieres pasar a mostacillas.</span><button class="btn small soft" id="bCropAll" type="button">Usar toda la foto</button></div>
+        </div>
         <div class="grp">
           <span class="lbl">Colores a usar</span>
           <div class="seg" id="segPhSrc">
@@ -477,6 +516,13 @@ dialog::backdrop { background: rgba(36, 18, 46, .6); }
           <table id="legTbl"></table>
         </div>
         <div class="grp">
+          <span class="lbl">Lista de compras</span>
+          <div class="row"><label class="field" style="flex:0 1 160px"><span id="paresLbl">Pares a tejer</span><input id="inPares" type="number" min="1" max="100" inputmode="numeric" /></label></div>
+          <table id="buyTbl"></table>
+          <p class="hint" id="buyTot"></p>
+          <div class="row"><button class="btn small soft" id="bCopyBuy" type="button">Copiar lista</button></div>
+        </div>
+        <div class="grp">
           <span class="lbl">Precio sugerido</span>
           <div class="row">
             <label class="field">Dificultad<select id="selNivel"></select></label>
@@ -500,9 +546,10 @@ dialog::backdrop { background: rgba(36, 18, 46, .6); }
       <div class="pane" data-pane="exportar" hidden>
         <div class="grp">
           <span class="lbl">Patrón para tejer</span>
-          <p class="hint">Grilla con letras, código Delica y cantidad de cada color, y el paso a paso fila por fila.</p>
+          <p class="hint">Grilla con letras, código Delica y cantidad de cada color, el paso a paso fila por fila con casillas para ir marcando, y al final los materiales y la lista de compras. El PDF viene en hojas tamaño carta.</p>
           <div class="row">
-            <button class="btn" id="bPattern" type="button">Descargar patrón (PNG)</button>
+            <button class="btn" id="bPdf" type="button">Descargar PDF</button>
+            <button class="btn soft" id="bPattern" type="button">Imagen (PNG)</button>
             <button class="btn soft" id="bPrint" type="button" hidden>Imprimir</button>
           </div>
         </div>
@@ -542,6 +589,34 @@ dialog::backdrop { background: rgba(36, 18, 46, .6); }
       <label class="btn small soft">Importar .json<input id="fileJson" type="file" accept="application/json,.json" hidden /></label>
     </div>
     <p class="hint">Los diseños y los colores que tienes se guardan en este navegador. Exporta un respaldo de vez en cuando, o para pasarlos a otro computador o celular.</p>
+  </div>
+</dialog>
+
+<dialog id="dlgTejer" class="tejer" aria-label="Modo tejer">
+  <div class="tj">
+    <div class="tj-h">
+      <div><span class="lbl">Modo tejer</span><h2 id="tjName"></h2></div>
+      <button class="x" type="button" data-close aria-label="Cerrar">×</button>
+    </div>
+    <div class="tj-prog"><div class="tj-bar"><i id="tjBar"></i></div><span id="tjCount" class="num"></span></div>
+    <div class="seg" id="segOrden">
+      <button type="button" data-v="ladrillo">Desde la fila más ancha</button>
+      <button type="button" data-v="arriba">De arriba hacia abajo</button>
+    </div>
+    <div class="tj-main">
+      <div class="tj-now">
+        <div class="tj-title"><b id="tjTitle"></b><span id="tjDone"></span></div>
+        <p class="hint" id="tjSub"></p>
+        <div class="tj-rowwrap"><canvas id="tjRow" aria-label="Mostacillas de esta fila"></canvas></div>
+        <div class="tj-runs" id="tjRuns"></div>
+      </div>
+      <div class="tj-mapbox"><canvas id="tjMap" aria-label="Mapa del patrón: toca una fila para ir a ella"></canvas><p class="hint">Toca una fila del mapa para ir a ella.</p></div>
+    </div>
+    <div class="tj-nav">
+      <button class="btn soft" id="tjPrev" type="button">← Anterior</button>
+      <button class="btn" id="tjNext" type="button">Tejida ✓ Siguiente →</button>
+    </div>
+    <div class="row"><button class="btn small soft" id="tjReset" type="button">Empezar de nuevo</button><span class="hint" id="tjWake"></span></div>
   </div>
 </dialog>
 
@@ -1903,7 +1978,7 @@ let STOCK = new Set(load(K_STOCK, []));
 const uid = () => "d" + Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
 function blank(W = 15, H = 19) {
   return { v: 2, id: uid(), name: "Diseño nuevo", cliente: "", notas: "", pieza: "aros", puntada: "brick", W, H, cells: Array(W * H).fill(null),
-    paleta: STARTER.slice(), fringe: { on: false, forma: "v", largo: 14, cells: [] }, gancho: "plata", par: "espejo", perlas: 0, cuentas: 0,
+    paleta: STARTER.slice(), pares: 1, fringe: { on: false, forma: "v", largo: 14, cells: [] }, gancho: "plata", par: "espejo", perlas: 0, cuentas: 0,
     nivel: "auto", tamano: "auto", creado: Date.now(), editado: Date.now() };
 }
 function normalize(d) {
@@ -2149,6 +2224,17 @@ function draw() {
   eachCell(D, (r, c, v) => { const [x, y] = center(D, r, c); bead(x, y, bw, bh, v); });
   for (const s of lay) for (let k = 0; k < s.len; k++) bead(s.x, s.y0 + (k + .5) * FR.bh, FR.bw, FR.bh, frColor(D, s, k));
 
+  // calcar: la foto convertida, transparente y alineada con la grilla
+  if (UI.trace && trace && trace.W === D.W && trace.H === D.H && trace.puntada === D.puntada) {
+    const sw = wmm * trace.k, sh = hTot * trace.k, cw = trace.canvas.width, ch = trace.canvas.height;
+    const sx0 = Math.max(0, trace.ox), sy0 = Math.max(0, trace.oy), sx1 = Math.min(cw, trace.ox + sw), sy1 = Math.min(ch, trace.oy + sh);
+    if (sx1 > sx0 && sy1 > sy0) {
+      const f = z / trace.k;
+      g.globalAlpha = .5;
+      g.drawImage(trace.canvas, sx0, sy0, sx1 - sx0, sy1 - sy0, PAD.l + (sx0 - trace.ox) * f, PAD.t + (sy0 - trace.oy) * f, (sx1 - sx0) * f, (sy1 - sy0) * f);
+      g.globalAlpha = 1;
+    }
+  }
   // selección: celdas marcadas y un marco punteado alrededor
   if (sel && sel.size) {
     let x0 = 1e9, y0 = 1e9, x1 = -1e9, y1 = -1e9;
@@ -2477,11 +2563,12 @@ function setTool(t) {
   saveUI(); renderOpts();
 }
 document.querySelectorAll("[data-tool]").forEach(b => b.addEventListener("click", () => setTool(b.dataset.tool)));
-function toggles() { $("#tSym").setAttribute("aria-pressed", UI.sym); $("#tGrid").setAttribute("aria-pressed", UI.grid); $("#tLet").setAttribute("aria-pressed", UI.letters); $("#tReal").setAttribute("aria-pressed", !!UI.real); }
+function toggles() { $("#tSym").setAttribute("aria-pressed", UI.sym); $("#tGrid").setAttribute("aria-pressed", UI.grid); $("#tLet").setAttribute("aria-pressed", UI.letters); $("#tReal").setAttribute("aria-pressed", !!UI.real); $("#tTrace").setAttribute("aria-pressed", !!(UI.trace && trace)); }
 $("#tSym").onclick = () => { UI.sym = !UI.sym; toggles(); saveUI(); draw(); };
 $("#tGrid").onclick = () => { UI.grid = !UI.grid; toggles(); saveUI(); draw(); };
 $("#tLet").onclick = () => { UI.letters = !UI.letters; toggles(); saveUI(); draw(); };
 $("#tReal").onclick = () => { UI.real = !UI.real; toggles(); saveUI(); draw(); };
+$("#tTrace").onclick = () => { if (!trace) return; UI.trace = !UI.trace; toggles(); draw(); };
 $("#tUndo").onclick = doUndo; $("#tRedo").onclick = doRedo;
 $("#tZi").onclick = () => setZoom(UI.zoom * 1.2); $("#tZo").onclick = () => setZoom(UI.zoom / 1.2);
 $("#zoomLbl").onclick = fitZoom;
@@ -2763,7 +2850,64 @@ $("#bFrGrad").onclick = () => {
 };
 
 /* ================== desde foto ================== */
-let photo = null, phLive = false, photoName = "";
+let photo = null, phLive = false, photoName = "", photoCrop = null, cropCache = null, trace = null;
+// la foto que se convierte: la parte elegida con el recuadro, o la foto completa
+function photoSrc() {
+  if (!photoCrop) return photo;
+  const key = photoCrop.join(",");
+  if (cropCache && cropCache.key === key) return cropCache.c;
+  const [a, b, c2, d] = photoCrop, sx = a * photo.width, sy = b * photo.height, sw = (c2 - a) * photo.width, sh = (d - b) * photo.height;
+  const S = Math.min(1, 1600 / Math.max(sw, sh)), c = document.createElement("canvas");
+  c.width = Math.max(1, Math.round(sw * S)); c.height = Math.max(1, Math.round(sh * S));
+  c.getContext("2d").drawImage(photo, sx, sy, sw, sh, 0, 0, c.width, c.height);
+  cropCache = { key, c };
+  return c;
+}
+// cuenta las mostacillas de la foto (o del recuadro) y deja ese ancho listo
+function detectWidth() {
+  const an = analyzePhotoMemo(photoSrc(), $("#phBg").checked, +$("#phTol").value, +$("#phW").value);
+  const par = an && an.pair ? " La foto tiene el par: uso un solo aro." : "";
+  if (an && an.beads) {
+    $("#phW").value = Math.max(+$("#phW").min, Math.min(+$("#phW").max, an.beads)); phLabels();
+    $("#phInfo").textContent = `Conté unas ${an.beads} mostacillas de ancho.${par} Toca «Pasar a mostacillas»; si no calza, ajusta el ancho o el recuadro.`;
+  } else $("#phInfo").textContent = `No pude contar las mostacillas: ajusta el ancho a mano o marca el aro con un recuadro.${par}`;
+}
+const crop = $("#phCrop");
+let cropDrag = null;
+function drawCrop() {
+  if (!photo) return;
+  const dpr = window.devicePixelRatio || 1, W = crop.clientWidth || 300, H = Math.min(360, Math.round(W * photo.height / photo.width));
+  crop.style.height = H + "px"; crop.width = W * dpr; crop.height = H * dpr;
+  const x = crop.getContext("2d"); x.setTransform(dpr, 0, 0, dpr, 0, 0);
+  const s = Math.min(W / photo.width, H / photo.height), iw = photo.width * s, ih = photo.height * s, ox = (W - iw) / 2, oy = (H - ih) / 2;
+  crop._fit = { s, ox, oy, iw, ih };
+  x.clearRect(0, 0, W, H); x.drawImage(photo, ox, oy, iw, ih);
+  const r = cropDrag ? cropDrag.r : photoCrop;
+  if (r) {
+    const [a, b, c2, d] = r, X0 = ox + a * iw, Y0 = oy + b * ih, X1 = ox + c2 * iw, Y1 = oy + d * ih;
+    x.fillStyle = "rgba(36,18,46,.55)";
+    x.fillRect(ox, oy, iw, Y0 - oy); x.fillRect(ox, Y1, iw, oy + ih - Y1); x.fillRect(ox, Y0, X0 - ox, Y1 - Y0); x.fillRect(X1, Y0, ox + iw - X1, Y1 - Y0);
+    x.strokeStyle = "#f7b928"; x.lineWidth = 2.5; x.setLineDash([7, 5]); x.strokeRect(X0, Y0, X1 - X0, Y1 - Y0); x.setLineDash([]);
+  }
+}
+const cropPt = e => { const b = crop.getBoundingClientRect(), f = crop._fit; return [Math.max(0, Math.min(1, (e.clientX - b.left - f.ox) / f.iw)), Math.max(0, Math.min(1, (e.clientY - b.top - f.oy) / f.ih))]; };
+crop.addEventListener("pointerdown", e => { if (!photo) return; crop.setPointerCapture(e.pointerId); const p = cropPt(e); cropDrag = { p, r: [p[0], p[1], p[0], p[1]] }; drawCrop(); });
+crop.addEventListener("pointermove", e => { if (!cropDrag) return; const p = cropPt(e), q = cropDrag.p; cropDrag.r = [Math.min(p[0], q[0]), Math.min(p[1], q[1]), Math.max(p[0], q[0]), Math.max(p[1], q[1])]; drawCrop(); });
+const cropEnd = () => {
+  if (!cropDrag) return;
+  const r = cropDrag.r; cropDrag = null;
+  // un toque sin arrastrar no cambia nada
+  if (r[2] - r[0] < .04 || r[3] - r[1] < .04) { drawCrop(); return; }
+  setCrop(r);
+};
+crop.addEventListener("pointerup", cropEnd); crop.addEventListener("pointercancel", cropEnd);
+function setCrop(r) {
+  photoCrop = r; anMemo = {}; photoP = null;
+  drawCrop(); detectWidth();
+  if (phLive) convertPhoto(false);
+}
+$("#bCropAll").onclick = () => setCrop(null);
+addEventListener("resize", () => { if (photo && !$("#cropBox").hidden) drawCrop(); });
 const fileImg = $("#fileImg"), drop = $("#drop");
 fileImg.addEventListener("change", () => fileImg.files[0] && loadPhoto(fileImg.files[0]));
 drop.addEventListener("dragover", e => { e.preventDefault(); drop.classList.add("over"); });
@@ -2776,15 +2920,10 @@ function loadPhoto(file) {
   photoName = /^(image|img|photo|foto|captura|screenshot|imagen)?[\s\d]*$/i.test(base) ? "" : base.charAt(0).toUpperCase() + base.slice(1);
   const url = URL.createObjectURL(file), img = new Image();
   img.onload = () => {
-    photo = img; phLive = false; photoP = null; anMemo = {};
-    $("#imgThumb").src = url; $("#imgThumb").hidden = false; $("#dropTxt").textContent = "Cambiar imagen"; $("#bPhoto").disabled = false;
-    // cuenta las mostacillas de la foto y deja ese ancho listo
-    const an = analyzePhotoMemo(img, $("#phBg").checked, +$("#phTol").value, +$("#phW").value);
-    const par = an && an.pair ? " La foto tiene el par: uso un solo aro." : "";
-    if (an && an.beads) {
-      $("#phW").value = Math.max(+$("#phW").min, Math.min(+$("#phW").max, an.beads)); phLabels();
-      $("#phInfo").textContent = `Conté unas ${an.beads} mostacillas de ancho.${par} Toca «Pasar a mostacillas»; si no calza, ajusta el ancho.`;
-    } else $("#phInfo").textContent = `No pude contar las mostacillas de la foto: ajusta el ancho a mano.${par}`;
+    photo = img; phLive = false; photoP = null; anMemo = {}; photoCrop = null; cropCache = null;
+    $("#dropTxt").textContent = "Cambiar imagen"; $("#bPhoto").disabled = false;
+    $("#cropBox").hidden = false; drawCrop();
+    detectWidth();
   };
   img.onerror = () => toast("No pude abrir esa imagen. Prueba con JPG o PNG");
   img.src = url;
@@ -2815,7 +2954,7 @@ function prepPhoto(img, deg = 0) {
   x.translate(w / 2, h / 2); x.rotate(-t); x.drawImage(img, -iw / 2, -ih / 2, iw, ih);
   const d = x.getImageData(0, 0, w, h).data, N = w * h, L = new Float32Array(N * 3), A = new Uint8Array(N);
   for (let i = 0; i < N; i++) { const l = lab([d[i * 4], d[i * 4 + 1], d[i * 4 + 2]]); L[i * 3] = l[0]; L[i * 3 + 1] = l[1]; L[i * 3 + 2] = l[2]; A[i] = d[i * 4 + 3] >= 128 ? 1 : 0; }
-  return { w, h, L, A };
+  return { w, h, L, A, canvas: c };
 }
 function photoMask(P, useBg, tol) {
   const { w, h, L, A } = P, N = w * h, bg = new Uint8Array(N);
@@ -2847,7 +2986,21 @@ function photoMask(P, useBg, tol) {
   const border = [];
   for (let x = 0; x < w; x++) border.push(x, (h - 1) * w + x);
   for (let y = 1; y < h - 1; y++) border.push(y * w, y * w + w - 1);
-  flood(border.filter(i => A[i]), bg);
+  // el borde puede tener más de un fondo (una tarjeta blanca sobre una mesa celeste): se agrupan los colores del borde
+  // y cada grupo grande se inunda con su propio color de referencia
+  {
+    const seeds = border.filter(i => A[i]);
+    const groups = [];
+    for (const i of seeds) {
+      const l = [L[i * 3], L[i * 3 + 1], L[i * 3 + 2]];
+      let gbest = null, gd = 1e9;
+      for (const gr of groups) { const e = Math.hypot(l[0] - gr.m[0], l[1] - gr.m[1], l[2] - gr.m[2]); if (e < gd) { gd = e; gbest = gr; } }
+      if (gbest && gd < far) { gbest.ids.push(i); const n = gbest.ids.length; for (let k = 0; k < 3; k++) gbest.m[k] += (l[k] - gbest.m[k]) / n; }
+      else groups.push({ m: l, ids: [i] });
+    }
+    groups.sort((a, b) => b.ids.length - a.ids.length);
+    for (const gr of groups) if (gr === groups[0] || gr.ids.length >= seeds.length * .08) flood(gr.ids, bg);
+  }
   // segunda capa: si lo que queda es una superficie lisa grande (una tarjeta, un papel, una mano), también es fondo
   for (let pass = 0; pass < 2; pass++) {
     const mask = new Uint8Array(N); for (let i = 0; i < N; i++) mask[i] = bg[i] ? 0 : 1;
@@ -3015,8 +3168,10 @@ function analyzePhoto(img, useBg, tol, Wslider) {
     const insideX = c.x0 >= big.x0 - beadPx && c.x1 <= big.x1 + beadPx, nearY = c.y0 <= big.y1 + beadPx * 3 && c.y1 >= big.y0 - beadPx;
     if (insideX && nearY) { keep.add(c.id); x0 = Math.min(x0, c.x0); x1 = Math.max(x1, c.x1); y0 = Math.min(y0, c.y0); y1 = Math.max(y1, c.y1); }
   }
+  // con un recuadro marcado a mano, todo lo que quedó adentro es la pieza (aunque esté partida por mostacillas del color del fondo)
+  if (photoCrop) for (const c of cc.comps) if (!keep.has(c.id) && c.n >= w * h * .004) { keep.add(c.id); x0 = Math.min(x0, c.x0); x1 = Math.max(x1, c.x1); y0 = Math.min(y0, c.y0); y1 = Math.max(y1, c.y1); }
   const final = new Uint8Array(w * h); for (let i = 0; i < w * h; i++) if (keep.has(cc.lab[i])) final[i] = 1;
-  const pair = cc.comps.some(c => !keep.has(c.id) && c.n > big.n * .4);
+  const pair = !photoCrop && cc.comps.some(c => !keep.has(c.id) && c.n > big.n * .4);
   // luz: estira el brillo de la pieza (las fotos de celular suelen quedar oscuras frente a las fotos oficiales de Miyuki)
   let light = null;
   const Ls = []; for (let i = 0; i < w * h; i++) if (final[i]) Ls.push(P.L[i * 3]);
@@ -3051,7 +3206,7 @@ function convertPhoto(withUndo) {
   const { bw, bh } = bd(D);
   const tol = +$("#phTol").value, useBg = $("#phBg").checked;
   const W = +$("#phW").value, wmm = W * bw;
-  const an = analyzePhotoMemo(photo, useBg, tol, W);
+  const an = analyzePhotoMemo(photoSrc(), useBg, tol, W);
   if (!an) { $("#phInfo").textContent = "No encontré la pieza: baja la tolerancia del fondo o desmarca «Quitar el fondo»."; return; }
   const { P, mask } = an, cwPx = an.x1 - an.x0 + 1, chPx = an.y1 - an.y0 + 1;
   // si el ancho elegido es el que se contó, la grilla usa el tamaño medido de la mostacilla (sin acumular corrimiento)
@@ -3160,6 +3315,8 @@ function convertPhoto(withUndo) {
   }
   for (const p of pts) cells[p.i] = p.c.id;
   D.W = W; D.H = H; D.cells = cells; phLive = true;
+  trace = { canvas: P.canvas, ox: an.x0 + off[0], oy: an.y0 + off[1], k, W, H, puntada: D.puntada };
+  $("#tTrace").disabled = false;
   D.fringe.on = false; D.fringe.cells = [];
   if (fr) {
     // los flecos: largo y forma medidos en la foto, y el color de cada mostacilla de cada tira
@@ -3189,7 +3346,7 @@ function convertPhoto(withUndo) {
   const ids = Object.keys(usados).sort((a, b) => usados[b] - usados[a]);
   D.paleta = ids.concat(D.paleta.filter(id => !usados[id]));
   if (!usados[UI.color]) UI.color = ids[0];
-  $("#phInfo").textContent = `Quedó de ${W} × ${H} mostacillas con ${ids.length} colores: ${ids.map(codeTxt).join(", ")}.${an.pair ? " Usé un solo aro del par." : ""} Retócalo con el lápiz o cambia colores en la pestaña Colores.`;
+  $("#phInfo").textContent = `Quedó de ${W} × ${H} mostacillas con ${ids.length} colores: ${ids.map(codeTxt).join(", ")}.${an.pair ? " Usé un solo aro del par." : ""} Retócalo con el lápiz; con «Calcar» (la foto en la barra de herramientas) ves la foto encima de la grilla.`;
   changed(); fitZoom();
 }
 
@@ -3311,6 +3468,7 @@ function renderInfo() {
     `<tr><td>Costo</td><td class="r">${clp(P.costo)}</td></tr>` +
     `<tr><td>Ganancia ${Math.round(T.ganancia * 100)} %</td><td class="r">${clp(P.ganancia)}</td></tr>` +
     `<tr class="total"><td>Precio de venta</td><td class="r">${clp(P.precio)}</td></tr>`;
+  renderShopping();
   $("#priceSrc").textContent = `Misma fórmula que calcular-precio.js, con los valores de tabla-precios.json (${tSource}). Redondeado a ${clp(T.redondeo)}.`;
 }
 $("#selNivel").onchange = e => { D.nivel = e.target.value; changed(); };
@@ -3404,14 +3562,14 @@ function runs(list) {
   if (cur !== undefined) out.push([cur, n]);
   return out.map(([v, k]) => v === "·" ? `(${k} vacío${k > 1 ? "s" : ""})` : `${k} ${v}`).join(" · ");
 }
-async function makePattern() {
+async function makePattern(maxChart = 1800) {
   await fontsReady();
   const m = measure(D), lg = legend(D, m), L = Object.fromEntries(lg.map(l => [l.id, l])), piezas = D.pieza === "aros" ? 2 : 1;
   const { bw, bh } = bd(D), I = T.insumos.mostacillas;
   const W = 1600, M = 70, SANS = '"Bricolage Grotesque", system-ui, sans-serif';
   const [wmm, hmm] = gridMM(D);
   let hTot = hmm; for (const s of m.lay) hTot = Math.max(hTot, s.y0 + s.len * FR.bh);
-  const s = Math.min((W - 2 * M - 80) / wmm, 46, 1800 / hTot);
+  const s = Math.min((W - 2 * M - 80) / wmm, 46, maxChart / hTot);
   const chartW = wmm * s, chartH = hTot * s;
   const lines = [];
   if (D.puntada === "peyote") {
@@ -3466,8 +3624,10 @@ async function makePattern() {
   if (D.puntada === "brick") { x.fillStyle = "#5a4a63"; x.font = `500 19px ${SANS}`; x.fillText("En ladrillo se suele partir por la fila más ancha y tejer hacia arriba, y después hacia abajo.", M, y + 30); y += 30; }
   for (const [name, n, t] of lines) {
     y += lineH;
-    x.fillStyle = "#24122e"; x.font = `700 21px ${SANS}`; x.fillText(name, M, y);
-    x.fillStyle = "#5a4a63"; x.font = `500 19px ${SANS}`; x.fillText(`(${n})`, M + 150, y);
+    // casilla para marcar la fila al tejer (en papel)
+    x.strokeStyle = "#7a3fa0"; x.lineWidth = 2; rr(x, M, y - 19, 22, 22, 5); x.stroke();
+    x.fillStyle = "#24122e"; x.font = `700 21px ${SANS}`; x.fillText(name, M + 34, y);
+    x.fillStyle = "#5a4a63"; x.font = `500 19px ${SANS}`; x.fillText(`(${n})`, M + 168, y);
     x.fillStyle = "#24122e"; x.font = `500 21px ${SANS}`;
     let tt = t; while (x.measureText(tt).width > W - 2 * M - 220 && tt.length > 10) tt = tt.slice(0, -2);
     x.fillText(tt === t ? t : tt + "…", M + 220, y);
@@ -3475,6 +3635,136 @@ async function makePattern() {
   x.fillStyle = "#5a4a63"; x.font = `500 18px ${SANS}`; x.textAlign = "right"; x.fillText("Kika Miyuki · diseñador de patrones", W - M, H - 30);
   return c;
 }
+
+/* ---------- lista de compras ---------- */
+// Lo que hay que tener para tejer: gramos de cada color (con merma), en tubos como los que se compran (tabla-precios.json)
+function shoppingList(d = D) {
+  const m = measure(d), I = T.insumos.mostacillas, piezas = (d.pieza === "aros" ? 2 : 1) * Math.max(1, d.pares || 1);
+  const items = legend(d, m).map(l => {
+    const beads = l.n * piezas, grams = beads / I.porGramo * (1 + I.merma), tubes = Math.max(1, Math.ceil(grams / I.gramos));
+    return { ...l, beads, grams, tubes, cost: tubes * I.precio, have: STOCK.has(l.id) };
+  });
+  const buy = items.filter(i => !i.have);
+  return { items, buy, tubes: buy.reduce((s, i) => s + i.tubes, 0), cost: buy.reduce((s, i) => s + i.cost, 0), piezas, I };
+}
+function renderShopping() {
+  const s = shoppingList(), u = D.pieza === "aros" ? "pares" : "piezas";
+  $("#paresLbl").textContent = D.pieza === "aros" ? "Pares a tejer" : "Piezas a tejer";
+  if (document.activeElement !== $("#inPares")) $("#inPares").value = D.pares || 1;
+  $("#buyTbl").innerHTML = s.items.length ? `<tr><th>Color</th><th class="r">g</th><th class="r">Tubos ${s.I.gramos} g</th><th></th></tr>` +
+    s.items.map(i => `<tr><td><span class="leg-sw" style="background:${i.c.hex}"></span><b>${codeTxt(i.id)}</b> <span class="hint">${esc(i.c.name)}</span></td><td class="r">${fmtD(i.grams)}</td><td class="r">${i.tubes}</td><td class="r">${i.have ? '<span class="hint">la tienes</span>' : "<b>comprar</b>"}</td></tr>`).join("")
+    : `<tr><td class="hint">Todavía no hay mostacillas pintadas.</td></tr>`;
+  $("#buyTot").textContent = !s.items.length ? "" : s.buy.length
+    ? `Para ${D.pares || 1} ${u}: comprar ${s.tubes} tubo${s.tubes > 1 ? "s" : ""} de ${s.I.gramos} g, unos ${clp(s.cost)}. Marca con la estrella (pestaña Colores) los colores que ya tienes.`
+    : `Tienes todos los colores para ${D.pares || 1} ${u}.`;
+}
+function shoppingText() {
+  const s = shoppingList(), u = D.pieza === "aros" ? "pares" : "piezas";
+  const head = `Lista de compras · ${D.name} (${D.pares || 1} ${u})`;
+  if (!s.buy.length) return `${head}\nTengo todos los colores.`;
+  return [head, ...s.buy.map(i => `- ${codeTxt(i.id)} ${i.c.name}: ${fmtD(i.grams)} g → ${i.tubes} tubo${i.tubes > 1 ? "s" : ""} de ${s.I.gramos} g`), `Total: ${s.tubes} tubo${s.tubes > 1 ? "s" : ""}, unos ${clp(s.cost)}`].join("\n");
+}
+$("#inPares").addEventListener("change", e => { D.pares = Math.max(1, Math.min(100, +e.target.value | 0)); scheduleSave(); renderShopping(); });
+$("#bCopyBuy").onclick = async () => {
+  const t = shoppingText();
+  try { await navigator.clipboard.writeText(t); toast("Lista copiada"); }
+  catch (e) { saveFile(`lista-de-compras-${slug(D.name)}.txt`, new Blob([t], { type: "text/plain" })); }
+};
+
+/* ---------- patrón en PDF (tamaño carta) ---------- */
+// PDF hecho a mano, sin librerías: cada página es una imagen JPEG a 150 ppp. Funciona sin internet en la app.
+async function pdfFromCanvases(pages) {
+  const enc = new TextEncoder(), parts = [], offsets = [];
+  let len = 0;
+  const push = x => { const b = typeof x === "string" ? enc.encode(x) : x; parts.push(b); len += b.length; };
+  push(new Uint8Array([0x25, 0x50, 0x44, 0x46, 0x2d, 0x31, 0x2e, 0x34, 0x0a, 0x25, 0xe2, 0xe3, 0xcf, 0xd3, 0x0a]));   // %PDF-1.4 y marca binaria
+  const n = pages.length, total = 3 + n * 3;
+  const obj = (id, body) => { offsets[id] = len; push(`${id} 0 obj\n${body}\nendobj\n`); };
+  obj(1, "<< /Type /Catalog /Pages 2 0 R >>");
+  obj(2, `<< /Type /Pages /Kids [${pages.map((_, i) => `${3 + i * 3} 0 R`).join(" ")}] /Count ${n} >>`);
+  for (let i = 0; i < n; i++) {
+    const pg = 3 + i * 3, ct = pg + 1, im = pg + 2, c = pages[i];
+    const jpg = new Uint8Array(await (await new Promise(r => c.toBlob(r, "image/jpeg", .9))).arrayBuffer());
+    obj(pg, `<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /XObject << /Im${i} ${im} 0 R >> >> /Contents ${ct} 0 R >>`);
+    const cs = `q 612 0 0 792 0 0 cm /Im${i} Do Q`;
+    obj(ct, `<< /Length ${cs.length} >>\nstream\n${cs}\nendstream`);
+    offsets[im] = len;
+    push(`${im} 0 obj\n<< /Type /XObject /Subtype /Image /Width ${c.width} /Height ${c.height} /ColorSpace /DeviceRGB /BitsPerComponent 8 /Filter /DCTDecode /Length ${jpg.length} >>\nstream\n`);
+    push(jpg); push("\nendstream\nendobj\n");
+  }
+  const xref = len;
+  push(`xref\n0 ${total}\n0000000000 65535 f \n` + Array.from({ length: total - 1 }, (_, i) => String(offsets[i + 1]).padStart(10, "0") + " 00000 n \n").join(""));
+  push(`trailer\n<< /Size ${total} /Root 1 0 R >>\nstartxref\n${xref}\n%%EOF\n`);
+  return new Blob(parts, { type: "application/pdf" });
+}
+async function makePDF() {
+  await fontsReady();
+  const SANS = '"Bricolage Grotesque", system-ui, sans-serif';
+  const PW = 1275, PH = 1650, M = 70, HEAD = 56, room = PH - M - HEAD - M;
+  // el gráfico se achica lo justo para caber entero en la primera hoja junto al título (el patrón mide 1600 px de ancho)
+  const pat = await makePattern(Math.floor(room * 1600 / (PW - 2 * M)) - 300);
+  const scale = (PW - 2 * M) / pat.width, sliceH = Math.floor(room / scale);
+  // cortes de página por filas blancas del patrón, para no partir una fila de mostacillas ni una línea de texto
+  const px = pat.getContext("2d").getImageData(0, 0, pat.width, pat.height).data;
+  const blank = y => { for (let x = 0; x < pat.width; x += 3) { const i = (y * pat.width + x) * 4; if (px[i] < 245 || px[i + 1] < 245 || px[i + 2] < 245) return false; } return true; };
+  const cuts = [0];
+  while (cuts[cuts.length - 1] + sliceH < pat.height) {
+    const lim = cuts[cuts.length - 1] + sliceH;
+    // primero un espacio blanco alto (entre secciones o líneas de texto), si no, el espacio entre dos filas de mostacillas
+    let end = -1, run = 0;
+    for (let y = lim; y > cuts[cuts.length - 1] + 200 && end < 0; y--) { run = blank(y) ? run + 1 : 0; if (run >= 12) end = y + 6; }
+    if (end < 0) for (let y = lim; y > lim - 260; y--) if (blank(y)) { end = y; break; }
+    cuts.push(end > cuts[cuts.length - 1] + 200 ? end : lim);
+  }
+  cuts.push(pat.height);
+  const pages = [];
+  const page = () => { const c = document.createElement("canvas"); c.width = PW; c.height = PH; const x = c.getContext("2d"); x.fillStyle = "#fff"; x.fillRect(0, 0, PW, PH); pages.push(c); return x; };
+  for (let i = 0; i + 1 < cuts.length; i++) {
+    const x = page(), h = cuts[i + 1] - cuts[i];
+    x.drawImage(pat, 0, cuts[i], pat.width, h, M, M + HEAD, pat.width * scale, h * scale);
+  }
+  // última página: materiales y lista de compras
+  const s = shoppingList(), P = price(D), u = D.pieza === "aros" ? "pares" : "piezas";
+  let x = page(), y = M + HEAD + 40;
+  x.fillStyle = "#24122e"; x.font = `750 46px ${SANS}`; x.textBaseline = "alphabetic"; x.fillText("Materiales y lista de compras", M, y); y += 44;
+  x.fillStyle = "#5a4a63"; x.font = `500 24px ${SANS}`;
+  x.fillText(`Para ${D.pares || 1} ${u} · ${fmtN(s.items.reduce((t, i) => t + i.beads, 0))} mostacillas · tubos de ${s.I.gramos} g con ${Math.round(s.I.merma * 100)} % de merma`, M, y); y += 50;
+  x.fillStyle = "#7a3fa0"; x.font = `700 20px ${SANS}`;
+  [["COLOR", M + 40], ["MOSTACILLAS", 760], ["GRAMOS", 930], ["TUBOS", 1040], ["", 1120]].forEach(([t, X]) => x.fillText(t, X, y)); y += 16;
+  for (const i of s.items) {
+    if (y > PH - M - 140) { x = page(); y = M + HEAD + 40; }
+    y += 40;
+    x.fillStyle = i.c.hex; rr(x, M, y - 26, 30, 30, 7); x.fill(); x.strokeStyle = "rgba(36,18,46,.3)"; x.lineWidth = 1; x.stroke();
+    x.fillStyle = "#24122e"; x.font = `700 23px ${SANS}`; x.fillText(`${i.letter} · ${codeTxt(i.id)}`, M + 40, y);
+    x.fillStyle = "#5a4a63"; x.font = `500 20px ${SANS}`; let nm = i.c.name; while (x.measureText(nm).width > 330 && nm.length > 4) nm = nm.slice(0, -2); x.fillText(nm === i.c.name ? nm : nm + "…", M + 260, y);
+    x.fillStyle = "#24122e"; x.font = `600 22px ${SANS}`; x.fillText(fmtN(i.beads), 760, y); x.fillText(fmtD(i.grams), 930, y); x.fillText(String(i.tubes), 1040, y);
+    x.fillStyle = i.have ? "#5a4a63" : "#a3302a"; x.font = `700 20px ${SANS}`; x.fillText(i.have ? "la tengo" : "comprar", 1110, y);
+  }
+  y += 60;
+  x.fillStyle = "#24122e"; x.font = `700 26px ${SANS}`;
+  x.fillText(s.buy.length ? `Comprar: ${s.tubes} tubo${s.tubes > 1 ? "s" : ""} (unos ${clp(s.cost)})` : "Tienes todos los colores", M, y); y += 40;
+  x.fillStyle = "#5a4a63"; x.font = `500 22px ${SANS}`;
+  const extra = [D.pieza === "aros" && ({ plata: "Ganchos de plata 925", oro: "Ganchos con baño de oro", poste: "Postes dorados" })[D.gancho] + `: ${D.pares || 1} par${(D.pares || 1) > 1 ? "es" : ""}`,
+    D.perlas && `Perlas o cristales: ${D.perlas * (D.pares || 1)}`, D.cuentas && `Charms / ojo turco: ${D.cuentas * (D.pares || 1)}`, P.precio && `Precio sugerido: ${clp(P.precio)} ${D.pieza === "aros" ? "el par" : "la pieza"}`].filter(Boolean);
+  for (const t of extra) { x.fillText(t, M, y); y += 34; }
+  // encabezado y número de página
+  pages.forEach((c, i) => {
+    const g2 = c.getContext("2d");
+    g2.fillStyle = "#24122e"; g2.font = `700 22px ${SANS}`; g2.textAlign = "left"; g2.fillText(`Kika Miyuki · ${D.name}`, M, M + 10);
+    g2.fillStyle = "#5a4a63"; g2.font = `500 20px ${SANS}`; g2.textAlign = "right"; g2.fillText(`Página ${i + 1} de ${pages.length}`, PW - M, M + 10);
+    g2.strokeStyle = "#ebe1d3"; g2.lineWidth = 2; g2.beginPath(); g2.moveTo(M, M + 26); g2.lineTo(PW - M, M + 26); g2.stroke();
+    g2.textAlign = "left";
+  });
+  return pdfFromCanvases(pages);
+}
+$("#bPdf").onclick = async () => {
+  if (!measure(D).total) { toast("Pinta el diseño primero"); return; }
+  const b = $("#bPdf"); b.disabled = true; b.textContent = "Armando el PDF…";
+  try { saveFile(`patron-${slug(D.name)}.pdf`, await makePDF()); }
+  catch (e) { toast("No pude armar el PDF: " + e.message); }
+  finally { b.disabled = false; b.textContent = "Descargar PDF"; }
+};
+
 $("#bPattern").onclick = async () => { if (!measure(D).total) { toast("Pinta el diseño primero"); return; } saveFile(`patron-${slug(D.name)}.png`, await canvasBlob(await makePattern())); };
 if (window.self === window.top) $("#bPrint").hidden = false;
 $("#bPrint").onclick = async () => {
@@ -3485,6 +3775,134 @@ $("#bPrint").onclick = async () => {
   $("#printArea").innerHTML = ""; $("#printArea").appendChild(img);
 };
 
+/* ================== modo tejer ================== */
+// Pasos para tejer: las filas (columnas en peyote) con sus colores de izquierda a derecha, y al final los flecos.
+// En ladrillo se suele partir por la fila más ancha (la base), tejer hacia arriba y después, dando vuelta la pieza, hacia abajo.
+function tejerSteps(d, orden) {
+  const m = measure(d), L = Object.fromEntries(legend(d, m).map(l => [l.id, l]));
+  const lines = [];
+  if (d.puntada === "peyote") {
+    for (let c = 0; c < d.W; c++) { const seq = []; for (let r = 0; r < d.H; r++) if (valid(d, r, c)) seq.push(getC(d, r, c)); if (seq.some(Boolean)) lines.push({ key: "c" + c, label: `Columna ${c + 1}`, idx: c, seq }); }
+  } else {
+    for (let r = 0; r < d.H; r++) { const seq = []; for (let c = 0; c < d.W; c++) if (valid(d, r, c)) seq.push(getC(d, r, c)); if (seq.some(Boolean)) lines.push({ key: "r" + r, label: `Fila ${r + 1}`, idx: r, seq }); }
+  }
+  let order = lines.map(l => ({ ...l, note: "" }));
+  if (orden === "ladrillo" && d.puntada === "brick" && lines.length > 2) {
+    let bi = 0; lines.forEach((l, i) => { if (l.seq.filter(Boolean).length > lines[bi].seq.filter(Boolean).length) bi = i; });
+    order = [{ ...lines[bi], note: "Fila base: la más ancha. Se teje primero, en escalera (ladder)." }];
+    for (let i = bi - 1; i >= 0; i--) order.push({ ...lines[i], note: i === bi - 1 ? "Subiendo desde la base hacia la punta." : "Subiendo." });
+    for (let i = bi + 1; i < lines.length; i++) order.push({ ...lines[i], note: i === bi + 1 ? "Da vuelta la pieza y teje hacia abajo desde la base." : "Bajando." });
+  }
+  for (const s of m.lay) order.push({ key: "f" + s.i, label: `Fleco ${s.i + 1}`, fringe: s.i, note: "Desde la pieza hacia la punta del fleco.", seq: Array.from({ length: s.len }, (_, k) => frColor(d, s, k)) });
+  for (const st of order) {
+    let a = 0, b = st.seq.length - 1; while (a <= b && !st.seq[a]) a++; while (b >= a && !st.seq[b]) b--;
+    st.runs = []; for (let i = a; i <= b; i++) { const v = st.seq[i] || null, last = st.runs[st.runs.length - 1]; if (last && last.v === v) last.n++; else st.runs.push({ v, n: 1 }); }
+    st.count = st.seq.filter(Boolean).length;
+    st.letters = L;
+  }
+  return order;
+}
+let TJ = null, wakeLock = null;
+function tejerState() { return D.tejido || (D.tejido = { orden: D.puntada === "brick" ? "ladrillo" : "arriba", paso: 0, hechas: [] }); }
+function openTejer() {
+  if (!measure(D).total) { toast("Pinta el diseño primero"); return; }
+  $("#dlgTejer").showModal(); renderTejer();
+  try { if (navigator.wakeLock) navigator.wakeLock.request("screen").then(l => { wakeLock = l; $("#tjWake").textContent = "La pantalla se queda encendida mientras tejes."; }).catch(() => {}); } catch (e) { /* sin bloqueo de pantalla */ }
+}
+$("#dlgTejer").addEventListener("close", () => { try { wakeLock && wakeLock.release(); } catch (e) { /* nada */ } wakeLock = null; changed(); });
+function renderTejer() {
+  const t = tejerState();
+  TJ = tejerSteps(D, t.orden);
+  t.paso = Math.max(0, Math.min(TJ.length - 1, t.paso || 0));
+  const st = TJ[t.paso], done = new Set(t.hechas);
+  $("#tjName").textContent = D.name;
+  document.querySelectorAll("#segOrden button").forEach(b => { b.setAttribute("aria-pressed", b.dataset.v === t.orden); b.disabled = D.puntada !== "brick" && b.dataset.v === "ladrillo"; });
+  const nDone = TJ.filter(s => done.has(s.key)).length;
+  $("#tjBar").style.width = (nDone / TJ.length * 100) + "%";
+  $("#tjCount").textContent = `Paso ${t.paso + 1} de ${TJ.length} · ${nDone} tejidos`;
+  $("#tjTitle").textContent = st.label;
+  $("#tjDone").textContent = done.has(st.key) ? "✓ Tejida" : `${st.count} mostacillas`;
+  $("#tjSub").textContent = st.note || (st.fringe != null ? "" : D.puntada === "peyote" ? "De arriba hacia abajo." : "De izquierda a derecha.");
+  $("#tjRuns").innerHTML = st.runs.map(r => {
+    if (!r.v) return `<span class="tj-run"><i style="background:transparent">·</i>${r.n} hueco${r.n > 1 ? "s" : ""}</span>`;
+    const l = st.letters[r.v], hex = pal(r.v).hex;
+    return `<span class="tj-run"><i style="background:${hex};color:${lum(hex) > .55 ? "#24122e" : "#fff"}">${l ? l.letter : ""}</i><b class="num">${r.n}</b> ${codeTxt(r.v)}</span>`;
+  }).join("");
+  $("#tjPrev").disabled = t.paso === 0;
+  $("#tjNext").textContent = t.paso === TJ.length - 1 ? "Tejida ✓ Terminar" : "Tejida ✓ Siguiente →";
+  // la fila en grande
+  // solo de la primera a la última mostacilla (sin las casillas vacías de los extremos), y siempre cabe en la pantalla
+  let a0 = 0, b0 = st.seq.length - 1; while (a0 < b0 && !st.seq[a0]) a0++; while (b0 > a0 && !st.seq[b0]) b0--;
+  const seqV = st.seq.slice(a0, b0 + 1);
+  const rc = $("#tjRow"), dpr = window.devicePixelRatio || 1, n = seqV.length;
+  const avail = Math.max(160, $(".tj-now").clientWidth - 34), size = Math.max(10, Math.min(48, Math.floor(avail / Math.max(1, n))));
+  const Wc = n * size, Hc = Math.round(size * .9);
+  rc.width = Wc * dpr; rc.height = Hc * dpr; rc.style.width = Wc + "px"; rc.style.height = Hc + "px";
+  const x = rc.getContext("2d"); x.setTransform(dpr, 0, 0, dpr, 0, 0); x.clearRect(0, 0, Wc, Hc);
+  seqV.forEach((v, i) => {
+    const X = i * size + size / 2, Y = Hc / 2;
+    if (!v) { x.strokeStyle = css("--cell"); x.lineWidth = 1.5; rr(x, X - size * .44, Y - Hc * .44, size * .88, Hc * .88, 6); x.stroke(); return; }
+    beadReal(x, X, Y, size, Hc, pal(v));
+    const l = st.letters[v]; if (l && size >= 20) { x.fillStyle = lum(pal(v).hex) > .55 ? "#24122e" : "#fff"; x.font = `750 ${Math.round(size * .42)}px ${css("--sans")}`; x.textAlign = "center"; x.textBaseline = "middle"; x.fillText(l.letter, X, Y + 1); }
+  });
+  drawTejerMap(done, st);
+}
+function drawTejerMap(done, cur) {
+  const mc = $("#tjMap"), dpr = window.devicePixelRatio || 1, Wc = mc.clientWidth || 200;
+  const m = measure(D), { bw, bh } = bd(D), [wmm, hmm] = gridMM(D);
+  let hTot = hmm; for (const s of m.lay) hTot = Math.max(hTot, s.y0 + s.len * FR.bh);
+  const z = Wc / wmm, Hc = Math.min(560, Math.ceil(hTot * z));
+  const zz = Math.min(z, Hc / hTot);
+  mc.width = Wc * dpr; mc.height = Hc * dpr; mc.style.height = Hc + "px";
+  const x = mc.getContext("2d"); x.setTransform(dpr, 0, 0, dpr, 0, 0); x.clearRect(0, 0, Wc, Hc);
+  const ox = (Wc - wmm * zz) / 2;
+  mc._map = { ox, zz };
+  const keyOf = (r, c) => D.puntada === "peyote" ? "c" + c : "r" + r;
+  eachCell(D, (r, c, v) => {
+    if (!v) return;
+    const [cx, cy] = center(D, r, c), k = keyOf(r, c);
+    x.globalAlpha = done.has(k) && cur.key !== k ? .28 : 1;
+    x.fillStyle = pal(v).hex; x.fillRect(ox + (cx - bw * .45) * zz, (cy - bh * .44) * zz, bw * .9 * zz, bh * .88 * zz);
+  });
+  for (const s of m.lay) for (let k = 0; k < s.len; k++) {
+    const key = "f" + s.i; x.globalAlpha = done.has(key) && cur.key !== key ? .28 : 1;
+    x.fillStyle = pal(frColor(D, s, k)).hex; x.fillRect(ox + (s.x - FR.bw * .45) * zz, (s.y0 + k * FR.bh + FR.bh * .06) * zz, FR.bw * .9 * zz, FR.bh * .88 * zz);
+  }
+  x.globalAlpha = 1;
+  // la fila actual, marcada
+  x.strokeStyle = "#f7b928"; x.lineWidth = 3;
+  if (cur.fringe != null) { const s = m.lay[cur.fringe]; x.strokeRect(ox + (s.x - FR.bw / 2) * zz - 2, s.y0 * zz - 2, FR.bw * zz + 4, s.len * FR.bh * zz + 4); }
+  else if (D.puntada === "peyote") x.strokeRect(ox + cur.idx * bw * zz - 2, 0, bw * zz + 4, Hc);
+  else x.strokeRect(1, cur.idx * bh * zz - 2, Wc - 2, bh * zz + 4);
+}
+$("#tjMap").addEventListener("click", e => {
+  const mc = $("#tjMap"), b = mc.getBoundingClientRect(), { ox, zz } = mc._map || {};
+  if (!zz) return;
+  const xmm = (e.clientX - b.left - ox) / zz, ymm = (e.clientY - b.top) / zz;
+  let key = null;
+  const f = hitFringe(fringeLayout(D), xmm, ymm);
+  if (f) key = "f" + f[0];
+  else { const h = hitCell(D, xmm, ymm) || (D.puntada === "peyote" ? [0, Math.floor(xmm / bd(D).bw)] : [Math.floor(ymm / bd(D).bh), 0]); key = D.puntada === "peyote" ? "c" + h[1] : "r" + h[0]; }
+  const i = TJ.findIndex(s => s.key === key);
+  if (i >= 0) { tejerState().paso = i; scheduleSave(); renderTejer(); }
+});
+$("#tjNext").onclick = () => {
+  const t = tejerState(), st = TJ[t.paso];
+  if (!t.hechas.includes(st.key)) t.hechas.push(st.key);
+  if (t.paso < TJ.length - 1) t.paso++;
+  else toast("¡Terminado! Todas las filas están tejidas");
+  scheduleSave(); renderTejer();
+};
+$("#tjPrev").onclick = () => { const t = tejerState(); if (t.paso > 0) { t.paso--; scheduleSave(); renderTejer(); } };
+$("#tjReset").onclick = () => { const t = tejerState(); t.paso = 0; t.hechas = []; scheduleSave(); renderTejer(); };
+$("#segOrden").addEventListener("click", e => { const b = e.target.closest("button"); if (!b || b.disabled) return; const t = tejerState(); t.orden = b.dataset.v; t.paso = 0; scheduleSave(); renderTejer(); });
+$("#dlgTejer").addEventListener("keydown", e => {
+  if (e.key === "ArrowRight" || e.key === " ") { e.preventDefault(); $("#tjNext").click(); }
+  else if (e.key === "ArrowLeft") { e.preventDefault(); $("#tjPrev").click(); }
+});
+$("#bTejer").onclick = openTejer;
+addEventListener("resize", () => { if ($("#dlgTejer").open) renderTejer(); });
+
 /* ================== biblioteca ================== */
 let LIB = load(K_LIB, []);
 function thumb(d) {
@@ -3494,7 +3912,7 @@ function thumb(d) {
   return c.toDataURL("image/jpeg", .82);
 }
 let savedSig = null;
-const curSig = () => JSON.stringify([D.cells, D.fringe, D.name, D.cliente, D.notas, D.pieza, D.puntada, D.W, D.H, D.gancho, D.perlas, D.cuentas, D.nivel, D.tamano, D.paleta]);
+const curSig = () => JSON.stringify([D.cells, D.fringe, D.tejido, D.name, D.cliente, D.notas, D.pieza, D.puntada, D.W, D.H, D.gancho, D.perlas, D.cuentas, D.nivel, D.tamano, D.paleta]);
 function saveToLib() {
   const s = JSON.parse(JSON.stringify(D));
   s.editado = Date.now(); s.thumb = thumb(D); s.precio = price(D).precio;
@@ -3519,6 +3937,7 @@ let pending = null;
 function openDesign(d, isNew) {
   D = normalize(JSON.parse(JSON.stringify(d))); delete D.thumb; delete D.precio;
   undoS.length = 0; redoS.length = 0; savedSig = isNew ? null : curSig(); phLive = false;
+  trace = null; UI.trace = false; $("#tTrace").disabled = true; toggles();
   if (!D.paleta.includes(UI.color)) UI.color = usedIds(D)[0] || D.paleta[0];
   changed(); fitZoom();
 }
