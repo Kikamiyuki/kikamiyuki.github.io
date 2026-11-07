@@ -1,0 +1,2989 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Diseñador Kika Miyuki</title>
+<meta name="claude:viewport-fit-sides" content="cover" />
+<meta name="robots" content="noindex, nofollow" />
+<!-- app instalable: en el iPhone, Safari → Compartir → «Agregar a inicio» -->
+<link rel="manifest" href="manifest.webmanifest" />
+<link rel="apple-touch-icon" href="icono-180.png" />
+<link rel="icon" type="image/png" sizes="192x192" href="icono-192.png" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-title" content="Diseñador" />
+<meta name="apple-mobile-web-app-status-bar-style" content="default" />
+<meta name="theme-color" content="#f4ede3" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,400..800&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet" />
+<style>
+/* Diseñador de patrones de mostacillas (uso personal de Kika Miyuki).
+   Misma base que la web y los reels: papel crema, tinta ciruela, lila y las 4 mostacillas del logo;
+   Bricolage Grotesque para todo, Instrument Serif itálica para los acentos.
+   Layout: mesa de trabajo (grilla de mostacillas) a la izquierda y panel de la pieza a la derecha; en el celular se apilan. */
+:root {
+  --paper: #f4ede3; --paper2: #ebe1d3; --card: #fbf7f1; --ink: #24122e; --ink-soft: #5a4a63; --plum: #7a3fa0; --lilac: #dcc2f2;
+  --red: #e5392f; --yel: #f7b928; --blue: #1e7be0; --green: #2e9f4f;
+  --line: rgba(36, 18, 46, .14); --stage: #fffaf3; --cell: rgba(36, 18, 46, .11); --btn-bg: #24122e; --btn-fg: #f4ede3;
+  --warn: #a3302a;
+  --sans: "Bricolage Grotesque", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --serif: "Instrument Serif", Georgia, "Times New Roman", serif;
+  --r: 22px;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #1b0f22; --paper2: #2a1934; --card: #24152d; --ink: #f4ede3; --ink-soft: #c9b8d4; --plum: #cfa6f0; --lilac: #4b2f60;
+    --line: rgba(244, 237, 227, .14); --stage: #140a19; --cell: rgba(244, 237, 227, .13); --btn-bg: #f4ede3; --btn-fg: #24122e;
+    --warn: #ff9b8f; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --paper: #1b0f22; --paper2: #2a1934; --card: #24152d; --ink: #f4ede3; --ink-soft: #c9b8d4; --plum: #cfa6f0; --lilac: #4b2f60;
+  --line: rgba(244, 237, 227, .14); --stage: #140a19; --cell: rgba(244, 237, 227, .13); --btn-bg: #f4ede3; --btn-fg: #24122e;
+  --warn: #ff9b8f; color-scheme: dark;
+}
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+html, body { margin: 0; }
+body { background: var(--paper); color: var(--ink); font: 15px/1.45 var(--sans); -webkit-font-smoothing: antialiased; font-optical-sizing: auto;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: calc(14px + env(safe-area-inset-top, 0px)) calc(40px + env(safe-area-inset-bottom, 0px)); -webkit-tap-highlight-color: transparent; }
+button, input, select, textarea { font: inherit; color: inherit; }
+h1, h2, h3 { font-weight: 750; font-stretch: 90%; letter-spacing: -.03em; line-height: 1; margin: 0; text-wrap: balance; }
+h1 em, h2 em, h3 em { font-family: var(--serif); font-style: italic; font-weight: 400; font-stretch: normal; letter-spacing: -.01em; color: var(--plum); }
+a { color: var(--plum); }
+.num { font-variant-numeric: tabular-nums; }
+:focus-visible { outline: 3px solid var(--blue); outline-offset: 2px; }
+
+/* ---------- cabecera ---------- */
+.top { max-width: 1440px; margin: 0 auto 14px; display: flex; flex-wrap: wrap; align-items: center; gap: 12px 18px; }
+.brand { display: flex; align-items: center; gap: 12px; margin-right: auto; }
+.dots { display: inline-grid; grid-template-columns: repeat(2, 11px); gap: 3px; }
+.dots i { width: 11px; height: 11px; border-radius: 3px; box-shadow: inset 0 -2px 0 rgba(0,0,0,.2); }
+.dots i:nth-child(1) { background: var(--red); } .dots i:nth-child(2) { background: var(--yel); }
+.dots i:nth-child(3) { background: var(--blue); } .dots i:nth-child(4) { background: var(--green); }
+.brand h1 { font-size: 30px; }
+.meta { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.meta input { background: var(--card); border: 2px solid transparent; border-radius: 999px; padding: 9px 16px; min-width: 0; width: 210px; }
+.meta input:hover { border-color: var(--line); }
+.meta input:focus { border-color: var(--plum); outline: none; }
+
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; border: 0; border-radius: 999px; padding: 11px 18px; cursor: pointer;
+  font-weight: 700; background: var(--btn-bg); color: var(--btn-fg); box-shadow: 4px 4px 0 var(--yel); transition: transform .12s, box-shadow .12s, background .2s; white-space: nowrap; }
+.btn:hover { transform: translate(-1px, -1px); box-shadow: 5px 5px 0 var(--yel); }
+.btn:active { transform: translate(3px, 3px); box-shadow: 1px 1px 0 var(--yel); }
+.btn.soft { background: var(--paper2); color: var(--ink); box-shadow: 4px 4px 0 var(--lilac); }
+.btn.soft:hover { box-shadow: 5px 5px 0 var(--lilac); }
+.btn.soft:active { box-shadow: 1px 1px 0 var(--lilac); }
+.btn.small { padding: 8px 14px; font-size: 14px; box-shadow: 3px 3px 0 var(--lilac); }
+.btn.wide { width: 100%; }
+.btn[disabled] { opacity: .45; cursor: not-allowed; transform: none; }
+
+/* ---------- mesa ---------- */
+.app { max-width: 1440px; margin: 0 auto; display: grid; grid-template-columns: minmax(0, 1fr) 400px; gap: 18px; align-items: start; }
+.bench { background: var(--card); border-radius: var(--r); padding: 14px; min-width: 0; display: flex; flex-direction: column; gap: 12px; }
+.tools { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+.tool { width: 42px; height: 42px; border-radius: 14px; border: 2px solid transparent; background: var(--paper2); cursor: pointer; display: grid; place-items: center; color: var(--ink); }
+.tool svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.tool:hover { border-color: var(--line); }
+.tool[aria-pressed="true"] { background: var(--btn-bg); color: var(--btn-fg); box-shadow: 3px 3px 0 var(--yel); }
+.sep { width: 2px; height: 28px; background: var(--line); margin: 0 4px; border-radius: 2px; }
+.zoomlbl { font-size: 13px; color: var(--ink-soft); min-width: 44px; text-align: center; }
+
+.swatches { display: flex; gap: 7px; overflow-x: auto; padding: 8px 2px 8px; scrollbar-width: thin; align-items: center; }
+.sw { flex: none; position: relative; width: 34px; height: 30px; border-radius: 9px; border: 0; cursor: pointer; background: var(--c); padding: 0;
+  box-shadow: inset 0 -5px 0 rgba(0,0,0,.18), inset 0 4px 0 rgba(255,255,255,.28), 0 0 0 1px var(--line); }
+.sw[aria-pressed="true"] { outline: 3px solid var(--ink); outline-offset: 2px; }
+.sw .u { position: absolute; right: -4px; top: -7px; min-width: 16px; height: 16px; border-radius: 8px; background: var(--ink); color: var(--paper);
+  font-size: 10px; font-weight: 700; display: grid; place-items: center; padding: 0 3px; }
+.sw-add { flex: none; height: 30px; border-radius: 9px; border: 2px dashed var(--plum); background: transparent; color: var(--plum); font-weight: 700; font-size: 13px; padding: 0 10px; cursor: pointer; white-space: nowrap; }
+.sw-add:hover { background: var(--paper); }
+.cur { display: flex; align-items: center; gap: 10px; font-size: 14px; color: var(--ink-soft); min-height: 20px; }
+.cur b { color: var(--ink); }
+.chip { display: inline-block; flex: none; width: 18px; height: 16px; border-radius: 5px; background: var(--c); box-shadow: inset 0 -3px 0 rgba(0,0,0,.2), 0 0 0 1px var(--line); }
+
+.wrap { position: relative; overflow: auto; background: var(--stage); border-radius: 16px; height: min(66vh, 760px); min-height: 320px; overscroll-behavior: contain; }
+.wrap canvas { display: block; touch-action: none; cursor: crosshair; margin: 0 auto; }
+.status { display: flex; flex-wrap: wrap; gap: 6px 18px; font-size: 14px; color: var(--ink-soft); }
+.status b { color: var(--ink); font-weight: 700; }
+.status .price { margin-left: auto; color: var(--plum); font-weight: 750; font-size: 18px; }
+
+/* ---------- panel ---------- */
+.side { display: flex; flex-direction: column; gap: 14px; min-width: 0; position: sticky; top: calc(env(safe-area-inset-top, 0px) + 12px); }
+.prev { background: var(--card); border-radius: var(--r); padding: 14px 14px 12px; }
+.prev-h { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; margin-bottom: 8px; }
+.prev-h h2 { font-size: 22px; }
+.prev-h span { font-size: 13px; color: var(--ink-soft); }
+#prev { width: 100%; height: 210px; display: block; border-radius: 14px; background: var(--stage); }
+
+.panel { background: var(--card); border-radius: var(--r); overflow: hidden; }
+.tabs { display: flex; gap: 4px; padding: 8px; background: var(--paper2); overflow-x: auto; scrollbar-width: none; }
+.tab { flex: 1 0 auto; border: 0; background: transparent; border-radius: 999px; padding: 9px 12px; font-weight: 700; font-size: 14px; cursor: pointer; color: var(--ink-soft); }
+.tab[aria-selected="true"] { background: var(--card); color: var(--ink); box-shadow: 2px 2px 0 var(--yel); }
+.pane { padding: 16px; display: flex; flex-direction: column; gap: 16px; max-height: calc(100vh - 360px); min-height: 380px; overflow: auto; }
+.pane[hidden] { display: none !important; }
+.grp { display: flex; flex-direction: column; gap: 8px; }
+.grp[hidden] { display: none !important; }
+.lbl { font-size: 12px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--plum); display: flex; align-items: center; gap: 8px; }
+.lbl::before { content: ""; width: 10px; height: 10px; border-radius: 3px; background: var(--red); box-shadow: inset 0 -2px 0 rgba(0,0,0,.2); }
+.hint { font-size: 13px; color: var(--ink-soft); margin: 0; }
+.seg { display: flex; flex-wrap: wrap; gap: 4px; background: var(--paper2); padding: 4px; border-radius: 14px; }
+.seg button { flex: 1 1 auto; border: 0; background: transparent; padding: 8px 10px; border-radius: 10px; cursor: pointer; font-weight: 650; font-size: 14px; }
+.seg button[aria-pressed="true"] { background: var(--btn-bg); color: var(--btn-fg); }
+.row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+.row > * { min-width: 0; }
+.field { display: flex; flex-direction: column; gap: 4px; flex: 1 1 100px; font-size: 13px; color: var(--ink-soft); }
+.field input, .field select, textarea { background: var(--paper); border: 2px solid var(--line); border-radius: 12px; padding: 8px 10px; width: 100%; color: var(--ink); }
+.field input:focus, .field select:focus, textarea:focus { border-color: var(--plum); outline: none; }
+textarea { resize: vertical; min-height: 70px; }
+input[type="range"] { width: 100%; accent-color: var(--plum); }
+.check { display: flex; align-items: center; gap: 8px; font-size: 14px; cursor: pointer; }
+.check input { width: 18px; height: 18px; accent-color: var(--plum); }
+
+.shapes { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; }
+.shape { aspect-ratio: 1; border: 2px solid transparent; border-radius: 14px; background: var(--paper2); cursor: pointer; display: grid; place-items: center; padding: 8px; color: var(--ink); }
+.shape:hover { border-color: var(--plum); }
+.shape svg { width: 100%; height: 100%; fill: var(--lilac); stroke: var(--ink); stroke-width: 1.4; stroke-linejoin: round; }
+.moves { display: grid; grid-template-columns: repeat(6, 1fr); gap: 6px; }
+.moves .tool { width: 100%; }
+
+.drop { border: 2px dashed var(--line); border-radius: 16px; padding: 18px; text-align: center; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 8px; }
+.drop:hover, .drop.over { border-color: var(--plum); background: var(--paper); }
+.drop img { max-height: 150px; border-radius: 10px; }
+.drop b { font-size: 16px; }
+
+/* catálogo */
+.sel { display: grid; grid-template-columns: 58px minmax(0, 1fr); gap: 4px 12px; align-items: center; background: var(--paper); border-radius: 16px; padding: 12px; }
+.sel .big { grid-row: 1 / 4; width: 58px; height: 50px; border-radius: 13px; background: var(--c); box-shadow: inset 0 -8px 0 rgba(0,0,0,.18), inset 0 6px 0 rgba(255,255,255,.28), 0 0 0 1px var(--line); }
+.sel b { font-size: 18px; letter-spacing: -.01em; }
+.sel span { font-size: 13px; color: var(--ink-soft); }
+.sel .acts { grid-column: 1 / -1; display: flex; gap: 6px; flex-wrap: wrap; margin-top: 6px; }
+.star[aria-pressed="true"] { background: var(--yel); color: #24122e; box-shadow: 3px 3px 0 var(--ink); }
+.mine { display: flex; flex-wrap: wrap; gap: 6px; }
+.mine button { display: inline-flex; align-items: center; gap: 6px; border: 2px solid transparent; background: var(--paper); border-radius: 999px; padding: 4px 10px 4px 5px; cursor: pointer; font-size: 13px; }
+.mine button[aria-pressed="true"] { border-color: var(--ink); }
+.mine .n { color: var(--ink-soft); font-variant-numeric: tabular-nums; }
+.banner { background: var(--yel); color: #24122e; border-radius: 14px; padding: 10px 12px; font-weight: 650; font-size: 14px; display: flex; gap: 10px; align-items: center; justify-content: space-between; }
+.banner button { border: 0; background: #24122e; color: #f4ede3; border-radius: 999px; padding: 6px 12px; font-weight: 700; cursor: pointer; }
+.search { position: relative; }
+.search input { width: 100%; background: var(--paper); border: 2px solid var(--line); border-radius: 999px; padding: 10px 16px; }
+.search input:focus { border-color: var(--plum); outline: none; }
+.fams { display: flex; flex-wrap: wrap; gap: 5px; }
+.fam { display: inline-flex; align-items: center; gap: 6px; border: 2px solid transparent; background: var(--paper2); border-radius: 999px; padding: 4px 10px 4px 6px; font-size: 13px; font-weight: 600; cursor: pointer; }
+.fam i { width: 14px; height: 14px; border-radius: 4px; background: var(--c); box-shadow: inset 0 -2px 0 rgba(0,0,0,.2), 0 0 0 1px var(--line); }
+.fam[aria-pressed="true"] { background: var(--btn-bg); color: var(--btn-fg); }
+.cat { display: grid; grid-template-columns: repeat(auto-fill, minmax(30px, 1fr)); gap: 5px; }
+.cb { position: relative; aspect-ratio: 1.15; border: 0; border-radius: 7px; background: var(--c); cursor: pointer; padding: 0;
+  box-shadow: inset 0 -4px 0 rgba(0,0,0,.18), inset 0 3px 0 rgba(255,255,255,.26), 0 0 0 1px var(--line); }
+.cb:hover { transform: scale(1.15); z-index: 1; }
+.cb[aria-pressed="true"] { outline: 3px solid var(--ink); outline-offset: 2px; z-index: 1; }
+.cb.has::after { content: ""; position: absolute; top: 2px; right: 2px; width: 7px; height: 7px; border-radius: 50%; background: var(--yel); box-shadow: 0 0 0 1.5px #24122e; }
+.cb.in::before { content: ""; position: absolute; left: 3px; bottom: 5px; width: 6px; height: 3px; border-radius: 2px; background: #fff; box-shadow: 0 0 0 1px rgba(0,0,0,.4); }
+.cb.disc { opacity: .45; }
+.more { align-self: center; }
+
+table { width: 100%; border-collapse: collapse; font-size: 14px; }
+td, th { padding: 6px 4px; text-align: left; vertical-align: middle; }
+th { font-size: 12px; color: var(--ink-soft); font-weight: 700; }
+tr + tr td { border-top: 1px solid var(--line); }
+td.r, th.r { text-align: right; font-variant-numeric: tabular-nums; }
+.leg-sw { display: inline-block; width: 18px; height: 16px; border-radius: 5px; vertical-align: -3px; margin-right: 6px; box-shadow: inset 0 -3px 0 rgba(0,0,0,.2), 0 0 0 1px var(--line); }
+.leg-l { display: inline-grid; place-items: center; width: 22px; height: 22px; border-radius: 6px; background: var(--paper2); font-weight: 750; font-size: 12px; }
+.total td { font-weight: 750; font-size: 16px; border-top: 2px solid var(--ink) !important; }
+.total td.r { color: var(--plum); font-size: 22px; }
+.facts { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.fact { background: var(--paper); border-radius: 14px; padding: 10px 12px; }
+.fact span { display: block; font-size: 12px; color: var(--ink-soft); }
+.fact b { font-size: 18px; font-weight: 750; letter-spacing: -.02em; }
+
+/* ---------- diálogos y avisos ---------- */
+dialog { border: 0; border-radius: 26px; padding: 0; background: var(--card); color: var(--ink); width: min(760px, calc(100vw - 32px)); max-height: calc(100vh - 48px); box-shadow: 12px 12px 0 var(--yel); }
+dialog::backdrop { background: rgba(36, 18, 46, .6); }
+.dlg { padding: 20px; display: flex; flex-direction: column; gap: 14px; }
+.dlg-h { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+.dlg-h h2 { font-size: 30px; }
+.x { width: 40px; height: 40px; border-radius: 50%; border: 0; background: var(--paper2); font-size: 24px; cursor: pointer; line-height: 1; flex: none; }
+.lib { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 12px; }
+.item { background: var(--paper); border-radius: 18px; padding: 10px; display: flex; flex-direction: column; gap: 6px; }
+.item img { width: 100%; aspect-ratio: 1; object-fit: contain; background: var(--stage); border-radius: 12px; }
+.item b { font-size: 15px; line-height: 1.15; }
+.item span { font-size: 12px; color: var(--ink-soft); }
+.item .acts { display: flex; gap: 4px; flex-wrap: wrap; margin-top: auto; }
+.item .acts button { flex: 1; border: 0; border-radius: 10px; padding: 6px 4px; font-size: 13px; font-weight: 650; cursor: pointer; background: var(--paper2); }
+.item .acts button.go { background: var(--btn-bg); color: var(--btn-fg); }
+.item .acts button.danger { color: var(--warn); }
+.empty { text-align: center; color: var(--ink-soft); padding: 30px 10px; }
+.toast { position: fixed; left: 50%; bottom: calc(18px + env(safe-area-inset-bottom, 0px)); transform: translateX(-50%); background: var(--btn-bg); color: var(--btn-fg);
+  padding: 12px 20px; border-radius: 999px; font-weight: 700; box-shadow: 4px 4px 0 var(--yel); z-index: 50; max-width: calc(100vw - 32px); text-align: center; }
+#printArea { display: none; }
+
+@media (max-width: 1020px) {
+  .app { grid-template-columns: minmax(0, 1fr); }
+  .side { position: static; }
+  .pane { max-height: none; min-height: 0; }
+  .wrap { height: 58vh; }
+}
+@media (max-width: 520px) {
+  .brand h1 { font-size: 24px; }
+  .meta, .meta input { width: 100%; }
+  .meta .btn { flex: 1; }
+  .tool { width: 38px; height: 38px; }
+  .bench { padding: 10px; }
+  #prev { height: 190px; }
+}
+/* en el iPhone, Safari agranda la página al escribir en campos con letra menor a 16 px */
+@media (pointer: coarse) { input, select, textarea { font-size: 16px !important; } }
+@media (display-mode: standalone) { .wrap { height: 56vh; } }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+@media print {
+  body { padding: 0; background: #fff; }
+  body > *:not(#printArea) { display: none !important; }
+  #printArea { display: block !important; }
+  #printArea img { width: 100%; }
+}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="brand">
+    <span class="dots" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+    <h1>Diseñador <em>de patrones</em></h1>
+  </div>
+  <div class="meta">
+    <input id="dName" type="text" aria-label="Nombre del diseño" placeholder="Nombre del diseño" />
+    <input id="dCliente" type="text" aria-label="Pedido o clienta" placeholder="Pedido o clienta (opcional)" />
+    <button class="btn soft" id="bLib" type="button">Mis diseños</button>
+    <button class="btn soft" id="bNew" type="button">Nuevo</button>
+    <button class="btn" id="bSave" type="button">Guardar</button>
+  </div>
+</header>
+
+<main class="app">
+  <section class="bench" aria-label="Mesa de trabajo">
+    <div class="tools" role="toolbar" aria-label="Herramientas">
+      <button class="tool" data-tool="pencil" title="Pintar (P)" aria-label="Pintar"><svg viewBox="0 0 24 24"><path d="M4 20l4-1 11-11-3-3L5 16l-1 4z"/><path d="M14 6l3 3"/></svg></button>
+      <button class="tool" data-tool="line" title="Línea recta (L)" aria-label="Línea"><svg viewBox="0 0 24 24"><path d="M6 18L18 6"/><circle cx="5" cy="19" r="2"/><circle cx="19" cy="5" r="2"/></svg></button>
+      <button class="tool" data-tool="fill" title="Rellenar una zona (B)" aria-label="Rellenar"><svg viewBox="0 0 24 24"><path d="M5 12l7-7 7 7-7 7-7-7z"/><path d="M5 12h14"/><path d="M20 16c0 1.5-1 3-2 3s-2-1.5-2-3 2-3 2-3 2 1.5 2 3z"/></svg></button>
+      <button class="tool" data-tool="eraser" title="Borrar (E)" aria-label="Borrar"><svg viewBox="0 0 24 24"><path d="M8 20h12"/><path d="M5 15l9-9 5 5-8 8H8l-3-3z"/><path d="M10 10l5 5"/></svg></button>
+      <button class="tool" data-tool="picker" title="Tomar un color del diseño (I)" aria-label="Cuentagotas"><svg viewBox="0 0 24 24"><path d="M14 4l6 6"/><path d="M17 3l4 4-3 3-4-4 3-3z"/><path d="M14 7L5 16v3h3l9-9"/></svg></button>
+      <span class="sep" aria-hidden="true"></span>
+      <button class="tool" id="tSym" title="Simetría: lo que pintas a un lado se copia al otro (S)" aria-label="Simetría"><svg viewBox="0 0 24 24"><path d="M12 3v18" stroke-dasharray="2 2.5"/><path d="M9 7L4 12l5 5V7z"/><path d="M15 7l5 5-5 5V7z"/></svg></button>
+      <button class="tool" id="tGrid" title="Mostrar la grilla vacía" aria-label="Grilla"><svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M4 9.3h16M4 14.6h16M9.3 4v16M14.6 4v16"/></svg></button>
+      <button class="tool" id="tLet" title="Mostrar las letras del patrón en cada mostacilla" aria-label="Letras"><svg viewBox="0 0 24 24"><path d="M5 19L10 5l5 14"/><path d="M7 14h6"/><path d="M16 19v-6h2.5a1.7 1.7 0 010 3.4H16"/></svg></button>
+      <span class="sep" aria-hidden="true"></span>
+      <button class="tool" id="tUndo" title="Deshacer (Ctrl+Z)" aria-label="Deshacer"><svg viewBox="0 0 24 24"><path d="M9 14L4 9l5-5"/><path d="M4 9h11a5 5 0 010 10h-3"/></svg></button>
+      <button class="tool" id="tRedo" title="Rehacer (Ctrl+Y)" aria-label="Rehacer"><svg viewBox="0 0 24 24"><path d="M15 14l5-5-5-5"/><path d="M20 9H9a5 5 0 000 10h3"/></svg></button>
+      <span class="sep" aria-hidden="true"></span>
+      <button class="tool" id="tZo" title="Alejar" aria-label="Alejar"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="6"/><path d="M8 11h6M20 20l-4.5-4.5"/></svg></button>
+      <span class="zoomlbl num" id="zoomLbl">100%</span>
+      <button class="tool" id="tZi" title="Acercar" aria-label="Acercar"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="6"/><path d="M8 11h6M11 8v6M20 20l-4.5-4.5"/></svg></button>
+    </div>
+    <div class="cur" id="cur"></div>
+    <div class="swatches" id="swatches" aria-label="Colores de este diseño"></div>
+    <div class="wrap" id="wrap"><canvas id="cv"></canvas></div>
+    <div class="status num" id="status"></div>
+  </section>
+
+  <aside class="side">
+    <div class="prev">
+      <div class="prev-h"><h2>Así <em>se verá</em></h2><span id="prevInfo" class="num"></span></div>
+      <canvas id="prev" aria-label="Vista previa de la pieza"></canvas>
+    </div>
+
+    <div class="panel">
+      <div class="tabs" role="tablist">
+        <button class="tab" role="tab" data-tab="colores" aria-selected="true">Colores</button>
+        <button class="tab" role="tab" data-tab="pieza" aria-selected="false">Pieza</button>
+        <button class="tab" role="tab" data-tab="foto" aria-selected="false">Desde foto</button>
+        <button class="tab" role="tab" data-tab="precio" aria-selected="false">Cuenta y precio</button>
+        <button class="tab" role="tab" data-tab="exportar" aria-selected="false">Exportar</button>
+      </div>
+
+      <!-- COLORES -->
+      <div class="pane" data-pane="colores">
+        <div class="sel" id="sel"></div>
+        <div class="banner" id="replaceBanner" hidden><span id="replaceTxt"></span><button type="button" id="bReplaceCancel">Cancelar</button></div>
+        <div class="grp">
+          <span class="lbl">En este diseño</span>
+          <div class="mine" id="mine"></div>
+          <div class="row"><button class="btn small soft" id="bPrune" type="button">Quitar los que no uso</button></div>
+        </div>
+        <div class="grp">
+          <span class="lbl" id="catLbl">Todas las Delica 11/0</span>
+          <div class="search"><input id="q" type="search" placeholder="Buscar por código o nombre: 10, DB-0723, matte, gold…" aria-label="Buscar color" /></div>
+          <div class="fams" id="fams"></div>
+          <div class="row">
+            <label class="field">Acabado<select id="fFin">
+              <option value="">Todos</option><option value="o">Opaco</option><option value="t">Transparente</option><option value="a">Alabastro</option><option value="s">Seda</option>
+              <option value="m">Mate</option><option value="M">Metálico, galvanizado o bañado</option><option value="l">Lustre (brillo perlado)</option><option value="r">Tornasol (AB, arcoíris)</option><option value="L">Forrado (silver lined o color lined)</option>
+            </select></label>
+            <label class="field">Orden<select id="fSort"><option value="color">Por color</option><option value="code">Por código</option></select></label>
+          </div>
+          <div class="row">
+            <label class="check"><input id="fHave" type="checkbox" /> Solo los que tengo</label>
+            <label class="check"><input id="fDisc" type="checkbox" /> Incluir descontinuados</label>
+          </div>
+          <p class="hint num" id="catCount"></p>
+          <div class="cat" id="cat"></div>
+          <button class="btn small soft more" id="bMore" type="button" hidden>Mostrar más</button>
+          <p class="hint">Punto amarillo: lo tienes · raya blanca: está en este diseño. Los colores en pantalla son aproximados (promedio de la foto oficial de cada mostacilla): confírmalos con la mostacilla real.</p>
+          <p class="hint">Datos de color: <a href="https://makebead.com/" target="_blank" rel="noopener">MakeBead</a> (craft-color-codes, CC BY 4.0) y familias de Beadloo.</p>
+        </div>
+      </div>
+
+      <!-- PIEZA -->
+      <div class="pane" data-pane="pieza" hidden>
+        <div class="grp">
+          <span class="lbl">Tipo de pieza</span>
+          <div class="seg" id="segPieza">
+            <button type="button" data-v="aros">Aros (par)</button>
+            <button type="button" data-v="anillo">Anillo</button>
+            <button type="button" data-v="colgante">Colgante</button>
+          </div>
+        </div>
+        <div class="grp">
+          <span class="lbl">Puntada</span>
+          <div class="seg" id="segPuntada">
+            <button type="button" data-v="brick">Ladrillo</button>
+            <button type="button" data-v="peyote">Peyote</button>
+            <button type="button" data-v="telar">Telar</button>
+          </div>
+          <p class="hint" id="puntadaHint"></p>
+        </div>
+        <div class="grp">
+          <span class="lbl">Tamaño de la grilla</span>
+          <div class="row">
+            <label class="field">Ancho (mostacillas)<input id="inW" type="number" min="3" max="80" inputmode="numeric" /></label>
+            <label class="field">Alto (filas)<input id="inH" type="number" min="3" max="120" inputmode="numeric" /></label>
+          </div>
+          <div class="row">
+            <label class="field">Ancho en cm<input id="inWcm" type="number" min="0.5" max="12" step="0.1" inputmode="decimal" /></label>
+            <label class="field">Alto en cm<input id="inHcm" type="number" min="0.5" max="15" step="0.1" inputmode="decimal" /></label>
+            <button class="btn small soft" id="bFitCm" type="button" style="align-self:flex-end">Ajustar a cm</button>
+          </div>
+          <p class="hint">Delica 11/0: 1,6 mm de diámetro y 1,3 mm de largo.</p>
+        </div>
+        <div class="grp">
+          <span class="lbl">Forma base</span>
+          <p class="hint">Rellena la grilla con la forma en el color elegido. Después pintas encima.</p>
+          <div class="shapes" id="shapes"></div>
+          <div class="row">
+            <button class="btn small soft" id="bOutline" type="button">Borde con el color elegido</button>
+            <button class="btn small soft" id="bClear" type="button">Vaciar grilla</button>
+          </div>
+        </div>
+        <div class="grp">
+          <span class="lbl">Mover y voltear</span>
+          <div class="moves">
+            <button class="tool" type="button" data-move="l" title="Mover a la izquierda" aria-label="Mover a la izquierda"><svg viewBox="0 0 24 24"><path d="M15 6l-6 6 6 6"/></svg></button>
+            <button class="tool" type="button" data-move="r" title="Mover a la derecha" aria-label="Mover a la derecha"><svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg></button>
+            <button class="tool" type="button" data-move="u" title="Mover hacia arriba" aria-label="Mover hacia arriba"><svg viewBox="0 0 24 24"><path d="M6 15l6-6 6 6"/></svg></button>
+            <button class="tool" type="button" data-move="d" title="Mover hacia abajo" aria-label="Mover hacia abajo"><svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></button>
+            <button class="tool" type="button" data-move="fh" title="Voltear de izquierda a derecha" aria-label="Voltear horizontal"><svg viewBox="0 0 24 24"><path d="M12 3v18" stroke-dasharray="2 2.5"/><path d="M9 7L4 12l5 5V7z"/><path d="M15 9l3 3-3 3"/></svg></button>
+            <button class="tool" type="button" data-move="fv" title="Voltear de arriba a abajo" aria-label="Voltear vertical"><svg viewBox="0 0 24 24"><path d="M3 12h18" stroke-dasharray="2 2.5"/><path d="M7 9l5-5 5 5H7z"/><path d="M9 15l3 3 3-3"/></svg></button>
+          </div>
+        </div>
+        <div class="grp">
+          <span class="lbl">Flecos</span>
+          <label class="check"><input id="frOn" type="checkbox" /> Agregar flecos colgando de la última fila</label>
+          <div id="frOpts" class="grp">
+            <div class="seg" id="segFr">
+              <button type="button" data-v="recto">Rectos</button>
+              <button type="button" data-v="v">En V</button>
+              <button type="button" data-v="redondo">Redondos</button>
+              <button type="button" data-v="u">Abiertos</button>
+            </div>
+            <label class="field"><span>Largo: <b id="frLenLbl" class="num"></b> mostacillas</span><input id="frLen" type="range" min="3" max="45" /></label>
+            <div class="row">
+              <label class="field">Arriba<select id="frA"></select></label>
+              <label class="field">Abajo<select id="frB"></select></label>
+              <button class="btn small soft" id="bFrGrad" type="button" style="align-self:flex-end">Degradado</button>
+            </div>
+            <p class="hint">El degradado busca los tonos intermedios entre todas las Delica. Con el balde pintas una tira completa de una vez.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- FOTO -->
+      <div class="pane" data-pane="foto" hidden>
+        <p class="hint">Sube una foto, un dibujo o una captura y lo paso a mostacillas con los colores Delica más parecidos. Funciona mejor con imágenes simples y fondo liso. También puedes pegar una imagen con Ctrl+V.</p>
+        <label class="drop" id="drop">
+          <input id="fileImg" type="file" accept="image/*" hidden />
+          <img id="imgThumb" alt="Imagen de referencia" hidden />
+          <b id="dropTxt">Elegir imagen o arrastrarla aquí</b>
+          <span class="hint">JPG, PNG o captura de pantalla</span>
+        </label>
+        <div class="grp">
+          <span class="lbl">Colores a usar</span>
+          <div class="seg" id="segPhSrc">
+            <button type="button" data-v="todos">Todas las Delica</button>
+            <button type="button" data-v="tengo">Los que tengo</button>
+            <button type="button" data-v="diseno">Los del diseño</button>
+          </div>
+          <label class="field"><span>Ancho: <b id="phWLbl" class="num"></b> mostacillas</span><input id="phW" type="range" min="8" max="60" value="18" /></label>
+          <label class="field"><span>Cantidad de colores: <b id="phKLbl" class="num"></b></span><input id="phK" type="range" min="2" max="16" value="6" /></label>
+          <label class="check"><input id="phBg" type="checkbox" checked /> Quitar el fondo (el color de las esquinas)</label>
+          <label class="field">Tolerancia del fondo<input id="phTol" type="range" min="4" max="40" value="16" /></label>
+          <label class="check"><input id="phMatte" type="checkbox" /> Evitar mates, metálicos y tornasol</label>
+        </div>
+        <button class="btn wide" id="bPhoto" type="button" disabled>Pasar a mostacillas</button>
+        <p class="hint" id="phInfo"></p>
+      </div>
+
+      <!-- PRECIO -->
+      <div class="pane" data-pane="precio" hidden>
+        <div class="facts" id="facts"></div>
+        <div class="grp">
+          <span class="lbl">Mostacillas por color</span>
+          <table id="legTbl"></table>
+        </div>
+        <div class="grp">
+          <span class="lbl">Precio sugerido</span>
+          <div class="row">
+            <label class="field">Dificultad<select id="selNivel"></select></label>
+            <label class="field">Tamaño<select id="selTam"></select></label>
+          </div>
+          <div class="row">
+            <label class="field" id="ganchoField">Cierre<select id="selGancho">
+              <option value="plata">Ganchos de plata 925</option>
+              <option value="oro">Ganchos con baño de oro</option>
+              <option value="poste">Postes dorados</option>
+            </select></label>
+            <label class="field">Perlas o cristales<input id="inPerlas" type="number" min="0" max="200" inputmode="numeric" /></label>
+            <label class="field">Charms / ojo turco<input id="inCuentas" type="number" min="0" max="200" inputmode="numeric" /></label>
+          </div>
+          <table id="priceTbl"></table>
+          <p class="hint" id="priceSrc"></p>
+        </div>
+      </div>
+
+      <!-- EXPORTAR -->
+      <div class="pane" data-pane="exportar" hidden>
+        <div class="grp">
+          <span class="lbl">Patrón para tejer</span>
+          <p class="hint">Grilla con letras, código Delica y cantidad de cada color, y el paso a paso fila por fila.</p>
+          <div class="row">
+            <button class="btn" id="bPattern" type="button">Descargar patrón (PNG)</button>
+            <button class="btn soft" id="bPrint" type="button" hidden>Imprimir</button>
+          </div>
+        </div>
+        <div class="grp">
+          <span class="lbl">Imagen del diseño</span>
+          <p class="hint">Tarjeta con la vista previa, la medida y los colores, por si quieres mostrarla.</p>
+          <div class="seg" id="segPar">
+            <button type="button" data-v="espejo">Par en espejo</button>
+            <button type="button" data-v="igual">Par igual</button>
+          </div>
+          <label class="check"><input id="cardPrice" type="checkbox" /> Incluir el precio</label>
+          <div class="row">
+            <button class="btn soft" id="bCard" type="button">Descargar imagen</button>
+            <button class="btn soft" id="bShare" type="button" hidden>Compartir</button>
+          </div>
+        </div>
+        <div class="grp">
+          <span class="lbl">Notas</span>
+          <textarea id="dNotas" placeholder="Ideas, variaciones, lo que pidió la clienta, fecha de entrega…"></textarea>
+        </div>
+        <div class="grp">
+          <span class="lbl">Respaldo</span>
+          <button class="btn small soft" id="bExportOne" type="button">Exportar este diseño (.json)</button>
+        </div>
+      </div>
+    </div>
+  </aside>
+</main>
+
+<dialog id="dlgLib">
+  <div class="dlg">
+    <div class="dlg-h"><h2>Mis <em>diseños</em></h2><button class="x" type="button" data-close aria-label="Cerrar">×</button></div>
+    <div class="lib" id="lib"></div>
+    <div class="row">
+      <button class="btn small soft" id="bExportAll" type="button">Exportar todos (.json)</button>
+      <label class="btn small soft">Importar .json<input id="fileJson" type="file" accept="application/json,.json" hidden /></label>
+    </div>
+    <p class="hint">Los diseños y los colores que tienes se guardan en este navegador. Exporta un respaldo de vez en cuando, o para pasarlos a otro computador o celular.</p>
+  </div>
+</dialog>
+
+<dialog id="dlgNew">
+  <div class="dlg">
+    <div class="dlg-h"><h2>¿Guardar <em>antes?</em></h2><button class="x" type="button" data-close aria-label="Cerrar">×</button></div>
+    <p class="hint">El diseño actual tiene cambios que no están en Mis diseños.</p>
+    <div class="row">
+      <button class="btn" id="bNewSave" type="button">Guardar y seguir</button>
+      <button class="btn soft" id="bNewDiscard" type="button">Seguir sin guardar</button>
+    </div>
+  </div>
+</dialog>
+
+<div id="printArea"></div>
+<div class="toast" id="toast" role="status" hidden></div>
+
+<script>
+(() => {
+"use strict";
+
+/* ================== datos base ================== */
+const LOGO = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAgAAAAIACAIAAAB7GkOtAAAQAElEQVR4nOzdCZyN5f//8cvMWMY6ZhjDLIwtyVrZEiVZSpQILUilaKGStdCKyNpCJEkUKaVUFJVdtuzZt8Fg7MMwGP8P5/+d35n7nuWcc99n5sxcr+fDw8PcZ5kzZ47rfV2f67qvOyD+xEEFANCPnwIAaIkAAABNEQAAoCkCAAA0RQAAgKYIAADQFAEAAJoiAABAUwQAAGiKAAAATREAAKApAgAANEUAAICmCAAA0BQBAACaIgAAQFMEAABoigAAAE0RAACgKQIAADRFAACApggAANAUAQAAmiIAAEBTBAAAaIoAAABNEQAAoCkCAAA0RQAAgKYIAADQFAEAAJoiAABAUwQAAGiKAAAATREAAKApAgAANEUAAICmCAAA0BQBAACaIgAAQFMEAABoigAAAE0RAACgKQIAADRFAACApggAANAUAQAAmiIAAEBTBAAAaIoAAABNEQAAoCkCAAA0RQAAgKYIAADQFAEAAJoiAABAUwQAAGiKAAAATREAAKApAgAANEUAAICmCAAA0BQBAACaIgAAQFMEAABoigAAAE0RAACgKQIAADRFAACApggAANAUAQAAmiIAAEBTBAAAaIoAAABNEQAAoCkCAAA0RQAAgKYIAADQFAEAAJoiAABAUwQAAGiKAAAATREAAKApAgAANEUAAICmCAAA0BQBAACaIgAAQFMEAABoigAAAE0RAACgKQIAADRFAACApggAANAUAQAAmiIAAEBTBAAAaIoAAABNEQAAoCkCAAA0RQAAgKYIAADQFAEAAJoiAABAUwQAAGiKAAAATREAAKApAgAANEUAAICmCAAA0BQBAACaIgAAQFMEAABoigAAAE0RAACgKQIAADRFAACApggAANAUAQAAmiIAAEBTBAAAaIoAAABNEQAAoCkCAAA0RQAAgKYIAADQFAEAAJoiAABAUwQAAGiKAAAATREAAKApAgAANEUAAICmCAAA0BQBAACaIgAAQFMEAABoigAAAE0RAACgKQIAADRFAACApggAANAUAQAAmiIAAEBTBAAAaIoAAABNEQAAoCkCAAA0RQAAgKYIAADQFAEAAJoiAABAUwEKcN/VLVsv/Trvyr8brp0+nf49cwUFBdSonve+Fv63VM7gnuc254r7KdeZdepKBs95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";
+
+// Catálogo completo de Miyuki Delica 11/0: código|nombre|color|familias|acabado
+// Color: craft-color-codes de MakeBead (CC BY 4.0, promedio de la foto oficial de Miyuki). Familias y acabados: beadloo-assets (MIT).
+// Acabado: 1.ª letra o=opaco t=transparente a=alabastro s=seda; m=mate M=metálico l=lustre r=tornasol L=forrado d=descontinuado
+const DELICA = `
+0001|Metallic Gray|2d2e37|g|oM
+0002|Metallic Iridescent|1a212a|i|oM
+0003|Metallic Iridescent|222824|i|oM
+0004|Metallic Iridescent|212025|i|oM
+0005|Opaque Iridescent AB|283037|i|or
+0006|Metallic Iridescent|31393f|i|oM
+0007|Metallic Brown|2c241d|b|oM
+0010|Opaque Black|131313|k|o
+0011|Metallic Green|383622|v|oM
+0012|Metallic Purple|3e2223|m|oM
+0021|Nickel Plated Silver|605955|s|oM
+0022|Metallic Gold|453528|d|oM
+0022L|Metallic Gold|6b4a2f|d|tM
+0023|Metallic Iridescent|473832|i|oM
+0024|Metallic Green|4f4d3a|v|oM
+0025|Metallic Blue|26333e|a|oM
+0026|Metallic Gray|403e3c|g|oM
+0027|Metallic Green|33423a|v|oM
+0029|Nickel Plated Iridescent AB|5d5042|i|oMr
+0031|Gold Plated Gold|b18342|d|oM
+0031L|Gold Plated Gold|b49047|d|oM
+0033|Gold-Lined Transparent Gold|a4743d|d|tL
+0034|Gold Plated Gold|93744e|d|oM
+0035|Galvanized Silver|9e9484|s|tM
+0037|Copper-Lined Transparent Pink|7f5e53|p|tL
+0038|Palladium Plated Silver|76706f|s|oM
+0040|Copper Plated Brown|815447|b|oM
+0041|Silver-Lined Transparent Silver|8d8987|s|tL
+0042|Silver-Lined Transparent Gold|ac7c3f|d|tL
+0043|Silver-Lined Transparent Red|a62914|r|tL
+0044|Silver-Lined Transparent Blue|538499|a|tL
+0045|Silver-Lined Transparent Orange|bc5f10|n|tL
+0046|Silver-Lined Transparent Green|2a6130|v|tL
+0047|Silver-Lined Transparent Blue|2d2971|a|tL
+0048|Silver-Lined Transparent Gray|555450|g|tL
+0050|Transparent Crystal Luster|93939d|c|tl
+0051|Transparent Crystal AB|9fa1ad|c|tr
+0052|Color-Lined Transparent Crystal AB|ead4c4|c|trL
+0053|Color-Lined Transparent Yellow AB|edcc7a|y|trL
+0054|Color-Lined Transparent Brown-Orange AB|b87a68|bn|trL
+0055|Color-Lined Transparent Pink AB|e3cddd|p|trL
+0056|Color-Lined Transparent Pink-Purple AB|694864|pm|trL
+0057|Color-Lined Transparent Blue AB|459bbf|a|trL
+0058|Color-Lined Transparent Blue AB|3e697f|a|trL
+0059|Color-Lined Transparent Purple AB|4c4d5f|m|trL
+0060|Color-Lined Transparent Green AB|447069|v|trL
+0061|Color-Lined Transparent Purple Luster|483132|m|tlL
+0062|Color-Lined Transparent Pink-Red Luster|8b2b37|pr|tlL
+0063|Color-Lined Transparent Blue-Purple AB|353e98|am|trL
+0064|Color-Lined Transparent Brown Luster|635952|b|tlL
+0065|Color-Lined Transparent Brown Luster|83521c|b|tlL
+0066|Color-Lined Transparent Crystal AB|dad5d1|c|trL
+0067|Color-Lined Transparent Orange Luster|d08d71|n|tlL
+0068|Color-Lined Transparent Orange Luster|d37d6b|n|tlL
+0069|Color-Lined Transparent Brown Luster|9a7564|b|tlL
+0070|Color-Lined Transparent Pink Luster|d06a70|p|tlL
+0071|Color-Lined Transparent Pink AB|ddcbda|p|trL
+0072|Color-Lined Transparent Pink-Purple Luster|ab6a8d|pm|tlL
+0073|Color-Lined Transparent Purple Luster|7c3b82|m|tlL
+0074|Color-Lined Transparent Pink-Purple Luster|913570|pm|tlL
+0075|Color-Lined Transparent Pink-Red AB|c3425a|pr|trL
+0076|Color-Lined Transparent Blue AB|3089c9|a|trL
+0077|Color-Lined Transparent Blue AB|2a62a3|a|trL
+0078|Color-Lined Transparent Blue Luster|90c0cb|a|tlL
+0079|Color-Lined Transparent Green Luster|398e93|v|tlL
+0080|Color-Lined Transparent Purple Luster|9792a6|m|tlL
+0081|Color-Lined Transparent Gray Luster|5a5f64|g|tlL
+0082|Color-Lined Transparent Pink AB|dfd6de|p|trL
+0083|Color-Lined Transparent Blue-Green AB|add0da|av|trL
+0084|Color-Lined Transparent Green AB|60797c|v|trL
+0085|Color-Lined Transparent Blue AB|384c5b|a|trL
+0086|Color-Lined Transparent Blue AB|404857|a|trL
+0087|Color-Lined Transparent Iridescent-Purple AB|4e4039|im|trL
+0088|Color-Lined Transparent Purple-Red AB|764a43|mr|trL
+0089|Color-Lined Transparent Green-Iridescent AB|4f4e45|vi|trL
+0091|Color-Lined Transparent Purple AB|654d4d|m|trL
+0098|Transparent Red Luster|ba2f39|r|tl
+0099|Transparent Brown Luster|c18754|b|tl
+0100|Transparent Brown AB|bc844f|b|tr
+0101|Transparent Brown Glazed Luster|ad7956|b|tl
+0102|Transparent Brown Gold Luster|76513a|b|tl
+0103|Transparent Brown Gold Luster AB|653e3e|b|tlr
+0104|Transparent Pink-Purple Gold Luster AB|4a3238|pm|tlr
+0105|Transparent Purple-Red Gold Luster|472123|mr|tl
+0106|Transparent Pink Glazed Luster|ce807a|p|tl
+0107|Transparent Blue-Gray Gold Luster AB|706e6f|ag|tlr
+0108|Transparent Purple Gold Luster|5f3d3d|m|tl
+0109|Transparent Crystal Glazed Luster AB|d8cbac|c|tlr
+0110|Transparent Blue Glazed Luster AB|83919c|a|tlr
+0111|Transparent Blue Glazed Luster AB|505961|a|tlr
+0112|Transparent Green Glazed Luster|436c6d|v|tl
+0113|Transparent Blue Glazed Luster|236391|a|tl
+0114|Transparent Gray Gold Luster|7d7c79|g|tl
+0115|Transparent Brown Gold Luster|6a482e|b|tl
+0116|Transparent Red Gold Luster|5b2623|r|tl
+0117|Transparent Blue Gold Luster|4f3942|a|tl
+0118|Transparent Yellow Gold Luster|7e4f28|y|tl
+0119|Transparent Yellow Gold Luster|874e21|y|tl
+0120|Transparent Red Gold Luster|56282b|r|tl
+0121|Transparent Brown Gold Luster|6b452a|b|tl
+0122|Transparent Brown Gold Luster AB|4e463c|b|tlr
+0123|Transparent Brown Gold Luster|4c3e32|b|tl
+0124|Transparent Green Gold Luster|817540|v|tl
+0125|Transparent Green Gold Luster AB|3b483b|v|tlr
+0126|Transparent Gold-Iridescent Gold Luster AB|644c45|di|tlr
+0127|Transparent Green-Iridescent Gold Luster AB|564e4a|vi|tlr
+0128|Transparent Iridescent-Purple Gold Luster AB|524452|im|tlr
+0129|Transparent Brown Gold Luster|5b4146|b|tl
+0131|Opaque Green Gold Luster|403a30|v|ol
+0132|Opaque Blue Gold Luster|484d5a|a|ol
+0133|Opaque Green Gold Luster AB|6a5d34|v|olr
+0134|Opaque Iridescent-Purple Gold Luster AB|4d505c|im|olr
+0135|Opaque Blue Gold Luster AB|3a3457|a|olr
+0141|Transparent Crystal|919099|c|t
+0144|Silver-Lined Transparent Brown|653718|b|tL
+0145|Silver-Lined Transparent Yellow|b8a124|y|tL
+0146|Silver-Lined Transparent Purple|705355|m|tL
+0147|Silver-Lined Transparent Green|8d902e|v|tL
+0148|Silver-Lined Transparent Green|1d3e26|v|tL
+0149|Silver-Lined Transparent Blue|255573|a|tL
+0150|Silver-Lined Transparent Brown|433024|b|tL
+0151|Transparent Orange AB|e36129|n|tr
+0152|Transparent Green AB|266847|v|tr
+0157|Opaque Beige AB|e5bf91|e|or
+0158|Opaque Purple AB|8e7483|m|or
+0159|Opaque Red AB|cf2a32|r|or
+0160|Opaque Yellow AB|e9d622|y|or
+0161|Opaque Orange AB|df5130|n|or
+0162|Opaque Red AB|9c2539|r|or
+0163|Opaque Green AB|4a7b49|v|or
+0164|Opaque Blue AB|3c9dcb|a|or
+0165|Opaque Blue AB|2e2f7f|a|or
+0166|Opaque Green AB|328d8f|v|or
+0167|Opaque Blue AB|5d6dc1|a|or
+0168|Opaque Gray AB|656667|g|or
+0169|Opaque Green AB|96a851|v|or
+0170|Transparent Brown AB|644136|b|tr
+0171|Transparent Yellow AB|d8b237|y|tr
+0172|Transparent Red AB|aa2638|r|tr
+0173|Transparent Purple AB|725c6d|m|tr
+0174|Transparent Green AB|99ac44|v|tr
+0175|Transparent Green AB|244d42|v|tr
+0176|Transparent Blue AB|4895d1|a|tr
+0177|Transparent Blue AB|1f5e8e|a|tr
+0178|Transparent Blue AB|33328e|a|tr
+0179|Transparent Gray AB|545f69|g|tr
+0180|Transparent Brown AB|483f41|b|tr
+0181|Copper-Lined Transparent Brown|7b4e2d|b|tL
+0182|Copper-Lined Transparent Green|2d3e24|v|tL
+0183|Copper-Lined Transparent Blue|29284a|a|tL
+0184|Copper-Lined Transparent Brown|493c37|b|tL
+0191|Copper-Lined Alabaster Pink|8c6e69|p|aL
+0200|Opaque White|ebe9ed|w|o
+0201|Opaque White Luster|e8e5e7|w|ol
+0202|Opaque White AB|e9e4e6|w|or
+0203|Opaque Beige Glazed Luster|e2cfb2|e|ol
+0204|Opaque Beige Glazed Luster|d3aa8a|e|ol
+0205|Opaque Beige Glazed Luster|cb9e7d|e|ol
+0206|Opaque Pink Glazed Luster|e79685|p|ol
+0207|Opaque Pink Gold Luster AB|e38c7f|p|olr
+0208|Opaque Beige Gold Luster|c39072|e|ol
+0209|Opaque Gray Glazed Luster|a6aab7|g|ol
+0210|Opaque Pink Glazed Luster|af7c90|p|ol
+0211|Opaque White Glazed Luster|c8beb0|w|ol
+0214|Opaque Red Luster|a11c2a|r|ol
+0215|Opaque Blue Luster|3e9ac0|a|ol
+0216|Opaque Blue Luster|262679|a|ol
+0217|Opaque Blue Glazed Luster|478da2|a|ol
+0218|Opaque Blue Glazed Luster|4083a0|a|ol
+0220|Alabaster White|e2dee2|w|a
+0221|Silver-Lined Alabaster Silver|beb6ad|s|aL
+0222|Alabaster Crystal AB|e1dddf|c|ar
+0223|Silver-Lined Alabaster Silver AB|b0a7a3|s|arL
+0230|Gold-Lined Alabaster Gold|b4875b|d|aL
+0231|Alabaster White Luster|c0bec8|w|al
+0232|Color-Lined Alabaster Yellow Luster|e9d883|y|alL
+0233|Color-Lined Alabaster Orange-Yellow Luster|f2b651|ny|alL
+0234|Color-Lined Alabaster Pink Luster|eab7ba|p|alL
+0235|Color-Lined Alabaster Pink Luster|e4725f|p|alL
+0236|Color-Lined Alabaster Pink Luster|d46c80|p|alL
+0237|Color-Lined Alabaster Green Luster|7dc19d|v|alL
+0238|Color-Lined Alabaster Green Luster|2a8b83|v|alL
+0239|Color-Lined Alabaster Blue Luster|6ac3e0|a|alL
+0240|Color-Lined Alabaster Blue Luster|4b72ce|a|alL
+0241|Color-Lined Alabaster Purple Luster|a298b1|m|alL
+0242|Color-Lined Alabaster Gray Glazed Luster|74788c|g|alL
+0243|Color-Lined Alabaster Blue Luster|52629a|a|alL
+0244|Color-Lined Alabaster Pink Luster|f3b3cf|p|alL
+0245|Color-Lined Alabaster Pink Luster|f6a1c9|p|alL
+0246|Color-Lined Alabaster Pink Luster|f88fbc|p|alL
+0247|Color-Lined Alabaster Pink Luster|cc5eb2|p|alL
+0248|Color-Lined Alabaster Pink-Purple Luster|d596d5|pm|alL
+0249|Color-Lined Alabaster Purple Luster|806bb2|m|alL
+0250|Color-Lined Alabaster Purple Luster|655b84|m|alL
+0251|Opaque Gray Gold Luster AB|7e7c7a|g|olr
+0252|Opaque Gray Gold Luster|929295|g|ol
+0253|Opaque Pink-Purple Gold Luster|8d5f79|pm|ol
+0254|Opaque Brown Gold Luster|524b43|b|ol
+0256|Color-Lined Alabaster Brown Luster|977b79|b|alL
+0257|Color-Lined Alabaster Blue Luster|95a1c6|a|alL
+0261|Opaque Beige Glazed Luster|b3a592|e|ol
+0262|Opaque Green Glazed Luster|979945|v|ol
+0263|Opaque Green Glazed Luster|686d4f|v|ol
+0264|Opaque Green Glazed Luster|435f64|v|ol
+0265|Opaque Purple Glazed Luster|725667|m|ol
+0266|Opaque Blue Glazed Luster|5c6b8b|a|ol
+0267|Opaque Blue Glazed Luster|4f5a76|a|ol
+0268|Opaque Gray Glazed Luster|555557|g|ol
+0271|Color-Lined Transparent Gray Luster|9798a2|g|tlL
+0272|Color-Lined Transparent Brown Luster|93632a|b|tlL
+0273|Color-Lined Transparent Green Luster|404333|v|tlL
+0274|Color-Lined Transparent Green Luster|396a31|v|tlL
+0275|Color-Lined Transparent Green Luster|203b3c|v|tlL
+0276|Color-Lined Transparent Blue-Green-Iridescent|2e464f|avi|tL
+0277|Color-Lined Transparent Blue Luster|312a54|a|tlL
+0278|Color-Lined Transparent Blue Luster|3d3c4e|a|tlL
+0279|Color-Lined Transparent Purple Luster|3d3b42|m|tlL
+0280|Color-Lined Transparent Red Luster|65363a|r|tlL
+0281|Color-Lined Transparent Purple Luster|693463|m|tlL
+0282|Color-Lined Transparent Red Luster|693336|r|tlL
+0283|Color-Lined Transparent Red Luster|7c464c|r|tlL
+0284|Color-Lined Transparent Purple Luster|47477e|m|tlL
+0285|Color-Lined Transparent Blue Luster|314179|a|tlL
+0286|Color-Lined Transparent Blue Luster|303e49|a|tlL
+0287|Color-Lined Transparent Brown Luster|5b4537|b|tlL
+0288|Color-Lined Transparent Brown Luster|7a6146|b|tlL
+0295|Color-Lined Transparent Red Luster|802527|r|tlL
+0296|Color-Lined Transparent Red Luster|3e272c|r|tlL
+0297|Color-Lined Transparent Red Luster|3c2d30|r|tlL
+0301|Matte Opaque Gray Luster|464b56|g|oml
+0306|Matte Opaque Gray Glazed Luster|444448|g|oml
+0307|Matte Opaque Gray Luster|535150|g|oml
+0310|Matte Opaque Black|212020|k|om
+0311|Matte Opaque Brown|37302a|b|om
+0312|Matte Metallic Purple|42353e|m|omM
+0321|Matte Nickel Plated Silver|6f6763|s|omM
+0322|Matte Metallic Brown|554333|b|omM
+0322L|Matte Metallic Brown-Gold|543b2a|bd|omM
+0323|Matte Metallic Purple|3b3741|m|omM
+0324|Matte Metallic Green|585a51|v|omM
+0325|Matte Metallic Blue|353f49|a|omM
+0327|Matte Metallic Green|373b32|v|omM
+0331|Matte Gold Plated Gold|b1895a|d|omM
+0334|Matte Gold Plated Gold|9d8063|d|omM
+0335|Matte Galvanized Silver|b0a38f|s|tmM
+0338|Matte Palladium Plated Silver|7e7778|s|tmM
+0340|Matte Copper Plated Brown|795249|b|omM
+0351|Matte Opaque White AB|e8e3e6|w|omr
+0352|Matte Opaque White Glazed Luster|e3d3b6|w|oml
+0353|Matte Opaque Beige Glazed Luster|d4ac8e|e|oml
+0354|Matte Opaque Pink Glazed Luster|cc9f8f|p|oml
+0355|Matte Opaque Pink-Purple Glazed Luster|a4798c|pm|oml
+0356|Matte Opaque Purple Glazed Luster|9a8c9f|m|oml
+0357|Matte Opaque Gray Glazed Luster|b1b1bc|g|oml
+0361|Matte Opaque Blue Luster|404187|a|oml
+0362|Matte Opaque Red Luster|ae2d4a|r|oml
+0371|Matte Opaque Green Gold Luster|766740|v|oml
+0372|Matte Opaque Green Gold Luster AB|6f6a4b|v|omlr
+0373|Matte Opaque Green Gold Luster AB|4f5e56|v|omlr
+0374|Matte Opaque Blue-Green Glazed Luster|67807c|av|oml
+0375|Matte Opaque Blue Glazed Luster|55868f|a|oml
+0376|Matte Opaque Blue Gold Luster AB|57657a|a|omlr
+0377|Matte Opaque Blue Glazed Luster|3b4064|a|oml
+0378|Matte Opaque Red Glazed Luster|7a2928|r|oml
+0379|Matte Opaque Purple Gold Luster|886b70|m|oml
+0380|Matte Transparent Iridescent Glazed Luster AB|594744|i|tmlr
+0381|Matte Transparent Blue Glazed Luster|697589|a|tml
+0382|Matte Transparent Beige Glazed Luster|b89664|e|tml
+0383|Matte Transparent Gray Glazed Luster|858073|g|tml
+0384|Matte Transparent Brown Glazed Luster|4b3f31|b|tml
+0385|Matte Transparent Green Glazed Luster|5d7c78|v|tml
+0386|Matte Transparent Purple Glazed Luster|48404d|m|tml
+0387|Matte Transparent Blue Glazed Luster|3f494f|a|tml
+0388|Matte Opaque Beige Glazed Luster|afa085|e|oml
+0389|Matte Opaque Beige Glazed Luster|b48665|e|oml
+0390|Matte Opaque Green Glazed Luster|756546|v|oml
+0391|Matte Opaque Green Glazed Luster|5b5e42|v|oml
+0410|Galvanized Gold|a47c4f|d|tM
+0411|Galvanized Gold|a67c64|d|tM
+0412|Galvanized Yellow|a2905e|y|tM
+0413|Galvanized Green|79876b|v|tM
+0414|Galvanized Blue-Green|678583|av|tM
+0415|Galvanized Blue|688682|a|tM
+0416|Galvanized Blue|607f84|a|tM
+0417|Galvanized Pink-Silver|99837c|ps|tM
+0418|Galvanized Pink|aa8988|p|tM
+0419|Galvanized Pink-Purple|8f7986|pm|tM
+0420|Galvanized Pink|a55d6b|p|tM
+0421|Galvanized Orange|905022|n|tM
+0422|Galvanized Pink|8e2a7c|p|tM
+0423|Galvanized Orange|885052|n|tM
+0424|Galvanized Yellow|aa9132|y|tM
+0425|Galvanized Pink|93387e|p|tM
+0426|Galvanized Green|4a8b7a|v|tM
+0427|Galvanized Blue|296c78|a|tM
+0428|Galvanized Red|8b434d|r|tM
+0429|Galvanized Purple|8d7c86|m|tM
+0430|Galvanized Purple|5c4472|m|tM
+0431|Galvanized Pink-Purple|702f76|pm|tM
+0432|Galvanized Blue-Green|4d696c|av|tM
+0433|Galvanized Beige|a3876e|e|tM
+0434|Galvanized Beige|9e6d56|e|tM
+0435|Galvanized Pink|a67276|p|tM
+0436|Galvanized Silver|7a6f5e|s|tM
+0451|Nickel Plated Blue|2c3b46|a|oM
+0452|Nickel Plated Gray|4c4743|g|oM
+0453|Nickel Plated Gray|383a44|g|oM
+0454|Nickel Plated Purple|5c464a|m|oM
+0455|Nickel Plated Purple|4b3c4a|m|oM
+0456|Nickel Plated Green|53492d|v|oM
+0457|Nickel Plated Green|494946|v|oM
+0458|Nickel Plated Green|2f4742|v|oM
+0459|Nickel Plated Blue|223c4c|a|oM
+0460|Nickel Plated Brown|51382c|b|oM
+0461|Nickel Plated Brown|4f2e1b|b|oM
+0462|Nickel Plated Purple|69504e|m|oM
+0463|Nickel Plated Purple|4d2247|m|oM
+0464|Nickel Plated Purple|413448|m|oM
+0465|Nickel Plated Blue|2f3a3f|a|oM
+0501|Gold Plated Gold-Iridescent AB|8a6632|di|oMr
+0505|Gold Plated Gold AB|754a26|d|oMr
+0506|Gold Plated Iridescent AB|684633|i|oMr
+0507|Gold Plated Iridescent AB|7b5e40|i|oMr
+0508|Gold Plated Iridescent AB|71674c|i|oMr
+0514|Nickel Plated Blue AB|36485a|a|oMr
+0541|Palladium Plated Iridescent AB|655757|i|oMr
+0542|Palladium Plated Iridescent AB|52474c|i|oMr
+0543|Palladium Plated Iridescent AB|4b4d62|i|oMr
+0544|Palladium Plated Iridescent AB|5e6770|i|oMr
+0545|Palladium Plated Iridescent AB|5e6567|i|oMr
+0546|Palladium Plated Iridescent AB|756f60|i|oMr
+0551|Silver Plated Silver|b5b0a7|s|oMd
+0551F|Matte Silver Plated Silver|c9c0b9|s|omM
+0601|Silver-Lined Transparent Orange|6d2015|n|tL
+0602|Silver-Lined Transparent Red|881718|r|tL
+0603|Silver-Lined Transparent Red|681b16|r|tL
+0604|Silver-Lined Transparent Yellow|4f4017|y|tL
+0605|Silver-Lined Transparent Green|144a31|v|tL
+0606|Silver-Lined Transparent Green|303330|v|tL
+0607|Silver-Lined Transparent Blue-Green|254c49|av|tL
+0608|Silver-Lined Transparent Blue|1e3e54|a|tL
+0609|Silver-Lined Transparent Blue|2e213a|a|tL
+0610|Silver-Lined Transparent Blue-Purple|392064|am|tL
+0611|Silver-Lined Transparent Purple|312129|m|tL
+0612|Silver-Lined Transparent Brown|422817|b|tL
+0613|Silver-Lined Transparent Gray|33302b|g|tL
+0621|Silver-Lined Alabaster Gold|c99d6b|d|aL
+0622|Silver-Lined Alabaster Orange|a35e4e|n|aL
+0623|Silver-Lined Alabaster Yellow|c6ae5c|y|aL
+0624|Silver-Lined Alabaster Pink|c4958b|p|aL
+0625|Silver-Lined Alabaster Pink|b7687c|p|aL
+0626|Silver-Lined Alabaster Green|64a99d|v|aL
+0627|Silver-Lined Alabaster Green|269384|v|aL
+0628|Silver-Lined Alabaster Blue|6492a0|a|aL
+0629|Silver-Lined Alabaster Purple|9a7fa1|m|aL
+0630|Silver-Lined Alabaster Gray|79726d|g|aL
+0631|Silver-Lined Alabaster Gray|5d5751|g|aL
+0635|Silk White|c3c2ca|w|s
+0651|Opaque Orange|e18314|n|o
+0652|Opaque Gray|626263|g|o
+0653|Opaque Brown|8d5510|b|o
+0654|Opaque Red|6e1720|r|o
+0655|Opaque Green|136e34|v|o
+0656|Opaque Green|0b543e|v|o
+0657|Opaque Green|4b422f|v|o
+0658|Opaque Blue-Green|0d9dab|av|o
+0659|Opaque Blue|0c79b9|a|o
+0660|Opaque Purple|68517a|m|o
+0661|Opaque Purple|4b4fa4|m|o
+0662|Opaque Purple|574b5c|m|o
+0663|Opaque Green|2c3b23|v|o
+0664|Opaque Brown Luster|8e5319|b|ol
+0670|Silk White AB|c5c5cd|w|sr
+0671|Silver-Lined Silk Brown|7e6a4d|b|sL
+0672|Silk White Glazed Luster|dbd1af|w|sl
+0673|Silk White Glazed Luster|c9ae95|w|sl
+0674|Silk Beige Glazed Luster|d1a37e|e|sl
+0675|Silk Pink|d9b3c7|p|s
+0676|Silk White|c2c0cd|w|sd
+0677|Silk Blue|a5adc2|a|sd
+0678|Glazed Silk Pink|a17987|p|s
+0679|Silk Gray|908a8b|g|sd
+0680|Silver-Lined Silk Brown AB|907b6b|b|srL
+0681|Silver-Lined Transparent Orange|b16313|n|tL
+0682|Silver-Lined Transparent Orange|b34f19|n|tL
+0683|Silver-Lined Transparent Red|982820|r|tL
+0684|Silver-Lined Transparent Pink|bd644c|p|tL
+0685|Silver-Lined Transparent Pink|965949|p|tL
+0686|Silver-Lined Transparent Yellow|92794c|y|tL
+0687|Silver-Lined Transparent Green-Yellow|997c46|vy|tL
+0688|Silver-Lined Transparent Green|26603b|v|tL
+0689|Silver-Lined Transparent Green|53595a|v|tL
+0690|Silver-Lined Transparent Green|334837|v|tL
+0691|Silver-Lined Transparent Blue-Green|4a8997|av|tL
+0692|Silver-Lined Transparent Blue|3e7f9f|a|tL
+0693|Silver-Lined Transparent Blue|2a3165|a|tL
+0694|Silver-Lined Transparent Purple|5c6299|m|tL
+0695|Silver-Lined Transparent Purple|554655|m|tL
+0696|Silver-Lined Transparent Blue|332a76|a|tL
+0697|Silver-Lined Transparent Gray|555856|g|tL
+0702|Transparent Brown|bf7621|b|t
+0703|Transparent Orange|ea5c0b|n|t
+0704|Transparent Red|b60d0e|r|t
+0705|Transparent Green|0e491b|v|t
+0706|Transparent Blue|197bc9|a|t
+0707|Transparent Blue|1d0f71|a|t
+0708|Transparent Gray|3d4244|g|t
+0709|Transparent Brown|4b1e12|b|t
+0710|Transparent Yellow|dab419|y|t
+0711|Transparent Purple|5c3b47|m|t
+0712|Transparent Green|8ea014|v|t
+0713|Transparent Green|14301f|v|t
+0714|Transparent Blue|124677|a|t
+0715|Transparent Brown|34261f|b|t
+0721|Opaque Yellow|ebd708|y|o
+0722|Opaque Orange|eb490d|n|o
+0723|Opaque Red|b5121b|r|o
+0724|Opaque Green|427538|v|o
+0725|Opaque Blue|409bc1|a|o
+0726|Opaque Blue|201576|a|o
+0727|Opaque Red|d72217|r|o
+0728|Opaque Purple|8f7281|m|o
+0729|Opaque Green|2d8e8f|v|o
+0730|Opaque Blue|5263c2|a|o
+0731|Opaque Gray|656462|g|o
+0732|Opaque Beige-White|e2c49c|ew|o
+0733|Opaque Green|98aa47|v|o
+0734|Opaque Brown|331918|b|o
+0735|Opaque Brown|574343|b|o
+0741|Matte Transparent Crystal|cccbd6|c|tm
+0742|Matte Transparent Brown|c87c32|b|tm
+0743|Matte Transparent Yellow|dec11c|y|tm
+0744|Matte Transparent Orange|f46a09|n|tm
+0745|Matte Transparent Red|b8161a|r|tm
+0746|Matte Transparent Green|11582d|v|tm
+0747|Matte Transparent Blue|328ad6|a|tm
+0748|Matte Transparent Blue|25127f|a|tm
+0749|Matte Transparent Gray|4e5455|g|tm
+0750|Matte Opaque White|d3d3d3|w|om
+0751|Matte Opaque Yellow|edd603|y|om
+0752|Matte Opaque Orange|ed410e|n|om
+0753|Matte Opaque Red|b9111a|r|om
+0754|Matte Opaque Green|3d7434|v|om
+0755|Matte Opaque Blue|309bd2|a|om
+0756|Matte Opaque Blue|201985|a|om
+0757|Matte Opaque Red|cf1213|r|om
+0758|Matte Opaque Purple|876a79|m|om
+0759|Matte Opaque Blue-Green|338f96|av|om
+0760|Matte Opaque Blue|5f6dcb|a|om
+0761|Matte Opaque Gray|676664|g|om
+0762|Matte Opaque Beige-White|e5cba7|ew|om
+0763|Matte Opaque Green|9caf4e|v|om
+0764|Matte Transparent Brown|5b301e|b|tm
+0765|Matte Transparent Purple|6d4d58|m|tm
+0766|Matte Transparent Green|9fad24|v|tm
+0767|Matte Transparent Green|173726|v|tm
+0768|Matte Transparent Blue|104c81|a|tm
+0769|Matte Transparent Brown|372923|b|tm
+0771|Matte Transparent Yellow|847351|y|tm
+0772|Matte Transparent Brown|5d4942|b|tm
+0773|Matte Transparent Red|6a3532|r|tm
+0774|Matte Transparent Red|8a1417|r|tm
+0775|Matte Transparent Pink|90102f|p|tm
+0776|Matte Transparent Green|0f412e|v|tm
+0777|Matte Transparent Brown|a15127|b|tm
+0778|Matte Transparent Pink|974d48|p|tm
+0779|Matte Transparent Pink-Red|a32a24|pr|tm
+0780|Matte Transparent Pink|cc3354|p|tm
+0781|Matte Transparent Brown-Orange|af552c|bn|tm
+0782|Matte Transparent Purple|3b2a38|m|tm
+0783|Matte Transparent Purple|6342b5|m|tm
+0784|Matte Transparent Purple|382831|m|tm
+0785|Matte Transparent Blue-Purple|302359|am|tm
+0786|Matte Transparent Blue-Green|066e70|av|tm
+0787|Matte Transparent Blue|0b529a|a|tm
+0788|Matte Transparent Blue-Green|17414a|av|tm
+0791|Matte Opaque Red|980f1d|r|om
+0792|Matte Opaque Blue|4c6874|a|om
+0793|Matte Opaque Blue-Green|079299|av|om
+0794|Matte Opaque Brown|763e1d|b|om
+0795|Matte Opaque Orange-Red|a93419|nr|om
+0796|Matte Opaque Red|92262b|r|om
+0797|Matte Opaque Green|394c30|v|om
+0798|Matte Opaque Blue|34738a|a|om
+0799|Matte Opaque Purple|585979|m|om
+0800|Matte Opaque Pink|95647d|p|om
+0820|Silk Pink|cdaabd|p|sd
+0821|Silk Beige|eeb694|e|sd
+0822|Silk Gray|9f9394|g|sd
+0823|Silk Yellow|f0da84|y|s
+0824|Silk Orange|e9a48e|n|sd
+0825|Silk Pink|e89288|p|s
+0826|Silk Purple|a1817a|m|sd
+0827|Silk Gray|867877|g|s
+0828|Silk Green|8fb297|v|s
+0829|Silk Green|8c9a8d|v|sd
+0830|Silk Blue|adcbe7|a|sd
+0831|Silk Blue|96a6d3|a|s
+0832|Silk Blue|b0b3d5|a|sd
+0833|Silk Purple|c09cb1|m|sd
+0851|Matte Transparent Crystal AB|c7c6ce|c|tmr
+0852|Matte Transparent Brown AB|d09263|b|tmr
+0853|Matte Transparent Brown AB|745251|b|tmr
+0854|Matte Transparent Yellow AB|dcc15d|y|tmr
+0855|Matte Transparent Orange AB|f1733f|n|tmr
+0856|Matte Transparent Pink-Red AB|cb3e4f|pr|tmr
+0857|Matte Transparent Purple AB|816a79|m|tmr
+0858|Matte Transparent Green AB|3c755b|v|tmr
+0859|Matte Transparent Green AB|375a56|v|tmr
+0860|Matte Transparent Green AB|a5b85c|v|tmr
+0861|Matte Transparent Blue AB|5ba0df|a|tmr
+0862|Matte Transparent Blue AB|2d699c|a|tmr
+0863|Matte Transparent Gray AB|646c78|g|tmr
+0864|Matte Transparent Blue AB|484499|a|tmr
+0865|Matte Transparent Brown AB|544e54|b|tmr
+0866|Matte Transparent Brown AB|9b6451|b|tmr
+0867|Matte Transparent Red AB|893e50|r|tmr
+0868|Matte Transparent Pink AB|e6c0c1|p|tmr
+0869|Matte Transparent Purple AB|635363|m|tmr
+0870|Matte Transparent Purple AB|6c657c|m|tmr
+0871|Matte Opaque Blue AB|414856|a|omr
+0872|Matte Opaque Orange AB|ec5b48|n|omr
+0873|Matte Opaque Pink-Red AB|d03f4f|pr|omr
+0874|Matte Opaque Pink-Red AB|b53752|pr|omr
+0875|Matte Opaque Purple AB|917b8b|m|omr
+0876|Matte Opaque Green AB|9fb162|v|omr
+0877|Matte Opaque Green AB|53805d|v|omr
+0878|Matte Opaque Green AB|4b969d|v|omr
+0879|Matte Opaque Blue AB|4fa3cd|a|omr
+0880|Matte Opaque Blue AB|49488c|a|omr
+0881|Matte Opaque Blue AB|6a79ca|a|omr
+0882|Matte Opaque Gray AB|737376|g|omr
+0883|Matte Opaque White AB|e4cbab|w|omr
+0884|Matte Opaque Iridescent AB|594751|i|omr
+0901|Color-Lined Transparent Brown Luster|976d54|b|tlL
+0902|Color-Lined Transparent Pink Luster|a55f7c|p|tlL
+0903|Color-Lined Transparent Green Luster|a29f6f|v|tlL
+0904|Color-Lined Transparent Green Luster|257f7b|v|tlL
+0905|Color-Lined Transparent Blue Luster|2d709e|a|tlL
+0906|Color-Lined Transparent Purple Luster|5b497f|m|tlL
+0907|Color-Lined Transparent Gold Luster|897263|d|tlL
+0908|Color-Lined Transparent Green Luster|7c7349|v|tlL
+0909|Color-Lined Transparent Gold Luster|7c6331|d|tlL
+0910|Color-Lined Transparent Yellow Luster|99945a|y|tlL
+0911|Color-Lined Transparent Yellow Luster|95753c|y|tlL
+0912|Color-Lined Transparent Purple Luster|695356|m|tlL
+0913|Color-Lined Transparent Orange-Purple Luster|8f534d|nm|tlL
+0914|Color-Lined Transparent Pink Luster|a84d6b|p|tlL
+0915|Color-Lined Transparent Brown Luster|81534a|b|tlL
+0916|Color-Lined Transparent Green Luster|3a714c|v|tlL
+0917|Color-Lined Transparent Green Luster|4e634c|v|tlL
+0918|Color-Lined Transparent Green Luster|1e706d|v|tlL
+0919|Color-Lined Transparent Blue-Green Luster|225451|av|tlL
+0920|Color-Lined Transparent Blue Luster|285f92|a|tlL
+0921|Color-Lined Transparent Blue-Green Luster|374c54|av|tlL
+0922|Color-Lined Transparent Purple Luster|655176|m|tlL
+0923|Color-Lined Transparent Purple Luster|51466e|m|tlL
+0924|Color-Lined Transparent Red Luster|79424c|r|tlL
+0925|Color-Lined Transparent Gray Luster|484a52|g|tlL
+0981|Color-Lined Transparent Mix Luster|775f42|x|tlL
+0982|Color-Lined Transparent Mix Luster|845e65|x|tlL
+0983|Color-Lined Transparent Mix Luster|8e8d49|x|tlL
+0984|Color-Lined Transparent Mix Luster|357061|x|tlL
+0985|Color-Lined Transparent Mix Luster|33616a|x|tlL
+0986|Color-Lined Transparent Mix Luster|67626d|x|tlL
+0987|Color-Lined Transparent Mix Luster|946746|x|tlL
+0988|Color-Lined Transparent Mix Luster|946557|x|tlL
+0989|Color-Lined Transparent Mix Luster|747231|x|tlL
+0990|Color-Lined Transparent Mix Luster|6b453c|x|tlL
+0991|Color-Lined Transparent Mix Luster|4b4149|x|tlL
+0992|Color-Lined Transparent Mix Luster|2f3247|x|tlL
+1001|Opaque Iridescent AB|393b43|i|or
+1002|Metallic Iridescent|382421|i|oM
+1003|Metallic Iridescent|292e33|i|oM
+1004|Metallic Iridescent|413438|i|oM
+1005|Metallic Iridescent|2b3950|i|oM
+1006|Metallic Iridescent|314144|i|oM
+1010|Metallic Gold|6a4f43|d|oM
+1011|Metallic Iridescent|5e5150|i|oM
+1012|Metallic Iridescent|563e4b|i|oM
+1013|Metallic Iridescent|674744|i|oM
+1014|Metallic Iridescent|5c4750|i|oM
+1015|Metallic Purple|75495c|m|oM
+1016|Metallic Red|734246|r|oM
+1051|Matte Metallic Brown|432617|b|omM
+1052|Matte Metallic Blue|344051|a|omM
+1053|Matte Metallic Green|3c3b41|v|omM
+1054|Matte Metallic Blue|3e445b|a|omM
+1055|Matte Metallic Iridescent|564a45|i|omM
+1056|Matte Metallic Iridescent|5b5052|i|omM
+1061|Matte Metallic Brown|77605e|b|omM
+1062|Matte Metallic Purple|645963|m|omM
+1063|Matte Metallic Green|696d77|v|omM
+1064|Matte Metallic Purple|6e5b64|m|omM
+1065|Matte Metallic Purple|766976|m|omM
+1066|Matte Metallic Purple|825e6c|m|omM
+1067|Matte Metallic Purple|706166|m|omM
+1101|Transparent Brown|844116|b|t
+1102|Transparent Red|711219|r|t
+1103|Transparent Pink|dca79b|p|t
+1104|Transparent Purple|412b32|m|t
+1105|Transparent Purple|48394f|m|t
+1106|Transparent Green|438126|v|t
+1107|Transparent Green|354522|v|t
+1108|Transparent Green|0e555a|v|t
+1109|Transparent Blue|0b79c4|a|t
+1110|Transparent Blue|294cb2|a|t
+1111|Transparent Gray|88827c|g|t
+1112|Transparent Brown|ca9c56|b|t
+1131|Opaque Beige|cda270|e|o
+1132|Opaque Yellow|f7b806|y|o
+1133|Opaque Orange|f4830a|n|o
+1134|Opaque Brown|611c21|b|o
+1135|Opaque Green|4b5637|v|o
+1136|Opaque Blue-Green|42988e|av|o
+1137|Opaque Blue|8597dc|a|o
+1138|Opaque Blue|3e3ea1|a|o
+1139|Opaque Gray|808089|g|o
+1151|Matte Galvanized Silver|a39673|s|tmM
+1152|Matte Galvanized Gold|ae8c76|d|tmM
+1153|Matte Galvanized Gold|af8b64|d|tmM
+1154|Matte Galvanized Yellow|b2964e|y|tmM
+1155|Matte Galvanized Orange|ab7f6b|n|tmM
+1156|Matte Galvanized Pink|a17374|p|tmM
+1157|Matte Galvanized Pink|876363|p|tmM
+1158|Matte Galvanized Purple|9b8a7f|m|tmM
+1159|Matte Galvanized Gray|84786a|g|tmM
+1162|Matte Galvanized Brown|8b6f5d|b|tmM
+1163|Matte Galvanized Brown|94704f|b|tmM
+1164|Matte Galvanized Yellow|a58e59|y|tmM
+1165|Matte Galvanized Brown|936d5e|b|tmM
+1166|Matte Galvanized Pink|986f6e|p|tmM
+1167|Matte Galvanized Pink|745055|p|tmM
+1168|Matte Galvanized Purple|817571|m|tmM
+1169|Matte Galvanized Gray|72695e|g|tmM
+1170|Matte Galvanized Green|777360|v|tmM
+1171|Matte Galvanized Green|507b6b|v|tmM
+1172|Matte Galvanized Green|4d6769|v|tmM
+1173|Matte Galvanized Pink|7c5971|p|tmM
+1174|Matte Galvanized Purple|5b4a5d|m|tmM
+1175|Matte Galvanized Gray|57534f|g|tmM
+1176|Matte Galvanized Gray|998b80|g|tmM
+1181|Matte Galvanized Green|908a72|v|tmM
+1182|Matte Galvanized Green|458775|v|tmM
+1183|Matte Galvanized Blue|4b7a80|a|tmM
+1184|Matte Galvanized Pink|8e517c|p|tmM
+1185|Matte Galvanized Purple|69556f|m|tmM
+1186|Matte Galvanized Gray|595450|g|tmM
+1201|Silver-Lined Transparent Gold|8a5321|d|tL
+1202|Silver-Lined Transparent Red|4d281f|r|tL
+1203|Silver-Lined Transparent Pink|af9081|p|tL
+1204|Silver-Lined Transparent Purple|553d3f|m|tL
+1205|Silver-Lined Transparent Purple|5f525b|m|tL
+1206|Silver-Lined Transparent Green|608037|v|tL
+1207|Silver-Lined Transparent Green|4c5932|v|tL
+1208|Silver-Lined Transparent Green|23615f|v|tL
+1209|Silver-Lined Transparent Blue|367b95|a|tL
+1210|Silver-Lined Transparent Blue|3f608b|a|tL
+1211|Silver-Lined Transparent Silver|8b847a|s|tL
+1212|Silver-Lined Transparent Gold|ad915e|d|tL
+1221|Transparent Brown Luster|8f5b42|b|tl
+1222|Transparent Red Luster|733a48|r|tl
+1223|Transparent Pink Luster|d5ada7|p|tl
+1224|Transparent Purple Luster|5c4e5d|m|tl
+1225|Transparent Purple Luster|66617a|m|tl
+1226|Transparent Green Luster|619358|v|tl
+1227|Transparent Green Luster|536454|v|tl
+1228|Transparent Green Luster|236870|v|tl
+1229|Transparent Blue Luster|2c8dc7|a|tl
+1230|Transparent Blue Luster|4165b5|a|tl
+1231|Transparent Gray Luster|919091|g|tl
+1241|Transparent Brown AB|946343|b|tr
+1242|Transparent Red AB|65323c|r|tr
+1243|Transparent Pink AB|d7aea8|p|tr
+1244|Transparent Purple AB|584a57|m|tr
+1245|Transparent Purple AB|5f586c|m|tr
+1246|Transparent Green AB|5c904e|v|tr
+1247|Transparent Green AB|4b634b|v|tr
+1248|Transparent Green AB|20696f|v|tr
+1249|Transparent Blue AB|2a8cc3|a|tr
+1250|Transparent Blue AB|4067b3|a|tr
+1251|Transparent Gray AB|949292|g|tr
+1252|Transparent Gold AB|cca974|d|tr
+1261|Matte Transparent Brown|904c1a|b|tm
+1262|Matte Transparent Red|7b1720|r|tm
+1263|Matte Transparent Pink|e0aea5|p|tm
+1264|Matte Transparent Purple|452e35|m|tm
+1265|Matte Transparent Purple|544760|m|tm
+1266|Matte Transparent Green|488229|v|tm
+1267|Matte Transparent Green|3e4f2b|v|tm
+1268|Matte Transparent Green|085657|v|tm
+1269|Matte Transparent Blue|0782cb|a|tm
+1270|Matte Transparent Blue|3256bb|a|tm
+1271|Matte Transparent Gray|8e8985|g|tm
+1272|Matte Transparent Gold|d7ad68|d|tm
+1281|Matte Transparent Green AB|699a5a|v|tmr
+1282|Matte Transparent Green AB|5c6f5c|v|tmr
+1283|Matte Transparent Green AB|24727e|v|tmr
+1284|Matte Transparent Blue AB|2e94d5|a|tmr
+1285|Matte Transparent Blue AB|4f72c1|a|tmr
+1286|Matte Transparent Gray AB|9d9a9b|g|tmr
+1287|Matte Transparent Gold AB|dcb888|d|tmr
+1301|Transparent Yellow|f2b807|y|t
+1302|Transparent Orange-Pink|ad4732|np|t
+1304|Transparent Green|038b7c|v|t
+1308|Transparent Pink|c62c4d|p|t
+1310|Transparent Pink|a70d6e|p|t
+1312|Transparent Pink-Purple|45202d|pm|t
+1315|Transparent Purple|531d76|m|t
+1318|Transparent Blue|075a8f|a|t
+1319|Transparent Gray|2e2c29|g|t
+1333|Silver-Lined Transparent Orange|8d461a|n|tL
+1335|Silver-Lined Transparent Pink|b99ea6|p|tL
+1338|Silver-Lined Transparent Pink|b14257|p|tL
+1340|Silver-Lined Transparent Pink|932473|p|tL
+1341|Silver-Lined Transparent Pink|822f44|p|tL
+1342|Silver-Lined Transparent Pink-Purple|582a3b|pm|tL
+1343|Silver-Lined Transparent Purple|734f88|m|tL
+1345|Silver-Lined Transparent Pink-Purple|6e347d|pm|tL
+1347|Silver-Lined Transparent Purple|664d87|m|tL
+1363|Opaque Orange-Pink|c87566|np|o
+1371|Opaque Pink|e0658b|p|o
+1376|Opaque Pink-Purple|8e4862|pm|o
+1379|Opaque Purple|764ea7|m|o
+1391|Silver-Lined Glazed Transparent Brown|684319|b|tL
+1392|Silver-Lined Glazed Transparent Brown|452519|b|tL
+1393|Silver-Lined Glazed Transparent Brown|55351d|b|tL
+1401|Transparent Yellow|ebd055|y|td
+1402|Transparent Pink|a87a91|p|td
+1403|Transparent Pink|9e667b|p|td
+1404|Transparent Blue|b7c6a6|a|td
+1405|Transparent Blue|5a77bd|a|td
+1406|Transparent Blue-Gray|6a6c77|ag|td
+1407|Transparent Blue|898abb|a|td
+1408|Transparent Blue-Gray|817d7f|ag|td
+1409|Transparent Crystal|e2bc94|c|td
+1410|Transparent Pink|de997f|p|td
+1411|Transparent Orange|d46646|n|td
+1412|Transparent Red|cb5242|r|td
+1413|Transparent Pink|854e68|p|td
+1414|Transparent Green|54805b|v|td
+1415|Transparent Green|506656|v|td
+1416|Transparent Gray|6c5c59|g|td
+1417|Transparent Gray|52443f|g|td
+1431|Silver-Lined Transparent Silver|a0a08e|s|tLd
+1432|Silver-Lined Transparent Silver|a29477|s|tLd
+1433|Silver-Lined Transparent Pink|9d8287|p|tLd
+1434|Silver-Lined Transparent Pink|917078|p|tLd
+1435|Silver-Lined Transparent Blue|8b8b98|a|tLd
+1451|Silver-Lined Alabaster Beige|c2ad97|e|aLd
+1452|Silver-Lined Alabaster Beige|c3a392|e|aLd
+1453|Silver-Lined Alabaster Green|a8a68c|v|aLd
+1454|Silver-Lined Alabaster Green|9ba793|v|aLd
+1455|Silver-Lined Alabaster Gray|8b8989|g|aLd
+1456|Silver-Lined Alabaster Gray|857a76|g|aLd
+1457|Silver-Lined Alabaster Pink|b6959d|p|aLd
+1458|Silver-Lined Alabaster Gold|b19470|d|aLd
+1459|Silver-Lined Alabaster Brown|96736a|b|aLd
+1460|Silver-Lined Alabaster Gray|806d66|g|aLd
+1471|Transparent Yellow Glazed Luster|e8d07c|y|tld
+1472|Transparent Pink Glazed Luster|b691a3|p|tl
+1473|Transparent Pink Glazed Luster|a47d95|p|tld
+1474|Transparent Blue Glazed Luster|b8c9ae|a|tld
+1475|Transparent Blue Glazed Luster|758cc3|a|tl
+1476|Transparent Blue Glazed Luster|9494b8|a|tld
+1477|Transparent Gray Glazed Luster|989699|g|tld
+1478|Transparent Yellow Glazed Luster|e7b47a|y|tld
+1479|Transparent Pink Glazed Luster|dba28f|p|tl
+1480|Transparent Orange Glazed Luster|d77e6d|n|tld
+1481|Transparent Red Glazed Luster|c36c6c|r|tl
+1482|Transparent Pink Glazed Luster|9a748b|p|tl
+1483|Transparent Green Glazed Luster|6d9278|v|tl
+1484|Transparent Green Glazed Luster|6b7c75|v|tld
+1485|Transparent Gray Glazed Luster|7d7579|g|tld
+1486|Transparent Gray Glazed Luster|6c6568|g|tl
+1490|Opaque Pink|e9cfc3|p|o
+1491|Opaque Yellow|f4e29e|y|o
+1492|Opaque Beige|f0ba9f|e|o
+1493|Opaque Pink|dda19e|p|o
+1494|Opaque Pink|c9acc2|p|o
+1495|Opaque Pink|c1a09a|p|o
+1496|Opaque Green|a4c1aa|v|o
+1497|Opaque Blue|abbde5|a|o
+1498|Opaque Gray|939093|g|o
+1500|Opaque White AB|ebd0c5|w|ord
+1501|Opaque Yellow AB|f2e09a|y|ord
+1502|Opaque Orange AB|e9b69a|n|ord
+1503|Opaque Pink AB|d89a94|p|ord
+1504|Opaque Pink AB|c9a9bd|p|ord
+1505|Opaque Pink AB|ba9a97|p|ord
+1506|Opaque Green AB|9dbea9|v|ord
+1507|Opaque Blue AB|aabbdc|a|ord
+1508|Opaque Gray AB|969295|g|ord
+1510|Matte Opaque Pink|f1d7ce|p|om
+1511|Matte Opaque Yellow|f4e197|y|om
+1512|Matte Opaque Orange|efb295|n|omd
+1513|Matte Opaque Pink|e09d9a|p|omd
+1514|Matte Opaque Pink|ccaec3|p|omd
+1515|Matte Opaque Purple|c09e9c|m|omd
+1516|Matte Opaque Green|a8c8b2|v|om
+1517|Matte Opaque Blue|a9bdea|a|om
+1518|Matte Opaque Gray|949194|g|om
+1520|Matte Opaque Pink AB|ebd0c9|p|omrd
+1521|Matte Opaque Yellow AB|f2e19d|y|omrd
+1522|Matte Opaque Orange AB|ecb399|n|omrd
+1523|Matte Opaque Pink AB|db9c99|p|omrd
+1524|Matte Opaque Pink AB|ccb0c4|p|omrd
+1525|Matte Opaque Purple AB|c09f9f|m|omrd
+1526|Matte Opaque Green AB|a0c3af|v|omrd
+1527|Matte Opaque Blue AB|a5bbe4|a|omrd
+1528|Matte Opaque Gray AB|929094|g|omrd
+1530|Opaque White Glazed Luster|e9cfc1|w|ol
+1531|Opaque Yellow Glazed Luster|f1de9b|y|ol
+1532|Opaque Orange Glazed Luster|eeb69b|n|ol
+1533|Opaque Pink Glazed Luster|e3a39b|p|ol
+1534|Opaque Pink Glazed Luster|c4a6bb|p|ol
+1535|Opaque Beige Glazed Luster|b49995|e|ol
+1536|Opaque Green Glazed Luster|a0bba6|v|ol
+1537|Opaque Blue Glazed Luster|acbbdd|a|ol
+1538|Opaque Gray Glazed Luster|928f92|g|ol
+1560|Opaque Beige-White Luster|d4c088|ew|ol
+1561|Opaque Beige Luster|caa27a|e|ol
+1562|Opaque Yellow Luster|f3b731|y|ol
+1563|Opaque Orange Luster|e28233|n|ol
+1564|Opaque Red Luster|963951|r|ol
+1565|Opaque Red Luster|68424c|r|ol
+1566|Opaque Green Luster|5b6457|v|ol
+1567|Opaque Green Luster|56a0a3|v|ol
+1568|Opaque Blue Luster|8a99d1|a|ol
+1569|Opaque Blue Luster|5152a4|a|ol
+1570|Opaque Gray Luster|84848c|g|ol
+1571|Opaque Beige AB|cda376|e|or
+1572|Opaque Yellow AB|f5b71e|y|or
+1573|Opaque Orange AB|f1882a|n|or
+1574|Opaque Red AB|653b45|r|or
+1575|Opaque Green AB|505f53|v|or
+1576|Opaque Blue-Green|4d9fa3|av|o
+1577|Opaque Blue AB|8a9ad2|a|or
+1578|Opaque Blue AB|4a4fa5|a|or
+1579|Opaque Gray AB|83838d|g|or
+1581|Matte Opaque Beige|d1a573|e|om
+1582|Matte Opaque Yellow|f6b402|y|om
+1583|Matte Opaque Orange|f78503|n|om
+1584|Matte Opaque Brown|642327|b|om
+1585|Matte Opaque Green|4e583b|v|om
+1586|Matte Opaque Blue-Green|45a0a5|av|om
+1587|Matte Opaque Blue|889add|a|om
+1588|Matte Opaque Blue|4140a7|a|om
+1589|Matte Opaque Gray|81818a|g|om
+1591|Matte Opaque Beige AB|cda882|e|omr
+1592|Matte Opaque Yellow AB|f0b82c|y|omr
+1593|Matte Opaque Orange AB|f3863f|n|omr
+1594|Matte Opaque Green AB|5d685c|v|omr
+1595|Matte Opaque Blue-Green|56a4ad|av|om
+1596|Matte Opaque Blue AB|8b9dd9|a|omr
+1597|Matte Opaque Blue AB|585bad|a|omr
+1598|Matte Opaque Gray AB|8c8c97|g|omr
+1671|Color-Lined Transparent White Luster|cac9c8|w|tlL
+1672|Color-Lined Transparent Blue Luster|7ebac9|a|tlL
+1673|Color-Lined Transparent Pink Luster|c38d9f|p|tlL
+1674|Color-Lined Transparent Pink Luster|bca49e|p|tlL
+1675|Color-Lined Transparent Green Luster|99c0b4|v|tlL
+1676|Color-Lined Transparent Yellow Luster|cdc497|y|tlL
+1677|Color-Lined Transparent Blue Luster|949fae|a|tlL
+1681|Silver-Lined Glazed Transparent Brown|6d4e25|b|tL
+1682|Silver-Lined Glazed Transparent Brown|694820|b|tL
+1683|Silver-Lined Glazed Transparent Brown|5e331f|b|tL
+1684|Silver-Lined Glazed Transparent Brown|442f24|b|tL
+1685|Silver-Lined Glazed Transparent Red|462924|r|tL
+1691|Silver-Lined Glazed Transparent Brown AB|71523d|b|trL
+1692|Silver-Lined Glazed Transparent Purple AB|674b41|m|trL
+1694|Silver-Lined Glazed Transparent Purple AB|4f3642|m|trL
+1701|Color-Lined Transparent White Luster|e1d9cc|w|tlL
+1702|Color-Lined Transparent Orange Luster|a66735|n|tlL
+1703|Color-Lined Transparent Brown Luster|77573b|b|tlL
+1704|Color-Lined Transparent Brown Luster|84544b|b|tlL
+1705|Color-Lined Transparent Brown Luster|60393c|b|tlL
+1706|Color-Lined Transparent Brown Luster|5d4f54|b|tlL
+1707|Color-Lined Transparent Green Luster|6cbeb0|v|tlL
+1708|Color-Lined Transparent Blue Luster|3394a8|a|tlL
+1709|Color-Lined Transparent Blue Luster|2d719b|a|tlL
+1710|Color-Lined Transparent Brown Luster|4a3e36|b|tlL
+1711|Color-Lined Transparent Gray Luster|9e9b94|g|tlL
+1712|Color-Lined Transparent Gray Luster|686b6b|g|tlL
+1731|Color-Lined Alabaster Beige Luster|917a6a|e|alL
+1732|Color-Lined Transparent Brown Luster|735a4d|b|tlL
+1733|Color-Lined Alabaster Brown Luster|965f4f|b|alL
+1734|Color-Lined Transparent Brown Luster|8f5727|b|tlL
+1735|Color-Lined Transparent Brown Luster|744f2d|b|tlL
+1736|Color-Lined Transparent Brown Luster|724532|b|tlL
+1737|Color-Lined Transparent Brown|79554e|b|tL
+1738|Color-Lined Transparent Green Luster|735c3b|v|tlL
+1739|Color-Lined Transparent Green Luster|544a33|v|tlL
+1740|Color-Lined Transparent Purple Luster|4d483f|m|tlL
+1741|Color-Lined Transparent Green Luster|463f2b|v|tlL
+1742|Color-Lined Alabaster Pink Luster|aa5872|p|alL
+1743|Color-Lined Transparent Pink Luster|9d2967|p|tlL
+1744|Color-Lined Alabaster Purple Luster|954a82|m|alL
+1745|Color-Lined Transparent Purple Luster|825d6a|m|tlL
+1746|Color-Lined Alabaster Purple Luster|894f5a|m|alL
+1747|Color-Lined Transparent Purple Luster|592c4c|m|tlL
+1748|Color-Lined Transparent Red Luster|4e3735|r|tlL
+1749|Color-Lined Alabaster Purple Luster|77635f|m|alL
+1750|Color-Lined Transparent Brown Luster|593630|b|tlL
+1751|Color-Lined Transparent Red Luster|3f2831|r|tlL
+1752|Color-Lined Alabaster Purple Luster|947488|m|alL
+1753|Color-Lined Alabaster Purple Luster|6f5e96|m|alL
+1754|Color-Lined Transparent Purple Luster|5f4e73|m|tlL
+1755|Color-Lined Transparent Purple Luster|41316a|m|tlL
+1756|Color-Lined Transparent Purple Luster|423a59|m|tlL
+1757|Color-Lined Transparent Purple Luster|674858|m|tlL
+1758|Color-Lined Transparent Purple Luster|554361|m|tlL
+1759|Color-Lined Transparent Brown Luster|644d46|b|tlL
+1760|Color-Lined Transparent Purple Luster|584d53|m|tlL
+1761|Color-Lined Alabaster Blue Luster|3f7a9e|a|alL
+1762|Color-Lined Transparent Blue Luster|466982|a|tlL
+1763|Color-Lined Transparent Blue Luster|213553|a|tlL
+1764|Color-Lined Transparent Green Luster|15505c|v|tlL
+1765|Color-Lined Alabaster Green Luster|9c9e83|v|alL
+1766|Color-Lined Transparent Green Luster|8e866d|v|tlL
+1767|Color-Lined Transparent Green Luster|517f7d|v|tlL
+1768|Color-Lined Alabaster Green Luster|456462|v|alL
+1769|Color-Lined Transparent Green Luster|235056|v|tlL
+1770|Color-Lined Alabaster Gray Luster|7b7d80|g|alL
+1771|Color-Lined Transparent Gray Luster|8c8386|g|tlL
+1772|Color-Lined Transparent Gray Luster|7a6f6d|g|tlL
+1773|Color-Lined Transparent Gray Luster|544e47|g|tlL
+1774|Color-Lined Alabaster Gray Luster|53565e|g|alL
+1775|Color-Lined Transparent Brown Luster|484743|b|tlL
+1776|Color-Lined Transparent Yellow Luster|d6c24b|y|tlL
+1777|Color-Lined Transparent Orange Luster|e77a1e|n|tlL
+1778|Color-Lined Transparent Brown Luster|a36e38|b|tlL
+1779|Color-Lined Transparent Brown Luster|7c4f30|b|tlL
+1780|Color-Lined Transparent Red Luster|af4029|r|tlL
+1781|Color-Lined Transparent Red Luster|703131|r|tlL
+1782|Color-Lined Transparent Blue Luster|1d7d86|a|tlL
+1783|Color-Lined Transparent Blue Luster|2f6f97|a|tlL
+1784|Color-Lined Transparent Blue Luster|4e7aba|a|tlL
+1785|Color-Lined Transparent Blue Luster|3b3d98|a|tlL
+1786|Color-Lined Transparent Green Luster|5e714a|v|tlL
+1787|Color-Lined Transparent Green Luster|327e4f|v|tlL
+1788|Color-Lined Transparent Green Luster|1c5d44|v|tlL
+1789|Color-Lined Transparent Purple Luster|71667a|m|tlL
+1790|Color-Lined Transparent Brown Luster|604d44|b|tlL
+1791|Color-Lined Transparent Purple Luster|8b6f7a|m|tlL
+1792|Color-Lined Transparent Purple Luster|6b535d|m|tlL
+1793|Color-Lined Transparent Gray Luster|6e7378|g|tlL
+1801|Color-Lined Silk Yellow Luster|cfa55c|y|slL
+1802|Color-Lined Silk Beige Luster|92755c|e|slL
+1803|Color-Lined Silk Beige Luster|aa7c67|e|slL
+1804|Color-Lined Silk Orange Luster|9f5f3d|n|slL
+1805|Color-Lined Silk Red Luster|904146|r|slL
+1806|Color-Lined Silk Purple Luster|95647b|m|slL
+1807|Color-Lined Silk Pink Luster|aa4764|p|slL
+1808|Color-Lined Silk Pink Luster|983d79|p|slL
+1809|Color-Lined Silk Purple Luster|634f81|m|slL
+1810|Color-Lined Silk Purple Luster|523c72|m|slL
+1811|Color-Lined Silk Blue Luster|37527a|a|slL
+1812|Color-Lined Silk Green Luster|4c9290|v|slL
+1813|Color-Lined Silk Green Luster|127e73|v|slL
+1814|Color-Lined Silk Green Luster|305b4e|v|slL
+1815|Color-Lined Silk Green Luster|9b997c|v|slL
+1816|Color-Lined Silk Gray Luster|9a9ba0|g|slL
+1817|Color-Lined Silk Gray Luster|777576|g|slL
+1818|Color-Lined Silk Gray Luster|434245|g|slL
+1831|Duracoat Galvanized Silver|aea185|s|tM
+1831F|Duracoat Matte Galvanized Silver-White|a08f6d|sw|tmM
+1832|Duracoat Galvanized Gold|a57d3d|d|tM
+1832F|Duracoat Matte Galvanized Brown-Gold|b07f44|bd|tmM
+1833|Duracoat Galvanized Gold|97662f|d|tM
+1833F|Duracoat Matte Galvanized Brown-Gold|a66d3d|bd|tmM
+1834|Duracoat Galvanized Gold|8e6a4b|d|tM
+1834F|Duracoat Matte Galvanized Brown-Gold|926f51|bd|tmM
+1835|Duracoat Galvanized Yellow|a18f3f|y|tM
+1836|Duracoat Galvanized Orange|975f3e|n|tM
+1837|Duracoat Galvanized Orange|8b4635|n|tM
+1838|Duracoat Galvanized Red|88352d|r|tM
+1838F|Duracoat Matte Galvanized Red|9e4b46|r|tmM
+1839|Duracoat Galvanized Pink|986260|p|tM
+1840|Duracoat Galvanized Pink|914e68|p|tM
+1840F|Duracoat Matte Galvanized Pink|a2596c|p|tmM
+1841|Duracoat Galvanized Pink|9c3d49|p|tM
+1841F|Duracoat Matte Galvanized Pink|a7494d|p|tmM
+1842|Duracoat Galvanized Brown|6e3c33|b|tM
+1842F|Duracoat Matte Galvanized Brown|73463e|b|tmM
+1843|Duracoat Galvanized Brown|61443d|b|tM
+1843F|Duracoat Matte Galvanized Brown|664e49|b|tmM
+1844|Duracoat Galvanized Green|608e67|v|tM
+1844F|Duracoat Matte Galvanized Green|6a9b6c|v|tmM
+1845|Duracoat Galvanized Green|556957|v|tM
+1846|Duracoat Galvanized Blue|60726f|a|tM
+1847|Duracoat Galvanized Blue|336569|a|tM
+1847F|Duracoat Matte Galvanized Blue|3e696c|a|tmM
+1848|Duracoat Galvanized Pink|805165|p|tM
+1849|Duracoat Galvanized Pink|7c4351|p|tM
+1850|Duracoat Galvanized Purple|614858|m|tM
+1851|Duracoat Galvanized Silver|837b68|s|tM
+1851F|Duracoat Matte Galvanized Silver|847c69|s|tmM
+1852|Duracoat Galvanized Silver|615243|s|tM
+1855|Color-Lined Silk Orange|fcd243|n|sL
+1856|Color-Lined Silk Pink|fb9a85|p|sL
+1857|Color-Lined Silk Green-Yellow|eaef70|vy|sL
+1858|Color-Lined Silk Green|b8e99c|v|sL
+1859|Color-Lined Silk Blue|93d8ec|a|sL
+1860|Color-Lined Silk Blue|116399|a|sL
+1861|Color-Lined Silk Yellow|f4ba46|y|sL
+1862|Color-Lined Silk Brown AB|816b58|b|srL
+1863|Color-Lined Silk Pink-Red AB|cb8073|pr|srL
+1864|Color-Lined Silk Brown-Orange AB|bd7148|bn|srL
+1865|Color-Lined Silk Red AB|a13d50|r|srL
+1866|Color-Lined Silk Purple AB|b271a5|m|srL
+1867|Color-Lined Silk Pink-Purple AB|d05b89|pm|srL
+1868|Color-Lined Silk Purple AB|826bb0|m|srL
+1869|Color-Lined Silk Green AB|199e90|v|srL
+1870|Color-Lined Silk Green AB|3d7370|v|srL
+1871|Color-Lined Silk Gray AB|94969b|g|srL
+1872|Color-Lined Silk Black-Gray AB|595859|kg|srL
+1873|Color-Lined Silk Yellow AB|e4df75|y|srL
+1874|Color-Lined Silk Orange AB|ccb29b|n|srL
+1875|Color-Lined Silk Pink-Purple AB|db77a1|pm|srL
+1876|Color-Lined Silk Brown AB|7f745e|b|srL
+1877|Color-Lined Silk Gray AB|817a75|g|srL
+1878|Color-Lined Silk Red AB|724c52|r|srL
+1879|Color-Lined Silk Pink AB|94736c|p|srL
+1880|Color-Lined Silk Purple AB|85566d|m|srL
+1881|Color-Lined Silk Purple AB|4d4168|m|srL
+1882|Color-Lined Silk Blue AB|48617e|a|srL
+1886|Transparent Yellow Luster|d1bd4c|y|tl
+1887|Transparent Orange Luster|df6f29|n|tl
+1888|Transparent Yellow Luster|a3ae43|y|tl
+1889|Transparent Green Luster|286c4b|v|tl
+1890|Transparent Blue Luster|4895c8|a|tl
+1891|Transparent Brown Luster|55332b|b|tl
+1892|Transparent Brown Luster|3e3231|b|tl
+1893|Transparent Purple Luster|76586b|m|tl
+1894|Transparent Green Luster|1b4133|v|tl
+1895|Transparent Blue Luster|18578c|a|tl
+1896|Transparent Blue Luster|2f2188|a|tl
+1897|Transparent Gray Luster|4a535a|g|tl
+1900|Opaque Yellow Luster|e1cfb1|y|ol
+1906|Glazed Opaque Pink|d2909f|p|o
+1907|Opaque Pink Glazed Luster|cd96a3|p|ol
+1910|Matte Opaque Black-Brown|482b2b|kb|om
+1991|Glazed Opaque Black-Purple|30272d|km|o
+2031|Color-Lined Transparent Yellow Luster|d2ea1a|y|tlL
+2032|Color-Lined Transparent Orange Luster|fbc425|n|tlL
+2033|Color-Lined Transparent Orange Luster|fc943d|n|tlL
+2034|Color-Lined Transparent Pink Luster|fa766e|p|tlL
+2035|Color-Lined Transparent Pink Luster|f942a6|p|tlL
+2036|Color-Lined Transparent Pink Luster|fa60a4|p|tlL
+2037|Color-Lined Transparent Purple Luster|e54da9|m|tlL
+2038|Color-Lined Transparent Purple Luster|b348a3|m|tlL
+2039|Color-Lined Transparent Blue Luster|4aa6dc|a|tlL
+2040|Color-Lined Transparent Green Luster|4fd36e|v|tlL
+2041|Color-Lined Transparent Yellow Luster|c09c45|y|tlL
+2042|Color-Lined Transparent Orange Luster|b7736b|n|tlL
+2043|Color-Lined Transparent Brown Luster|a47844|b|tlL
+2044|Color-Lined Transparent Brown Luster|9a6150|b|tlL
+2045|Color-Lined Transparent Orange Luster|e28631|n|tlL
+2046|Color-Lined Transparent Brown Luster|776d39|b|tlL
+2047|Color-Lined Transparent Orange Luster|f96127|n|tlL
+2048|Color-Lined Transparent Pink Luster|ae517f|p|tlL
+2049|Color-Lined Transparent Pink Luster|aa4398|p|tlL
+2050|Color-Lined Transparent Pink Luster|b13a82|p|tlL
+2051|Color-Lined Transparent Pink Luster|e13c3b|p|tlL
+2052|Color-Lined Transparent Green Luster|7d836c|v|tlL
+2053|Color-Lined Transparent Green Luster|2c987e|v|tlL
+2054|Color-Lined Transparent Blue Luster|426377|a|tlL
+2061|Color-Lined Transparent Mix Luster|cd9320|x|tlL
+2062|Color-Lined Transparent Mix Luster|da7445|x|tlL
+2063|Color-Lined Transparent Mix Luster|bd5228|x|tlL
+2064|Color-Lined Transparent Mix Luster|c43773|x|tlL
+2065|Color-Lined Transparent Mix Luster|785486|x|tlL
+2066|Color-Lined Transparent Mix Luster|929e40|x|tlL
+2067|Color-Lined Transparent Mix Luster|44858b|x|tlL
+2068|Color-Lined Transparent Mix Luster|596c82|x|tlL
+2101|Duracoat Opaque White-Yellow|f0d785|wy|o
+2102|Duracoat Opaque Beige|d69f3f|e|o
+2103|Duracoat Opaque Orange|f1930b|n|o
+2104|Duracoat Opaque Orange|de7810|n|o
+2105|Duracoat Opaque Brown-Gray|8e7062|bg|o
+2106|Duracoat Opaque Brown|9e6813|b|o
+2107|Duracoat Opaque Brown|9b613f|b|o
+2108|Duracoat Opaque Brown|955415|b|o
+2109|Duracoat Opaque Brown|835223|b|o
+2110|Duracoat Opaque Pink|89591a|p|o
+2111|Duracoat Opaque Pink|da8c71|p|o
+2112|Duracoat Opaque Pink|e27d6e|p|o
+2113|Duracoat Opaque Pink|de8483|p|o
+2114|Duracoat Opaque Pink|c7645c|p|o
+2115|Duracoat Opaque Pink|d56b74|p|o
+2116|Duracoat Opaque Pink|ea879d|p|o
+2117|Duracoat Opaque Pink|e26c89|p|o
+2118|Duracoat Opaque Pink-Purple|8e475d|pm|o
+2119|Duracoat Opaque Brown-Red|7a2721|br|o
+2120|Duracoat Opaque Brown-Red|6b2a20|br|o
+2121|Duracoat Opaque Green|65b514|v|o
+2122|Duracoat Opaque Blue-Green|4fd4c3|av|o
+2123|Duracoat Opaque Green|91946c|v|o
+2124|Duracoat Opaque Green|8a7f51|v|o
+2125|Duracoat Opaque Blue-Green|569885|av|o
+2126|Duracoat Opaque Green|308c4c|v|o
+2127|Duracoat Opaque Green|246b55|v|o
+2128|Duracoat Opaque Blue|4493a9|a|o
+2129|Duracoat Opaque Blue-Gray|687d88|ag|o
+2130|Duracoat Opaque Blue|1597a5|a|o
+2131|Duracoat Opaque Blue-Green|3d6a68|av|o
+2132|Duracoat Opaque Blue|456a87|a|o
+2133|Duracoat Opaque Blue|0f768e|a|o
+2134|Duracoat Opaque Blue|1567b1|a|o
+2135|Duracoat Opaque Blue|225b83|a|o
+2136|Duracoat Opaque Purple|9974a4|m|o
+2137|Duracoat Opaque Purple|915e70|m|o
+2138|Duracoat Opaque Purple|977abe|m|o
+2139|Duracoat Opaque Purple|745678|m|o
+2140|Duracoat Opaque Purple|654771|m|o
+2141|Duracoat Opaque Brown-Green|765f15|bv|o
+2142|Duracoat Opaque Brown|63442a|b|o
+2143|Duracoat Opaque Blue|2a355b|a|o
+2144|Duracoat Opaque Blue|212348|a|o
+2151|Duracoat Silver-Lined Transparent Orange-Pink|9e6046|np|tL
+2152|Duracoat Silver-Lined Transparent Red|8d3a38|r|tL
+2153|Duracoat Silver-Lined Transparent Pink-Purple|a24a73|pm|tL
+2154|Duracoat Silver-Lined Transparent Pink-Purple|b1464b|pm|tL
+2155|Duracoat Silver-Lined Transparent Silver|946d59|s|tL
+2156|Duracoat Silver-Lined Transparent Purple|8b4d6a|m|tL
+2157|Duracoat Silver-Lined Transparent Gold-Yellow|9c6222|dy|tL
+2158|Duracoat Silver-Lined Transparent Orange|a64526|n|tL
+2159|Duracoat Silver-Lined Transparent Pink-Red|a44536|pr|tL
+2160|Duracoat Silver-Lined Transparent Red|6c3634|r|tL
+2161|Duracoat Silver-Lined Transparent Pink-Purple|7b3e43|pm|tL
+2162|Duracoat Silver-Lined Transparent Purple|754156|m|tL
+2163|Duracoat Silver-Lined Transparent Green|6b6d50|v|tL
+2164|Duracoat Silver-Lined Transparent Green|7c6636|v|tL
+2165|Duracoat Silver-Lined Transparent Blue-Green|59695a|av|tL
+2166|Duracoat Silver-Lined Transparent Blue-Green|474d4d|av|tL
+2167|Duracoat Silver-Lined Transparent Blue-Purple|4b4a56|am|tL
+2168|Duracoat Silver-Lined Transparent Purple|674e77|m|tL
+2169|Duracoat Silver-Lined Transparent Purple|694a5b|m|tL
+2170|Duracoat Silver-Lined Transparent Brown-Purple|573f40|bm|tL
+2171|Duracoat Silver-Lined Alabaster Yellow|b07e4c|y|aL
+2172|Duracoat Silver-Lined Alabaster Orange-Pink|a76850|np|aL
+2173|Duracoat Silver-Lined Alabaster Red|913a39|r|aL
+2174|Duracoat Silver-Lined Alabaster Pink-Purple|a8527e|pm|aL
+2175|Duracoat Silver-Lined Alabaster Pink|b34c5b|p|aL
+2176|Duracoat Silver-Lined Alabaster Blue|506f88|a|aL
+2177|Duracoat Silver-Lined Alabaster Beige|997160|e|aL
+2178|Duracoat Silver-Lined Alabaster Orange-Red|9e5045|nr|aL
+2179|Duracoat Silver-Lined Alabaster Brown-Red|754644|br|aL
+2180|Duracoat Silver-Lined Alabaster Purple|8f5574|m|aL
+2181|Duracoat Silver-Lined Alabaster Purple|845064|m|aL
+2182|Duracoat Silver-Lined Alabaster Purple|705269|m|aL
+2183|Duracoat Silver-Lined Alabaster Brown|684b4b|b|aL
+2184|Duracoat Silver-Lined Alabaster Brown-Gray|6a5d55|bg|aL
+2185|Duracoat Silver-Lined Alabaster Brown-Gray|5f5a56|bg|aL
+2186|Duracoat Silver-Lined Alabaster Yellow|b9985f|y|aL
+2187|Duracoat Silver-Lined Alabaster Yellow|b09e3a|y|aL
+2188|Duracoat Silver-Lined Alabaster Green|509877|v|aL
+2189|Duracoat Silver-Lined Alabaster Pink-Purple|ae6873|pm|aL
+2190|Duracoat Silver-Lined Alabaster Green|5f6b60|v|aL
+2191|Duracoat Silver-Lined Transparent Blue|252a40|a|tL
+2192|Duracoat Silver-Lined Transparent Blue|24262e|a|tL
+2201|Transparent Gray-Iridescent Special Coating|574f47|gi|t
+2203|Matte Transparent Gray-Iridescent Special Coating|666464|gi|tm
+2204|Matte Opaque Gray-White Special Coating|84848a|gw|om
+2205|Transparent Gray-Iridescent Special Coating|46433f|gi|t
+2206|Transparent Gray-Iridescent Special Coating|414048|gi|t
+2207|Transparent Gray-Iridescent Special Coating|4c3c39|gi|t
+2261|Opaque Brown-Yellow|292825|by|o
+2262|Opaque Beige-White|927d5c|ew|o
+2263|Opaque Gray-Red|432a26|gr|o
+2264|Opaque Blue-Brown-Gray|586d5f|abg|o
+2265|Opaque Green|79763d|v|o
+2267|Opaque Brown|5e4d39|b|o
+2271|Glazed Opaque Purple AB|8d6c63|m|or
+2272|Glazed Opaque Green-Yellow AB|8d7232|vy|or
+2273|Glazed Opaque Orange AB|956530|n|or
+2274|Glazed Opaque Orange AB|ab5d30|n|or
+2275|Glazed Opaque Red AB|863b3a|r|or
+2281|Matte Glazed Opaque Gray|878f91|g|om
+2282|Matte Glazed Opaque Gray|858072|g|om
+2283|Matte Glazed Opaque Yellow|bfae29|y|om
+2284|Matte Glazed Opaque Yellow|cda12d|y|om
+2285|Matte Glazed Opaque Orange|d7922f|n|om
+2286|Matte Glazed Opaque Brown|895720|b|om
+2287|Matte Glazed Opaque Brown|9a571c|b|om
+2288|Matte Glazed Opaque Red|8d3926|r|om
+2290|Matte Glazed Opaque Green|9e9551|v|om
+2291|Matte Glazed Opaque Green|475139|v|om
+2292|Matte Glazed Opaque Purple|5f5b71|m|om
+2293|Matte Glazed Opaque Purple|5b4f6f|m|om
+2294|Matte Glazed Opaque Purple|8b626c|m|om
+2295|Matte Glazed Opaque Purple|6f4e5e|m|om
+2301|Matte Glazed Opaque Beige AB|aa9475|e|omr
+2302|Matte Glazed Opaque Yellow AB|c39542|y|omr
+2303|Matte Glazed Opaque Iridescent AB|a17a46|i|omr
+2305|Matte Glazed Opaque Purple AB|927672|m|omr
+2306|Matte Glazed Opaque Red AB|984e4d|r|omr
+2308|Matte Glazed Opaque Purple AB|6d4450|m|omr
+2309|Matte Glazed Opaque Green AB|808649|v|omr
+2310|Matte Glazed Opaque Green AB|717e65|v|omr
+2311|Matte Glazed Opaque Green AB|516d5c|v|omr
+2312|Matte Glazed Opaque Green AB|516654|v|omr
+2313|Matte Glazed Opaque Green AB|6f8a84|v|omr
+2315|Matte Glazed Opaque Blue AB|507888|a|omr
+2316|Matte Glazed Opaque Blue AB|4f6576|a|omr
+2317|Matte Glazed Opaque Blue-Purple AB|4f5d81|am|omr
+2318|Matte Glazed Opaque Blue-Purple AB|5d6d96|am|omr
+2319|Matte Glazed Opaque Blue-Purple AB|434767|am|omr
+2320|Matte Glazed Opaque Gray AB|7f8a90|g|omr
+2321|Matte Glazed Opaque Purple AB|796569|m|omr
+2322|Matte Glazed Opaque Purple AB|6b5e71|m|omr
+2351|Duracoat Opaque Beige|e8b985|e|o
+2352|Duracoat Opaque Brown|82431d|b|o
+2353|Duracoat Opaque Purple|7c3e54|m|o
+2354|Duracoat Opaque Brown-Red|632621|br|o
+2355|Duracoat Opaque Purple|573844|m|o
+2356|Duracoat Opaque Blue-Green|99afa4|av|o
+2357|Duracoat Opaque Green|4c4b25|v|o
+2358|Duracoat Opaque Green|384340|v|o
+2359|Duracoat Opaque Purple|55428b|m|o
+2360|Duracoat Opaque Purple|4f3c4f|m|o
+2361|Duracoat Opaque Pink-Purple|b29197|pm|o
+2362|Duracoat Opaque Green|a9997d|v|o
+2363|Duracoat Opaque Green|928268|v|o
+2364|Duracoat Opaque Beige|9e8761|e|o
+2365|Duracoat Opaque Green|50463c|v|o
+2366|Duracoat Opaque Gray|918c8b|g|o
+2367|Duracoat Opaque Gray|625a58|g|o
+2368|Duracoat Opaque Black-Gray|403b38|kg|o
+2371|Color-Lined Transparent Yellow Luster|eec38a|y|tlL
+2372|Color-Lined Transparent Yellow Luster|a37525|y|tlL
+2373|Color-Lined Transparent Brown Luster|94715b|b|tlL
+2374|Color-Lined Transparent Red Luster|9c1c24|r|tlL
+2375|Color-Lined Transparent Red Luster|572c38|r|tlL
+2376|Color-Lined Transparent Green Luster|678f40|v|tlL
+2377|Color-Lined Transparent Green-Yellow Luster|655f31|vy|tlL
+2378|Color-Lined Transparent Gray Luster|717461|g|tlL
+2379|Color-Lined Transparent Gray Luster|59635e|g|tlL
+2380|Color-Lined Transparent Blue-Green Luster|11636b|av|tlL
+2381|Color-Lined Transparent Green Luster|2d5a51|v|tlL
+2382|Color-Lined Transparent Blue Luster|1f7992|a|tlL
+2383|Color-Lined Transparent Blue Luster|496c83|a|tlL
+2384|Color-Lined Transparent Blue Luster|285065|a|tlL
+2385|Color-Lined Transparent Blue Luster|114b6a|a|tlL
+2386|Color-Lined Transparent Purple Luster|2f365b|m|tlL
+2387|Color-Lined Transparent Purple Luster|40475f|m|tlL
+2388|Color-Lined Transparent Purple Luster|5364b3|m|tlL
+2389|Color-Lined Transparent Purple Luster|6c2658|m|tlL
+2390|Color-Lined Transparent Purple Luster|523347|m|tlL
+2391|Color-Lined Transparent Gray Luster|a5a19e|g|tlL
+2392|Color-Lined Transparent Gray Luster|80838f|g|tlL
+2393|Color-Lined Transparent Gray Luster|79787a|g|tlL
+2394|Color-Lined Transparent Black-Gray Luster|353739|kg|tlL
+2395|Color-Lined Transparent Beige Luster|76645f|e|tlL
+2396|Color-Lined Transparent Brown Luster|735f4a|b|tlL
+2401|Matte Opaque White Glazed Luster|cecab2|w|oml
+2402|Matte Opaque White Glazed Luster|cdcab6|w|oml
+2403|Matte Opaque Brown Glazed Luster|4e2e23|b|oml
+2404|Matte Opaque Green Glazed Luster|4d5132|v|oml
+2405|Matte Opaque Purple Glazed Luster|49393c|m|oml
+2406|Matte Opaque Gray Glazed Luster|3c3c3c|g|oml
+2407|Matte Opaque Green Glazed Luster|36494b|v|oml
+2408|Matte Opaque Blue Glazed Luster|3d3c53|a|oml
+2409|Matte Opaque Gray Glazed Luster|4d4c4d|g|oml
+2501|Duracoat Transparent Gold|b29b68|d|tM
+2502|Duracoat Transparent Gold-Yellow|aa995f|dy|tM
+2503|Duracoat Transparent Brown-Pink|a57e68|bp|tM
+2504|Duracoat Transparent Brown|9b7d59|b|tM
+2505|Duracoat Transparent Green|3a8553|v|tM
+2506|Duracoat Transparent Green|397657|v|tM
+2507|Duracoat Transparent Green|42493c|v|tM
+2508|Duracoat Transparent Purple|744661|m|tM
+2509|Duracoat Transparent Purple|644b73|m|tM
+2510|Duracoat Transparent Purple|553969|m|tM
+2511|Duracoat Transparent Blue|393d75|a|tM
+2512|Duracoat Transparent Green|5f6247|v|tM
+2513|Duracoat Transparent Blue|3b7b82|a|tM
+2514|Duracoat Transparent Blue|215272|a|tM
+2515|Duracoat Transparent Blue|2f5a5c|a|tM
+2516|Duracoat Transparent Blue|34556f|a|tM
+2517|Duracoat Transparent Blue-Purple|475078|am|tM
+2518|Duracoat Transparent Gold-Pink|a47657|dp|tM
+2521|Gold-Lined Transparent Gold|cd9d4f|d|tL
+2522|Gold-Lined Transparent Green|81875a|v|tL
+2523|Gold-Lined Transparent Green|4f6052|v|tL
+2524|Gold-Lined Transparent Gold|997248|d|tL
+2525|Gold-Lined Transparent Gold|aa9045|d|tL
+`;
+
+// Copia de tabla-precios.json (la fórmula de calcular-precio.js). Si la página se abre desde el proyecto con un servidor,
+// se lee el archivo real y esta copia no se usa.
+let T = {"valorHora":2500,"ganancia":0.35,"redondeo":1000,"insumos":{"mostacillas":{"precio":2050,"gramos":3,"porGramo":190,"merma":0.10},"hilo":{"precio":6000,"metros":50},"ganchos":{"precio":550,"pares":1},"perlas":{"precio":4000,"unidades":65},"cuentas":{"precio":3600,"unidades":100},"postes":{"precio":1100,"unidades":1},"agujas":{"precio":1290,"unidades":4,"paresPorAguja":4},"bolsita":{"precio":3990,"unidades":50},"tarjeta":{"precio":6400,"unidades":100}},"tamanos":{"mini":{"nombre":"Mini (hasta 3 cm)","altoMax":3,"mostacillas":600,"metrosHilo":3,"horas":2.5},"mediano":{"nombre":"Mediano (3 a 5 cm)","altoMax":5,"mostacillas":750,"metrosHilo":3.5,"horas":3.5},"grande":{"nombre":"Grande (5 a 7 cm)","altoMax":7,"mostacillas":900,"metrosHilo":4,"horas":4.5},"xl":{"nombre":"Extra grande (más de 7 cm)","altoMax":null,"mostacillas":1200,"metrosHilo":5,"horas":6}},"disenos":{"simple":{"nombre":"Simple (figura plana, 2 a 4 colores)","factor":1.0},"medio":{"nombre":"Medio (degradado o figura con detalle)","factor":1.2},"complejo":{"nombre":"Complejo (ilustración, muchos colores o flecos)","factor":1.5}},"horasPorPerla":0.05};
+let tSource = "copia incluida en el diseñador";
+
+// Medidas de una Delica 11/0 según cómo queda acostada en cada puntada (mm)
+const BEAD = { brick: { bw: 1.6, bh: 1.3 }, peyote: { bw: 1.3, bh: 1.6 }, telar: { bw: 1.3, bh: 1.6 } };
+const FR = { bw: 1.6, bh: 1.3 };   // las mostacillas de los flecos van ensartadas en vertical
+const PUNTADA_TXT = {
+  brick: "Filas desplazadas media mostacilla, como ladrillos. La más usada para aros con forma.",
+  peyote: "Columnas desplazadas media mostacilla. Para anillos, pulseras y piezas largas.",
+  telar: "Grilla recta, sin desplazamiento. Para bandas y diseños tipo pixel.",
+};
+const FAMS = [["k", "Negro", "#131313"], ["w", "Blanco", "#ebe9ed"], ["c", "Cristal", "#d9e4ea"], ["g", "Gris", "#7d7c80"], ["s", "Plata", "#b9bcc2"], ["d", "Dorado", "#c9973f"],
+  ["e", "Beige", "#e2c49c"], ["b", "Café", "#7a4a2c"], ["r", "Rojo", "#c4161f"], ["n", "Naranjo", "#eb6a12"], ["y", "Amarillo", "#ebd708"], ["v", "Verde", "#2f8f46"],
+  ["a", "Azul", "#2f62c2"], ["m", "Morado", "#764ea7"], ["p", "Rosado", "#e0658b"], ["i", "Tornasol", "#3b4a5a"], ["x", "Mezcla", "#a08a9a"]];
+const FAM = Object.fromEntries(FAMS.map(([k, n]) => [k, n]));
+const GLASS = { o: "opaco", t: "transparente", a: "alabastro", s: "seda" };
+
+const CAT = DELICA.trim().split("\n").map(l => {
+  const [n, name, hex, fam, fl] = l.split("|");
+  return { id: "DB" + n, name, hex: "#" + hex, fam, glass: fl[0], matte: fl.includes("m"), metal: fl.includes("M"), luster: fl.includes("l"), ab: fl.includes("r"), lined: fl.includes("L"), disc: fl.includes("d"), fl };
+});
+const CATMAP = new Map(CAT.map(c => [c.id, c]));
+const UNKNOWN = { id: "?", name: "Color desconocido", hex: "#999999", fam: "x", glass: "o", fl: "o" };
+const pal = id => CATMAP.get(id) || UNKNOWN;
+const STARTER = ["DB0010", "DB0200", "DB0031", "DB0035", "DB0723", "DB0722", "DB0721", "DB0724", "DB0729", "DB0730", "DB1379", "DB1371"];
+const codeTxt = id => "DB-" + id.slice(2);
+const finTxt = c => [GLASS[c.glass], c.matte && "mate", c.metal && "metálico", c.luster && "lustre", c.ab && "tornasol", c.lined && "forrado"].filter(Boolean).join(", ");
+
+/* ================== almacenamiento ================== */
+const K_CUR = "kika-disenador-actual", K_LIB = "kika-disenador-biblioteca", K_UI = "kika-disenador-ui", K_STOCK = "kika-disenador-tengo";
+const load = (k, def) => { try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : def; } catch (e) { return def; } };
+const store = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); return true; } catch (e) { return false; } };
+
+const UI = Object.assign({ tool: "pencil", color: "DB1371", sym: true, grid: true, letters: false, zoom: 15, tab: "colores", cardPrice: false, phSrc: "todos" }, load(K_UI, {}));
+let tool = UI.tool;
+let STOCK = new Set(load(K_STOCK, []));
+
+/* ================== diseño ================== */
+const uid = () => "d" + Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
+function blank(W = 15, H = 19) {
+  return { v: 2, id: uid(), name: "Diseño nuevo", cliente: "", notas: "", pieza: "aros", puntada: "brick", W, H, cells: Array(W * H).fill(null),
+    paleta: STARTER.slice(), fringe: { on: false, forma: "v", largo: 14, cells: [] }, gancho: "plata", par: "espejo", perlas: 0, cuentas: 0,
+    nivel: "auto", tamano: "auto", creado: Date.now(), editado: Date.now() };
+}
+function normalize(d) {
+  const b = blank(d.W, d.H);
+  for (const k of Object.keys(b)) if (d[k] === undefined) d[k] = b[k];
+  d.fringe = Object.assign({ on: false, forma: "v", largo: 14, cells: [] }, d.fringe || {});
+  if (!Array.isArray(d.cells) || d.cells.length !== d.W * d.H) d.cells = Array(d.W * d.H).fill(null);
+  d.paleta = (d.paleta || []).filter(id => CATMAP.has(id));
+  for (const v of usedIds(d)) if (!d.paleta.includes(v)) d.paleta.push(v);
+  if (!d.paleta.length) d.paleta = STARTER.slice();
+  return d;
+}
+function usedIds(d) {
+  const s = new Set(d.cells.filter(Boolean));
+  for (const a of d.fringe.cells || []) for (const v of a || []) if (v) s.add(v);
+  return [...s];
+}
+
+/* ---------- geometría ---------- */
+const bd = (d = D) => BEAD[d.puntada];
+function valid(d, r, c) {
+  if (r < 0 || c < 0 || r >= d.H || c >= d.W) return false;
+  if (d.puntada === "brick") return c < ((r & 1) ? d.W - 1 : d.W);
+  if (d.puntada === "peyote") return r < ((c & 1) ? d.H - 1 : d.H);
+  return true;
+}
+function center(d, r, c) {
+  const { bw, bh } = bd(d);
+  if (d.puntada === "brick") return [(c + .5 + ((r & 1) ? .5 : 0)) * bw, (r + .5) * bh];
+  if (d.puntada === "peyote") return [(c + .5) * bw, (r + .5 + ((c & 1) ? .5 : 0)) * bh];
+  return [(c + .5) * bw, (r + .5) * bh];
+}
+const gridMM = d => [d.W * bd(d).bw, d.H * bd(d).bh];
+function hitCell(d, x, y) {
+  const { bw, bh } = bd(d);
+  let r, c;
+  if (d.puntada === "brick") { r = Math.floor(y / bh); c = Math.floor((x - ((r & 1) ? bw / 2 : 0)) / bw); }
+  else if (d.puntada === "peyote") { c = Math.floor(x / bw); r = Math.floor((y - ((c & 1) ? bh / 2 : 0)) / bh); }
+  else { r = Math.floor(y / bh); c = Math.floor(x / bw); }
+  return valid(d, r, c) ? [r, c] : null;
+}
+function mirrorRC(d, r, c) { return [r, (d.puntada === "brick" && (r & 1) ? d.W - 2 : d.W - 1) - c]; }
+const getC = (d, r, c) => d.cells[r * d.W + c];
+function neighbors(d, r, c) {
+  let n;
+  if (d.puntada === "brick") {
+    const o = (r & 1) ? [0, 1] : [-1, 0];
+    n = [[r, c - 1], [r, c + 1], [r - 1, c + o[0]], [r - 1, c + o[1]], [r + 1, c + o[0]], [r + 1, c + o[1]]];
+  } else if (d.puntada === "peyote") {
+    const o = (c & 1) ? [0, 1] : [-1, 0];
+    n = [[r - 1, c], [r + 1, c], [r + o[0], c - 1], [r + o[1], c - 1], [r + o[0], c + 1], [r + o[1], c + 1]];
+  } else n = [[r - 1, c], [r + 1, c], [r, c - 1], [r, c + 1]];
+  return n.filter(([a, b]) => valid(d, a, b));
+}
+function eachCell(d, fn) { for (let r = 0; r < d.H; r++) for (let c = 0; c < d.W; c++) if (valid(d, r, c)) fn(r, c, d.cells[r * d.W + c]); }
+
+/* ---------- flecos ---------- */
+function fringeLayout(d) {
+  if (!d.fringe.on) return [];
+  const { bh } = bd(d);
+  let maxY = -1, anchors = [];
+  eachCell(d, (r, c, v) => { if (!v) return; const [x, y] = center(d, r, c); if (y > maxY + 1e-6) { maxY = y; anchors = []; } if (Math.abs(y - maxY) < 1e-6) anchors.push({ x, y, v }); });
+  anchors.sort((a, b) => a.x - b.x);
+  const n = anchors.length, L = d.fringe.largo, mn = Math.max(2, Math.round(L * .35));
+  return anchors.map((a, i) => {
+    const t = n > 1 ? i / (n - 1) * 2 - 1 : 0;
+    let len = L;
+    if (d.fringe.forma === "v") len = mn + (L - mn) * (1 - Math.abs(t));
+    else if (d.fringe.forma === "redondo") len = mn + (L - mn) * Math.sqrt(Math.max(0, 1 - t * t));
+    else if (d.fringe.forma === "u") len = mn + (L - mn) * Math.abs(t);
+    return { i, x: a.x, y0: a.y + bh / 2 + .1, len: Math.max(1, Math.round(len)), anchor: a.v };
+  });
+}
+const frColor = (d, s, k) => (d.fringe.cells[s.i] && d.fringe.cells[s.i][k]) || s.anchor;
+function hitFringe(lay, x, y) {
+  for (const s of lay) if (Math.abs(x - s.x) <= FR.bw / 2 && y >= s.y0 && y < s.y0 + s.len * FR.bh) return [s.i, Math.floor((y - s.y0) / FR.bh)];
+  return null;
+}
+
+/* ---------- medidas y conteos ---------- */
+function measure(d) {
+  const { bw, bh } = bd(d);
+  let x0 = 1e9, x1 = -1e9, y0 = 1e9, y1 = -1e9, body = 0;
+  const count = {};
+  eachCell(d, (r, c, v) => {
+    if (!v) return;
+    body++; count[v] = (count[v] || 0) + 1;
+    const [x, y] = center(d, r, c);
+    x0 = Math.min(x0, x - bw / 2); x1 = Math.max(x1, x + bw / 2); y0 = Math.min(y0, y - bh / 2); y1 = Math.max(y1, y + bh / 2);
+  });
+  const lay = fringeLayout(d);
+  let fr = 0;
+  for (const s of lay) {
+    for (let k = 0; k < s.len; k++) { const v = frColor(d, s, k); count[v] = (count[v] || 0) + 1; fr++; }
+    y1 = Math.max(y1, s.y0 + s.len * FR.bh); x0 = Math.min(x0, s.x - FR.bw / 2); x1 = Math.max(x1, s.x + FR.bw / 2);
+  }
+  const total = body + fr;
+  if (!total) return { total: 0, body: 0, fr: 0, count, w: 0, h: 0, x0: 0, y0: 0, x1: 0, y1: 0, lay };
+  return { total, body, fr, count, w: x1 - x0, h: y1 - y0, x0, y0, x1, y1, lay };
+}
+const letterFor = i => i < 26 ? String.fromCharCode(65 + i) : String.fromCharCode(97 + i - 26);
+function legend(d, m = measure(d)) {
+  return Object.entries(m.count).sort((a, b) => b[1] - a[1]).map(([id, n], i) => ({ id, n, letter: letterFor(i), c: pal(id) }));
+}
+
+/* ---------- precio (igual que calcular-precio.js) ---------- */
+function unitCosts() {
+  const I = T.insumos;
+  return {
+    mostacilla: I.mostacillas.precio / (I.mostacillas.gramos * I.mostacillas.porGramo) * (1 + I.mostacillas.merma),
+    metroHilo: I.hilo.precio / I.hilo.metros, parGanchos: I.ganchos.precio / I.ganchos.pares, perla: I.perlas.precio / I.perlas.unidades,
+    cuenta: I.cuentas.precio / I.cuentas.unidades, poste: I.postes.precio / I.postes.unidades,
+    aguja: I.agujas.precio / I.agujas.unidades / I.agujas.paresPorAguja, bolsita: I.bolsita.precio / I.bolsita.unidades, tarjeta: I.tarjeta.precio / I.tarjeta.unidades,
+  };
+}
+function autoTamano(d, m) {
+  const ids = Object.keys(T.tamanos);
+  if (d.pieza === "aros") { const cmv = m.h / 10; for (const id of ids) { const t = T.tamanos[id]; if (t.altoMax == null || cmv <= t.altoMax) return id; } return ids[ids.length - 1]; }
+  // pieza sola: el tamaño cuya cantidad de mostacillas se parece más a la de la pieza
+  return ids.reduce((best, id) => Math.abs(T.tamanos[id].mostacillas - m.total) < Math.abs(T.tamanos[best].mostacillas - m.total) ? id : best, ids[0]);
+}
+function autoNivel(d, m) {
+  const k = Object.keys(m.count).length;
+  if (d.fringe.on && m.fr) return "complejo";
+  return k <= 4 ? "simple" : k <= 7 ? "medio" : "complejo";
+}
+function price(d, m = measure(d)) {
+  const u = unitCosts();
+  const tamano = d.tamano !== "auto" && T.tamanos[d.tamano] ? d.tamano : autoTamano(d, m);
+  const nivel = d.nivel !== "auto" && T.disenos[d.nivel] ? d.nivel : autoNivel(d, m);
+  const t = T.tamanos[tamano], f = T.disenos[nivel].factor;
+  const n = m.total * (d.pieza === "aros" ? 2 : 1);
+  const lines = [[`${fmtN(n)} mostacillas`, n * u.mostacilla], [`${fmtD(t.metrosHilo)} m de hilo`, t.metrosHilo * u.metroHilo]];
+  if (d.pieza === "aros") lines.push(d.gancho === "poste" ? ["2 postes dorados", 2 * u.poste] : [d.gancho === "oro" ? "Ganchos con baño de oro" : "Ganchos plata 925", u.parGanchos]);
+  if (d.perlas) lines.push([`${d.perlas} perlas o cristales`, d.perlas * u.perla]);
+  if (d.cuentas) lines.push([`${d.cuentas} charms / ojo turco`, d.cuentas * u.cuenta]);
+  lines.push(["Aguja (desgaste)", u.aguja], ["Bolsita o cajita", u.bolsita], ["Tarjeta", u.tarjeta]);
+  const insumos = lines.reduce((s, [, v]) => s + v, 0);
+  const horas = t.horas * f + (d.perlas || 0) * T.horasPorPerla;
+  const mano = horas * T.valorHora, costo = insumos + mano;
+  const precio = n ? Math.round(costo * (1 + T.ganancia) / T.redondeo) * T.redondeo : 0;
+  return { tamano, nivel, lines, insumos, horas, mano, costo, precio, ganancia: precio - costo, n };
+}
+
+/* ================== utilidades ================== */
+const $ = s => document.querySelector(s);
+const fmtN = n => Math.round(n).toLocaleString("es-CL");
+const fmtD = (n, d = 1) => Number(n).toLocaleString("es-CL", { maximumFractionDigits: d, minimumFractionDigits: 0 });
+const clp = n => "$" + fmtN(n);
+const cm = mm => fmtD(mm / 10, 1);
+const esc = s => String(s).replace(/[&<>"]/g, ch => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[ch]));
+function toast(t) { const el = $("#toast"); el.textContent = t; el.hidden = false; clearTimeout(toast.t); toast.t = setTimeout(() => el.hidden = true, 2600); }
+const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+function hexRgb(h) { const n = parseInt(h.slice(1), 16); return [n >> 16 & 255, n >> 8 & 255, n & 255]; }
+function rgbHex(c) { return "#" + c.map(v => Math.max(0, Math.min(255, Math.round(v))).toString(16).padStart(2, "0")).join(""); }
+function shade(h, k) { return rgbHex(hexRgb(h).map(v => k > 0 ? v + (255 - v) * k : v * (1 + k))); }
+function lum(h) { const [r, g, b] = hexRgb(h); return (0.299 * r + 0.587 * g + 0.114 * b) / 255; }
+function lab([r, g, b]) {
+  const f = v => { v /= 255; return v <= 0.04045 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4); };
+  const R = f(r), G = f(g), B = f(b);
+  let x = (R * .4124 + G * .3576 + B * .1805) / .95047, y = R * .2126 + G * .7152 + B * .0722, z = (R * .0193 + G * .1192 + B * .9505) / 1.08883;
+  const h = t => t > 0.008856 ? Math.cbrt(t) : 7.787 * t + 16 / 116;
+  x = h(x); y = h(y); z = h(z);
+  return [116 * y - 16, 500 * (x - y), 200 * (y - z)];
+}
+const dE = (a, b) => Math.hypot(a[0] - b[0], a[1] - b[1], a[2] - b[2]);
+const labOf = c => c._lab || (c._lab = lab(hexRgb(c.hex)));
+function nearest(L, among) { let best = among[0], bv = 1e9; for (const p of among) { const e = dE(L, labOf(p)); if (e < bv) { bv = e; best = p; } } return best; }
+function hsl(hex) {
+  const [r, g, b] = hexRgb(hex).map(v => v / 255), mx = Math.max(r, g, b), mn = Math.min(r, g, b), l = (mx + mn) / 2, dd = mx - mn;
+  if (!dd) return [0, 0, l];
+  const s = dd / (1 - Math.abs(2 * l - 1));
+  let h = mx === r ? ((g - b) / dd) % 6 : mx === g ? (b - r) / dd + 2 : (r - g) / dd + 4;
+  return [(h * 60 + 360) % 360, s, l];
+}
+const rr = (g, x, y, w, h, r) => { g.beginPath(); if (g.roundRect) g.roundRect(x, y, w, h, r); else g.rect(x, y, w, h); };
+
+/* ================== estado inicial ================== */
+let D = load(K_CUR, null);
+D = D && Array.isArray(D.cells) && D.v === 2 ? normalize(D) : null;
+
+/* ================== historial ================== */
+const undoS = [], redoS = [];
+const snap = () => JSON.stringify({ W: D.W, H: D.H, puntada: D.puntada, cells: D.cells, fringe: D.fringe, paleta: D.paleta });
+function pushUndo() { undoS.push(snap()); if (undoS.length > 80) undoS.shift(); redoS.length = 0; }
+function restore(s) { Object.assign(D, JSON.parse(s)); changed(); }
+function doUndo() { if (!undoS.length) return; redoS.push(snap()); restore(undoS.pop()); }
+function doRedo() { if (!redoS.length) return; undoS.push(snap()); restore(redoS.pop()); }
+
+/* ================== editor ================== */
+const cv = $("#cv"), g = cv.getContext("2d"), wrap = $("#wrap");
+const PAD = { l: 34, t: 24, r: 14, b: 16 };
+let lay = [];
+
+function draw() {
+  const z = UI.zoom, dpr = window.devicePixelRatio || 1;
+  const [wmm, hmm] = gridMM(D);
+  lay = fringeLayout(D);
+  let hTot = hmm;
+  for (const s of lay) hTot = Math.max(hTot, s.y0 + s.len * FR.bh);
+  const Wpx = Math.ceil(PAD.l + wmm * z + PAD.r), Hpx = Math.ceil(PAD.t + hTot * z + PAD.b);
+  if (cv.width !== Wpx * dpr || cv.height !== Hpx * dpr) { cv.width = Wpx * dpr; cv.height = Hpx * dpr; cv.style.width = Wpx + "px"; cv.style.height = Hpx + "px"; }
+  g.setTransform(dpr, 0, 0, dpr, 0, 0);
+  g.clearRect(0, 0, Wpx, Hpx);
+  const soft = css("--ink-soft"), cellC = css("--cell"), plum = css("--plum"), sans = css("--sans") || "sans-serif";
+  const { bw, bh } = bd(D);
+  const leg = UI.letters ? Object.fromEntries(legend(D).map(l => [l.id, l.letter])) : null;
+  const bead = (x, y, w, h, v) => {
+    const px = PAD.l + x * z, py = PAD.t + y * z, pw = w * z * .9, ph = h * z * .88;
+    const X = px - pw / 2, Y = py - ph / 2, rad = Math.min(pw, ph) * .26;
+    if (!v) { if (UI.grid) { rr(g, X, Y, pw, ph, rad); g.strokeStyle = cellC; g.lineWidth = 1; g.stroke(); } return; }
+    const hex = pal(v).hex;
+    rr(g, X, Y, pw, ph, rad); g.fillStyle = hex; g.fill();
+    if (pw > 7) {
+      g.fillStyle = "rgba(255,255,255,.28)"; rr(g, X + pw * .12, Y + ph * .1, pw * .76, ph * .16, ph * .08); g.fill();
+      g.fillStyle = "rgba(0,0,0,.16)"; rr(g, X + pw * .1, Y + ph * .78, pw * .8, ph * .12, ph * .06); g.fill();
+    }
+    if (leg && pw > 11) { g.fillStyle = lum(hex) > .55 ? "#24122e" : "#ffffff"; g.font = `700 ${Math.round(Math.min(pw, ph) * .55)}px ${sans}`; g.textAlign = "center"; g.textBaseline = "middle"; g.fillText(leg[v], px, py + 1); }
+  };
+  eachCell(D, (r, c, v) => { const [x, y] = center(D, r, c); bead(x, y, bw, bh, v); });
+  for (const s of lay) for (let k = 0; k < s.len; k++) bead(s.x, s.y0 + (k + .5) * FR.bh, FR.bw, FR.bh, frColor(D, s, k));
+
+  // numeración de filas (o columnas en peyote)
+  g.fillStyle = soft; g.font = `600 10px ${sans}`; g.textBaseline = "middle";
+  const every = (D.puntada === "peyote" ? bw : bh) * z >= 13 ? 1 : 5;
+  if (D.puntada === "peyote") {
+    g.textAlign = "center";
+    for (let c = 0; c < D.W; c++) if (every === 1 || (c + 1) % every === 0) g.fillText(c + 1, PAD.l + (c + .5) * bw * z, PAD.t / 2);
+  } else {
+    g.textAlign = "right";
+    for (let r = 0; r < D.H; r++) if (every === 1 || (r + 1) % every === 0) g.fillText(r + 1, PAD.l - 8, PAD.t + (r + .5) * bh * z);
+  }
+  // eje de simetría
+  if (UI.sym) {
+    g.strokeStyle = plum; g.globalAlpha = .55; g.setLineDash([5, 5]); g.lineWidth = 1.5;
+    g.beginPath(); g.moveTo(PAD.l + wmm / 2 * z, PAD.t - 8); g.lineTo(PAD.l + wmm / 2 * z, PAD.t + hTot * z + 6); g.stroke();
+    g.setLineDash([]); g.globalAlpha = 1;
+  }
+}
+
+function toMM(e) { const b = cv.getBoundingClientRect(); return [(e.clientX - b.left - PAD.l) / UI.zoom, (e.clientY - b.top - PAD.t) / UI.zoom]; }
+
+function paintAt(x, y, erase) {
+  let did = false;
+  const val = erase ? null : UI.color;
+  const h = hitCell(D, x, y);
+  if (h) {
+    const pts = [h];
+    if (UI.sym) { const m = mirrorRC(D, h[0], h[1]); if (valid(D, m[0], m[1])) pts.push(m); }
+    for (const [r, c] of pts) { const i = r * D.W + c; if (D.cells[i] !== val) { D.cells[i] = val; did = true; } }
+    return did;
+  }
+  const f = hitFringe(lay, x, y);
+  if (f) {
+    const n = lay.length, pts = [f];
+    if (UI.sym && n) pts.push([n - 1 - f[0], f[1]]);
+    for (const [i, k] of pts) {
+      const arr = D.fringe.cells[i] || (D.fringe.cells[i] = []);
+      if ((arr[k] || null) !== val) { arr[k] = val; did = true; }
+    }
+  }
+  return did;
+}
+function fillAt(x, y) {
+  const h = hitCell(D, x, y);
+  if (h) {
+    const target = getC(D, h[0], h[1]);
+    if (target === UI.color) return false;
+    const seen = new Set(), stack = [h];
+    if (UI.sym) { const m = mirrorRC(D, h[0], h[1]); if (valid(D, m[0], m[1]) && getC(D, m[0], m[1]) === target) stack.push(m); }
+    while (stack.length) {
+      const [r, c] = stack.pop(), key = r * D.W + c;
+      if (seen.has(key) || D.cells[key] !== target) continue;
+      seen.add(key); D.cells[key] = UI.color;
+      for (const nb of neighbors(D, r, c)) stack.push(nb);
+    }
+    return seen.size > 0;
+  }
+  const f = hitFringe(lay, x, y);
+  if (f) {
+    const idx = UI.sym ? [f[0], lay.length - 1 - f[0]] : [f[0]];
+    for (const i of idx) { const s = lay[i]; if (s) D.fringe.cells[i] = Array(s.len).fill(UI.color); }
+    return true;
+  }
+  return false;
+}
+function pickAt(x, y) {
+  const h = hitCell(D, x, y);
+  let v = h ? getC(D, h[0], h[1]) : null;
+  if (!h) { const f = hitFringe(lay, x, y); if (f) v = frColor(D, lay[f[0]], f[1]); }
+  if (v) { selectColor(v); setTool("pencil"); }
+}
+
+// trazos con el dedo o el mouse; con dos dedos se mueve la grilla
+const ptrs = new Map();
+let stroke = null, pan = null;
+cv.addEventListener("pointerdown", e => {
+  cv.setPointerCapture(e.pointerId);
+  ptrs.set(e.pointerId, [e.clientX, e.clientY]);
+  if (ptrs.size === 2) {
+    if (stroke && stroke.did) restore(undoS.pop()); else if (stroke) undoS.pop();
+    stroke = null;
+    const pts = [...ptrs.values()];
+    pan = { x: (pts[0][0] + pts[1][0]) / 2, y: (pts[0][1] + pts[1][1]) / 2 };
+    return;
+  }
+  if (ptrs.size > 2) return;
+  const [x, y] = toMM(e);
+  if (tool === "picker") { pickAt(x, y); return; }
+  const erase = tool === "eraser" || e.button === 2;
+  pushUndo();
+  if (tool === "fill" && !erase) { if (fillAt(x, y)) changed(); else undoS.pop(); return; }
+  if (tool === "line" && !erase) {
+    stroke = { line: true, start: [x, y], base: D.cells.slice(), baseFr: JSON.stringify(D.fringe.cells), did: paintAt(x, y, false) };
+  } else stroke = { last: [x, y], erase, did: paintAt(x, y, erase) };
+  if (stroke.did) changed();
+});
+function paintLine(x0, y0, x1, y1, erase) {
+  const steps = Math.max(1, Math.ceil(Math.hypot(x1 - x0, y1 - y0) / .35));
+  let did = false;
+  for (let i = 0; i <= steps; i++) did = paintAt(x0 + (x1 - x0) * i / steps, y0 + (y1 - y0) * i / steps, erase) || did;
+  return did;
+}
+cv.addEventListener("pointermove", e => {
+  if (!ptrs.has(e.pointerId)) return;
+  ptrs.set(e.pointerId, [e.clientX, e.clientY]);
+  if (pan && ptrs.size >= 2) {
+    const pts = [...ptrs.values()], mx = (pts[0][0] + pts[1][0]) / 2, my = (pts[0][1] + pts[1][1]) / 2;
+    wrap.scrollLeft -= mx - pan.x; wrap.scrollTop -= my - pan.y; pan = { x: mx, y: my };
+    return;
+  }
+  if (!stroke) return;
+  const [x, y] = toMM(e);
+  if (stroke.line) {
+    D.cells = stroke.base.slice(); D.fringe.cells = JSON.parse(stroke.baseFr);
+    stroke.did = paintLine(stroke.start[0], stroke.start[1], x, y, false);
+    changed();
+    return;
+  }
+  const [lx, ly] = stroke.last;
+  stroke.last = [x, y];
+  if (paintLine(lx, ly, x, y, stroke.erase)) { stroke.did = true; changed(); }
+});
+const endPtr = e => {
+  ptrs.delete(e.pointerId);
+  if (ptrs.size < 2) pan = null;
+  if (stroke && ptrs.size === 0) { if (!stroke.did) undoS.pop(); stroke = null; }
+};
+cv.addEventListener("pointerup", endPtr);
+cv.addEventListener("pointercancel", endPtr);
+cv.addEventListener("contextmenu", e => e.preventDefault());
+wrap.addEventListener("wheel", e => { if (e.ctrlKey || e.metaKey) { e.preventDefault(); setZoom(UI.zoom * (e.deltaY < 0 ? 1.12 : 1 / 1.12)); } }, { passive: false });
+
+function setZoom(z) { UI.zoom = Math.max(5, Math.min(48, z)); $("#zoomLbl").textContent = Math.round(UI.zoom / 15 * 100) + "%"; saveUI(); draw(); }
+function fitZoom() {
+  const [wmm, hmm] = gridMM(D);
+  let hTot = hmm; for (const s of fringeLayout(D)) hTot = Math.max(hTot, s.y0 + s.len * FR.bh);
+  const z = Math.min((wrap.clientWidth - PAD.l - PAD.r - 8) / wmm, (wrap.clientHeight - PAD.t - PAD.b - 8) / hTot);
+  if (z > 0) setZoom(Math.max(5, Math.min(30, z)));
+}
+
+/* ================== herramientas ================== */
+function setTool(t) { tool = t; UI.tool = t; document.querySelectorAll("[data-tool]").forEach(b => b.setAttribute("aria-pressed", b.dataset.tool === t)); saveUI(); }
+document.querySelectorAll("[data-tool]").forEach(b => b.addEventListener("click", () => setTool(b.dataset.tool)));
+function toggles() { $("#tSym").setAttribute("aria-pressed", UI.sym); $("#tGrid").setAttribute("aria-pressed", UI.grid); $("#tLet").setAttribute("aria-pressed", UI.letters); }
+$("#tSym").onclick = () => { UI.sym = !UI.sym; toggles(); saveUI(); draw(); };
+$("#tGrid").onclick = () => { UI.grid = !UI.grid; toggles(); saveUI(); draw(); };
+$("#tLet").onclick = () => { UI.letters = !UI.letters; toggles(); saveUI(); draw(); };
+$("#tUndo").onclick = doUndo; $("#tRedo").onclick = doRedo;
+$("#tZi").onclick = () => setZoom(UI.zoom * 1.2); $("#tZo").onclick = () => setZoom(UI.zoom / 1.2);
+document.addEventListener("keydown", e => {
+  if (e.target.matches("input, textarea, select")) return;
+  const k = e.key.toLowerCase();
+  if ((e.ctrlKey || e.metaKey) && k === "z") { e.preventDefault(); e.shiftKey ? doRedo() : doUndo(); return; }
+  if ((e.ctrlKey || e.metaKey) && k === "y") { e.preventDefault(); doRedo(); return; }
+  if (e.ctrlKey || e.metaKey || e.altKey) return;
+  const map = { p: "pencil", l: "line", b: "fill", e: "eraser", i: "picker" };
+  if (map[k]) setTool(map[k]);
+  else if (k === "s") $("#tSym").click(); else if (k === "+" || k === "=") setZoom(UI.zoom * 1.2); else if (k === "-") setZoom(UI.zoom / 1.2);
+});
+
+/* ================== colores ================== */
+function selectColor(id) {
+  if (!CATMAP.has(id)) return;
+  if (!D.paleta.includes(id)) { D.paleta.push(id); scheduleSave(); }
+  UI.color = id; saveUI();
+  if (tool === "eraser" || tool === "picker") setTool("pencil");
+  renderColors();
+}
+function renderSwatches(used = measure(D).count) {
+  $("#swatches").innerHTML = D.paleta.map(id => { const p = pal(id); return `<button class="sw" type="button" style="--c:${p.hex}" data-id="${id}" aria-pressed="${id === UI.color}" title="${codeTxt(id)} · ${esc(p.name)}" aria-label="${codeTxt(id)} ${esc(p.name)}">${used[id] ? `<span class="u num">${used[id] > 999 ? "1k+" : used[id]}</span>` : ""}</button>`; }).join("") +
+    `<button class="sw-add" type="button" id="swAdd">+ Todos los colores</button>`;
+  const c = pal(UI.color);
+  $("#cur").innerHTML = `<span class="chip" style="--c:${c.hex}"></span><span><b>${codeTxt(UI.color)}</b> ${esc(c.name)}</span>`;
+  for (const sel of ["#frA", "#frB"]) {
+    const el = $(sel), v = el.value;
+    el.innerHTML = D.paleta.map(id => `<option value="${id}">${codeTxt(id)} ${esc(pal(id).name)}</option>`).join("");
+    el.value = D.paleta.includes(v) ? v : (sel === "#frA" ? UI.color : (D.paleta.find(id => pal(id).metal) || D.paleta[0]));
+  }
+}
+$("#swatches").addEventListener("click", e => {
+  if (e.target.closest("#swAdd")) { showTab("colores"); const q = $("#q"); q.focus({ preventScroll: true }); $(".panel").scrollIntoView({ behavior: "smooth", block: "start" }); return; }
+  const b = e.target.closest(".sw"); if (b) selectColor(b.dataset.id);
+});
+
+let replaceFrom = null;
+function renderSel(used) {
+  const c = pal(UI.color), n = used[UI.color] || 0, have = STOCK.has(UI.color);
+  $("#sel").innerHTML = `<span class="big" style="--c:${c.hex}"></span><b>${codeTxt(UI.color)}</b><span>${esc(c.name)}</span>
+    <span>${FAM[c.fam[0]] || ""} · ${finTxt(c)}${c.disc ? " · <b class=\"warn\" style=\"font-size:13px\">descontinuado</b>" : ""}${n ? ` · ${fmtN(n)} en el diseño` : ""}</span>
+    <div class="acts"><button class="btn small soft star" id="bStar" type="button" aria-pressed="${have}">${have ? "★ Lo tengo" : "☆ Marcar que lo tengo"}</button>
+    ${n ? `<button class="btn small soft" id="bReplace" type="button">Cambiar por otro color</button>` : ""}</div>`;
+}
+$("#sel").addEventListener("click", e => {
+  if (e.target.closest("#bStar")) { STOCK.has(UI.color) ? STOCK.delete(UI.color) : STOCK.add(UI.color); store(K_STOCK, [...STOCK]); renderColors(); }
+  if (e.target.closest("#bReplace")) { replaceFrom = UI.color; renderColors(); $("#q").focus(); }
+});
+$("#bReplaceCancel").onclick = () => { replaceFrom = null; renderColors(); };
+function doReplace(to) {
+  const from = replaceFrom; replaceFrom = null;
+  if (from === to) { renderColors(); return; }
+  pushUndo();
+  D.cells = D.cells.map(v => v === from ? to : v);
+  D.fringe.cells = D.fringe.cells.map(a => a && a.map(v => v === from ? to : v));
+  const i = D.paleta.indexOf(from);
+  if (!D.paleta.includes(to)) { if (i >= 0) D.paleta[i] = to; else D.paleta.push(to); } else if (i >= 0) D.paleta.splice(i, 1);
+  UI.color = to;
+  changed();
+  toast(`${codeTxt(from)} cambiado por ${codeTxt(to)}`);
+}
+function renderMine(used) {
+  $("#mine").innerHTML = D.paleta.map(id => `<button type="button" data-id="${id}" aria-pressed="${id === UI.color}"><span class="chip" style="--c:${pal(id).hex}"></span>${codeTxt(id)}${used[id] ? ` <span class="n">${fmtN(used[id])}</span>` : ""}</button>`).join("");
+  $("#replaceBanner").hidden = !replaceFrom;
+  if (replaceFrom) $("#replaceTxt").textContent = `Elige en el catálogo el color que reemplaza a ${codeTxt(replaceFrom)}`;
+}
+$("#mine").addEventListener("click", e => { const b = e.target.closest("button"); if (b) selectColor(b.dataset.id); });
+$("#bPrune").onclick = () => {
+  const u = new Set(usedIds(D)); const before = D.paleta.length;
+  D.paleta = D.paleta.filter(id => u.has(id) || id === UI.color);
+  if (!D.paleta.length) D.paleta = [UI.color];
+  scheduleSave(); renderColors(); toast(before === D.paleta.length ? "Ya usas todos los colores de la paleta" : `Quité ${before - D.paleta.length} color${before - D.paleta.length > 1 ? "es" : ""} sin usar`);
+};
+
+// catálogo
+const F = { q: "", fam: "", fin: "", sort: "color", have: false, disc: false, limit: 400 };
+$("#fams").innerHTML = `<button class="fam" type="button" data-f="" aria-pressed="true">Todos</button>` + FAMS.map(([k, n, h]) => `<button class="fam" type="button" data-f="${k}" aria-pressed="false"><i style="--c:${h}"></i>${n}</button>`).join("");
+$("#fams").addEventListener("click", e => { const b = e.target.closest(".fam"); if (!b) return; F.fam = b.dataset.f; F.limit = 400; document.querySelectorAll(".fam").forEach(x => x.setAttribute("aria-pressed", x === b)); renderCat(); });
+$("#q").addEventListener("input", e => { F.q = e.target.value; F.limit = 400; renderCat(); });
+$("#fFin").onchange = e => { F.fin = e.target.value; F.limit = 400; renderCat(); };
+$("#fSort").onchange = e => { F.sort = e.target.value; renderCat(); };
+$("#fHave").onchange = e => { F.have = e.target.checked; F.limit = 400; renderCat(); };
+$("#fDisc").onchange = e => { F.disc = e.target.checked; F.limit = 400; renderCat(); };
+$("#bMore").onclick = () => { F.limit += 400; renderCat(); };
+const sortKey = c => { if (!c._sk) { const [h, s, l] = hsl(c.hex); c._sk = s < .14 || l < .1 ? -1 + l : Math.floor(h / 12) + (1 - l) * .9; } return c._sk; };
+function matches(c) {
+  if (!F.disc && c.disc && !D.paleta.includes(c.id)) return false;
+  if (F.have && !STOCK.has(c.id)) return false;
+  if (F.fam && !c.fam.includes(F.fam)) return false;
+  if (F.fin) { if ("otas".includes(F.fin)) { if (c.glass !== F.fin) return false; } else if (!c.fl.slice(1).includes(F.fin)) return false; }
+  const q = F.q.trim().toLowerCase();
+  if (q) {
+    const num = q.match(/^(?:db)?[\s-]*0*(\d+[a-z]?)$/);
+    if (num) { if (!c.id.slice(2).replace(/^0+(?=\d)/, "").toLowerCase().startsWith(num[1])) return false; }
+    else {
+      const hay = `${c.name} ${FAM[c.fam[0]] || ""} ${finTxt(c)}`.toLowerCase();
+      if (!q.split(/\s+/).every(w => hay.includes(w))) return false;
+    }
+  }
+  return true;
+}
+function renderCat(used = measure(D).count) {
+  let list = CAT.filter(matches);
+  if (F.sort === "color") list.sort((a, b) => sortKey(a) - sortKey(b));
+  const shown = list.slice(0, F.limit);
+  $("#catCount").textContent = `${fmtN(list.length)} color${list.length === 1 ? "" : "es"}${STOCK.size ? ` · tienes ${fmtN(STOCK.size)} marcados` : ""}`;
+  $("#cat").innerHTML = shown.length ? shown.map(c => `<button class="cb${STOCK.has(c.id) ? " has" : ""}${D.paleta.includes(c.id) ? " in" : ""}${c.disc ? " disc" : ""}" type="button" style="--c:${c.hex}" data-id="${c.id}" aria-pressed="${c.id === UI.color}" title="${codeTxt(c.id)} · ${esc(c.name)} · ${finTxt(c)}${c.disc ? " · descontinuado" : ""}${used[c.id] ? " · " + used[c.id] + " en el diseño" : ""}" aria-label="${codeTxt(c.id)} ${esc(c.name)}"></button>`).join("")
+    : `<p class="hint">Ningún color calza con esa búsqueda.${F.have ? " Desmarca «Solo los que tengo» para ver todos." : ""}</p>`;
+  $("#bMore").hidden = list.length <= F.limit;
+}
+$("#cat").addEventListener("click", e => {
+  const b = e.target.closest(".cb"); if (!b) return;
+  if (replaceFrom) { doReplace(b.dataset.id); return; }
+  selectColor(b.dataset.id);
+});
+function renderColors() {
+  const used = measure(D).count;
+  renderSwatches(used);
+  if (UI.tab === "colores") { renderSel(used); renderMine(used); renderCat(used); }
+}
+
+/* ================== formas ================== */
+const SHAPES = [
+  ["triAbajo", "Triángulo con punta abajo", '<polygon points="4,5 20,5 12,20"/>', (u, v) => Math.abs(u) <= (1 - v) / 2 + .02],
+  ["triArriba", "Triángulo con punta arriba", '<polygon points="12,4 20,19 4,19"/>', (u, v) => Math.abs(u) <= (1 + v) / 2 + .02],
+  ["rombo", "Rombo", '<polygon points="12,3 21,12 12,21 3,12"/>', (u, v) => Math.abs(u) + Math.abs(v) <= 1.04],
+  ["hexagono", "Hexágono", '<polygon points="3,12 7.5,4 16.5,4 21,12 16.5,20 7.5,20"/>', (u, v) => Math.abs(v) <= 1 && Math.abs(u) <= 1.02 - .5 * Math.abs(v)],
+  ["circulo", "Círculo", '<circle cx="12" cy="12" r="8.5"/>', (u, v) => u * u + v * v <= 1.04],
+  ["corazon", "Corazón", '<path d="M12 20C4 14 3 9 6.5 6.5 9 5 11 6.5 12 8c1-1.5 3-3 5.5-1.5C21 9 20 14 12 20z"/>', (u, v) => { const x = u * 1.139, y = .118 - v * 1.118, a = x * x + y * y - 1; return a * a * a - x * x * y * y * y <= 0.002; }],
+  ["gota", "Gota", '<path d="M12 3c3 5 6 8 6 12a6 6 0 01-12 0c0-4 3-7 6-12z"/>', (u, v) => { const t = (v + 1) / 2; const w = t < .6 ? Math.pow(t / .6, 1.1) : Math.sqrt(Math.max(0, 1 - ((t - .6) / .4) ** 2)); return Math.abs(u) <= w + .02; }],
+  ["luna", "Luna", '<path d="M15 3a9 9 0 1 0 6 12A7 7 0 1 1 15 3z"/>', (u, v) => u * u + v * v <= 1.02 && (u - .45) ** 2 + (v + .2) ** 2 >= .62],
+  ["arco", "Abanico", '<path d="M3 6h18a9 12 0 01-18 0z"/>', (u, v) => { const t = (v + 1) / 2; return u * u + t * t <= 1.02; }],
+  ["rect", "Rectángulo", '<rect x="5" y="4" width="14" height="16" rx="1.5"/>', () => true],
+];
+const shapeFn = id => SHAPES.find(s => s[0] === id)[3];
+function applyShape(d, f, color) {
+  const [wmm, hmm] = gridMM(d);
+  eachCell(d, (r, c) => { const [x, y] = center(d, r, c); d.cells[r * d.W + c] = f((x - wmm / 2) / (wmm / 2), (y - hmm / 2) / (hmm / 2)) ? color : null; });
+}
+function edgeCells(d) {
+  const out = [], full = d.puntada === "telar" ? 4 : 6;
+  eachCell(d, (r, c, v) => { if (!v) return; const nb = neighbors(d, r, c); if (nb.length < full || nb.some(([a, b]) => !getC(d, a, b))) out.push(r * d.W + c); });
+  return out;
+}
+$("#shapes").innerHTML = SHAPES.map(([id, name, svg]) => `<button class="shape" type="button" data-shape="${id}" title="${name}" aria-label="${name}"><svg viewBox="0 0 24 24">${svg}</svg></button>`).join("");
+$("#shapes").addEventListener("click", e => { const b = e.target.closest(".shape"); if (!b) return; pushUndo(); applyShape(D, shapeFn(b.dataset.shape), UI.color); changed(); });
+$("#bOutline").onclick = () => {
+  const edge = edgeCells(D);
+  if (!edge.length) { toast("Primero pinta una forma"); return; }
+  pushUndo(); for (const i of edge) D.cells[i] = UI.color; changed();
+};
+$("#bClear").onclick = () => { pushUndo(); D.cells.fill(null); D.fringe.cells = []; changed(); toast("Grilla vacía. Puedes deshacer con Ctrl+Z"); };
+
+// mover y voltear
+function transform(fn) {
+  const old = D.cells.slice(), moved = [];
+  let lost = false;
+  eachCell(D, (r, c, v) => { if (!v) return; const t = fn(r, c); if (t && valid(D, t[0], t[1])) moved.push([t[0] * D.W + t[1], v]); else lost = true; });
+  if (lost) { toast("No cabe: agranda la grilla en «Tamaño de la grilla»"); return; }
+  pushUndo(); D.cells = Array(D.W * D.H).fill(null); for (const [i, v] of moved) D.cells[i] = v;
+  if (D.cells.every((v, i) => v === old[i])) undoS.pop(); else changed();
+}
+function paintedRows() { let r0 = 1e9, r1 = -1, c0 = 1e9, c1 = -1; eachCell(D, (r, c, v) => { if (v) { r0 = Math.min(r0, r); r1 = Math.max(r1, r); c0 = Math.min(c0, c); c1 = Math.max(c1, c); } }); return { r0, r1, c0, c1 }; }
+document.querySelectorAll("[data-move]").forEach(b => b.onclick = () => {
+  const m = b.dataset.move, br = D.puntada === "brick", py = D.puntada === "peyote";
+  // en ladrillo se sube o baja de a 2 filas (y en peyote se corre de a 2 columnas) para no deformar el tejido
+  const dy = br ? 2 : 1, dx = py ? 2 : 1;
+  if (m === "l") transform((r, c) => [r, c - dx]);
+  else if (m === "r") transform((r, c) => [r, c + dx]);
+  else if (m === "u") transform((r, c) => [r - dy, c]);
+  else if (m === "d") transform((r, c) => [r + dy, c]);
+  else if (m === "fh") transform((r, c) => mirrorRC(D, r, c));
+  else if (m === "fv") {
+    const { r0, r1 } = paintedRows(); if (r1 < 0) return;
+    let R = r0 + r1;
+    if (br && R % 2) R += r1 + 1 < D.H ? 1 : -1;
+    transform((r, c) => [R - r, c]);
+  }
+});
+
+/* ================== pieza ================== */
+function seg(id, get, setv) {
+  const el = $(id);
+  el.addEventListener("click", e => { const b = e.target.closest("button"); if (!b) return; setv(b.dataset.v); });
+  return () => el.querySelectorAll("button").forEach(b => b.setAttribute("aria-pressed", b.dataset.v === get()));
+}
+const segUpd = [
+  seg("#segPieza", () => D.pieza, v => { D.pieza = v; changed(); }),
+  seg("#segPuntada", () => D.puntada, v => { if (v === D.puntada) return; pushUndo(); D.puntada = v; changed(); fitZoom(); }),
+  seg("#segFr", () => D.fringe.forma, v => { pushUndo(); D.fringe.forma = v; changed(); }),
+  seg("#segPar", () => D.par, v => { D.par = v; changed(); }),
+  seg("#segPhSrc", () => UI.phSrc, v => { UI.phSrc = v; saveUI(); segUpd.forEach(f => f()); if (photo && phLive) convertPhoto(false); }),
+];
+function resize(W2, H2) {
+  W2 = Math.max(3, Math.min(80, W2 | 0)); H2 = Math.max(3, Math.min(120, H2 | 0));
+  if (W2 === D.W && H2 === D.H) { syncForm(); return; }
+  pushUndo();
+  let dx = Math.round((W2 - D.W) / 2);
+  if (D.puntada === "peyote" && dx % 2) dx -= Math.sign(dx);
+  const old = { ...D, cells: D.cells.slice() }, cells = Array(W2 * H2).fill(null);
+  D.W = W2; D.H = H2;
+  eachCell(old, (r, c, v) => { if (v && valid(D, r, c + dx)) cells[r * W2 + c + dx] = v; });
+  D.cells = cells;
+  changed(); fitZoom();
+}
+$("#inW").addEventListener("change", e => resize(+e.target.value, D.H));
+$("#inH").addEventListener("change", e => resize(D.W, +e.target.value));
+$("#bFitCm").onclick = () => {
+  const { bw, bh } = bd(D), w = parseFloat(String($("#inWcm").value).replace(",", ".")), h = parseFloat(String($("#inHcm").value).replace(",", "."));
+  if (!(w > 0) || !(h > 0)) { toast("Escribe el ancho y el alto en centímetros"); return; }
+  resize(Math.round(w * 10 / bw), Math.round(h * 10 / bh));
+};
+$("#frOn").addEventListener("change", e => { pushUndo(); D.fringe.on = e.target.checked; changed(); fitZoom(); });
+$("#frLen").addEventListener("pointerdown", () => pushUndo());
+$("#frLen").addEventListener("input", e => { D.fringe.largo = +e.target.value; changed(); });
+$("#bFrGrad").onclick = () => {
+  const L = fringeLayout(D); if (!L.length) { toast("Pinta la pieza primero: los flecos cuelgan de la última fila"); return; }
+  pushUndo();
+  const a = pal($("#frA").value), b = pal($("#frB").value), A = labOf(a), B = labOf(b);
+  // tonos intermedios: las Delica (vigentes, del mismo tipo de brillo) que quedan entre los dos colores elegidos
+  const metal = a.metal && b.metal;
+  const among = CAT.filter(p => !p.disc && p.metal === metal && dE(labOf(p), A) + dE(labOf(p), B) <= dE(A, B) * 1.15 + 2);
+  const used = new Set();
+  for (const s of L) D.fringe.cells[s.i] = Array.from({ length: s.len }, (_, k) => {
+    const t = s.len > 1 ? k / (s.len - 1) : 0;
+    if (t < .18) return a.id; if (t > .82) return b.id;
+    const id = nearest(A.map((v, j) => v + (B[j] - v) * t), among.length ? among : [a, b]).id; used.add(id); return id;
+  });
+  for (const id of used) if (!D.paleta.includes(id)) D.paleta.push(id);
+  changed();
+};
+
+/* ================== desde foto ================== */
+let photo = null, phLive = false;
+const fileImg = $("#fileImg"), drop = $("#drop");
+fileImg.addEventListener("change", () => fileImg.files[0] && loadPhoto(fileImg.files[0]));
+drop.addEventListener("dragover", e => { e.preventDefault(); drop.classList.add("over"); });
+drop.addEventListener("dragleave", () => drop.classList.remove("over"));
+drop.addEventListener("drop", e => { e.preventDefault(); drop.classList.remove("over"); const f = e.dataTransfer.files[0]; if (f) loadPhoto(f); });
+document.addEventListener("paste", e => { const f = [...(e.clipboardData && e.clipboardData.files || [])].find(f => f.type.startsWith("image/")); if (f) { showTab("foto"); loadPhoto(f); } });
+function loadPhoto(file) {
+  const url = URL.createObjectURL(file), img = new Image();
+  img.onload = () => { photo = img; phLive = false; $("#imgThumb").src = url; $("#imgThumb").hidden = false; $("#dropTxt").textContent = "Cambiar imagen"; $("#bPhoto").disabled = false; $("#phInfo").textContent = ""; };
+  img.onerror = () => toast("No pude abrir esa imagen. Prueba con JPG o PNG");
+  img.src = url;
+}
+for (const id of ["#phW", "#phK", "#phTol"]) $(id).addEventListener("input", () => { phLabels(); if (photo && phLive) convertPhoto(false); });
+for (const id of ["#phBg", "#phMatte"]) $(id).addEventListener("change", () => photo && phLive && convertPhoto(false));
+function phLabels() { $("#phWLbl").textContent = $("#phW").value; $("#phKLbl").textContent = $("#phK").value; }
+$("#bPhoto").onclick = () => convertPhoto(true);
+function photoPalette() {
+  let list = UI.phSrc === "tengo" ? CAT.filter(c => STOCK.has(c.id)) : UI.phSrc === "diseno" ? D.paleta.map(pal) : CAT.filter(c => !c.disc);
+  if ($("#phMatte").checked) { const f = list.filter(c => !c.matte && !c.metal && !c.ab); if (f.length) list = f; }
+  return list;
+}
+function convertPhoto(withUndo) {
+  if (!photo) return;
+  const palList = photoPalette();
+  if (!palList.length) { toast(UI.phSrc === "tengo" ? "Todavía no marcas colores que tienes (estrella en la pestaña Colores)" : "No hay colores para usar"); return; }
+  const { bw, bh } = bd(D);
+  const W = +$("#phW").value, wmm = W * bw;
+  const H = Math.max(3, Math.min(120, Math.round(wmm * photo.height / photo.width / bh)));
+  const k = 8, cw = Math.ceil(wmm * k), ch = Math.ceil(H * bh * k);
+  const oc = document.createElement("canvas"); oc.width = cw; oc.height = ch;
+  const og = oc.getContext("2d", { willReadFrequently: true });
+  og.drawImage(photo, 0, 0, cw, ch);
+  const px = og.getImageData(0, 0, cw, ch).data;
+  const avg = (x0, y0, x1, y1) => {
+    let r = 0, gg = 0, b = 0, a = 0, n = 0;
+    x0 = Math.max(0, x0 | 0); y0 = Math.max(0, y0 | 0); x1 = Math.min(cw, Math.ceil(x1)); y1 = Math.min(ch, Math.ceil(y1));
+    for (let y = y0; y < y1; y++) for (let x = x0; x < x1; x++) { const i = (y * cw + x) * 4, al = px[i + 3] / 255; r += px[i] * al; gg += px[i + 1] * al; b += px[i + 2] * al; a += al; n++; }
+    return a ? [r / a, gg / a, b / a, a / n] : [255, 255, 255, 0];
+  };
+  // color del fondo: promedio de las 4 esquinas
+  const s = Math.max(2, Math.round(Math.min(cw, ch) * .05));
+  const corners = [avg(0, 0, s, s), avg(cw - s, 0, cw, s), avg(0, ch - s, s, ch), avg(cw - s, ch - s, cw, ch)].filter(c => c[3] > .5);
+  const bgLab = corners.length ? lab([0, 1, 2].map(j => corners.reduce((t, c) => t + c[j], 0) / corners.length)) : null;
+  const tol = +$("#phTol").value, useBg = $("#phBg").checked;
+  const nd = { ...D, W, H }, cells = Array(W * H).fill(null), pts = [];
+  eachCell(nd, (r, c) => {
+    const [x, y] = center(nd, r, c);
+    const col = avg((x - bw * .4) * k, (y - bh * .4) * k, (x + bw * .4) * k, (y + bh * .4) * k);
+    if (col[3] < .5) return;
+    const L = lab(col);
+    if (useBg && bgLab && dE(L, bgLab) < tol) return;
+    pts.push({ i: r * W + c, L });
+  });
+  if (!pts.length) { $("#phInfo").textContent = "No quedó nada: baja la tolerancia del fondo o desmarca «Quitar el fondo»."; return; }
+  if (withUndo || !phLive) pushUndo();
+  // k-means en Lab y después cada grupo a la Delica más parecida
+  const K = Math.min(+$("#phK").value, pts.length);
+  const cen = [pts.reduce((a, p) => a.map((v, j) => v + p.L[j] / pts.length), [0, 0, 0])];
+  while (cen.length < K) { let far = pts[0], fd = -1; for (const p of pts) { let dmin = 1e9; for (const c of cen) dmin = Math.min(dmin, dE(c, p.L)); if (dmin > fd) { fd = dmin; far = p; } } cen.push(far.L.slice()); }
+  for (let it = 0; it < 12; it++) {
+    const sum = cen.map(() => [0, 0, 0, 0]);
+    for (const p of pts) { let bi = 0, bv = 1e9; cen.forEach((c, j) => { const e = dE(c, p.L); if (e < bv) { bv = e; bi = j; } }); const sm = sum[bi]; sm[0] += p.L[0]; sm[1] += p.L[1]; sm[2] += p.L[2]; sm[3]++; }
+    sum.forEach((sm, j) => { if (sm[3]) cen[j] = [sm[0] / sm[3], sm[1] / sm[3], sm[2] / sm[3]]; });
+  }
+  const chosen = [...new Set(cen.map(c => nearest(c, palList)))];
+  for (const p of pts) cells[p.i] = nearest(p.L, chosen).id;
+  D.W = W; D.H = H; D.cells = cells; phLive = true;
+  D.fringe.on = false; D.fringe.cells = [];
+  const counts = {}; for (const v of cells) if (v) counts[v] = (counts[v] || 0) + 1;
+  const ids = Object.keys(counts).sort((a, b) => counts[b] - counts[a]);
+  D.paleta = ids.concat(D.paleta.filter(id => !counts[id]));
+  if (!counts[UI.color]) UI.color = ids[0];
+  $("#phInfo").textContent = `Quedó de ${W} × ${H} mostacillas con ${ids.length} colores: ${ids.map(codeTxt).join(", ")}. Retócalo con el lápiz o cambia colores en la pestaña Colores.`;
+  changed(); fitZoom();
+}
+
+/* ================== vista previa realista ================== */
+function beadReal(ctx, x, y, w, h, p) {
+  const hex = p.hex;
+  const pw = w * .93, ph = h * .9, X = x - pw / 2, Y = y - ph / 2, rad = Math.min(pw, ph) * .3;
+  const gr = ctx.createLinearGradient(0, Y, 0, Y + ph);
+  if (p.metal) { gr.addColorStop(0, shade(hex, .7)); gr.addColorStop(.35, shade(hex, .15)); gr.addColorStop(.6, shade(hex, -.25)); gr.addColorStop(1, shade(hex, .1)); }
+  else if (p.matte) { gr.addColorStop(0, shade(hex, .12)); gr.addColorStop(1, shade(hex, -.12)); }
+  else { gr.addColorStop(0, shade(hex, .32)); gr.addColorStop(.3, hex); gr.addColorStop(.85, shade(hex, -.12)); gr.addColorStop(1, shade(hex, -.28)); }
+  rr(ctx, X, Y, pw, ph, rad); ctx.fillStyle = gr; ctx.fill();
+  if (!p.matte) { ctx.fillStyle = p.ab ? "rgba(190,230,255,.45)" : "rgba(255,255,255,.38)"; rr(ctx, X + pw * .18, Y + ph * .14, pw * .4, ph * .14, ph * .07); ctx.fill(); }
+}
+// dibuja la pieza con su origen (0,0) en la esquina superior izquierda de la grilla, en mm
+function drawPiece(ctx, d, m) {
+  const { bw, bh } = bd(d);
+  eachCell(d, (r, c, v) => { if (v) { const [x, y] = center(d, r, c); beadReal(ctx, x, y, bw, bh, pal(v)); } });
+  for (const s of m.lay) for (let k = 0; k < s.len; k++) beadReal(ctx, s.x, s.y0 + (k + .5) * FR.bh, FR.bw, FR.bh, pal(frColor(d, s, k)));
+}
+function topAnchor(d) {
+  let ty = 1e9, xs = [];
+  eachCell(d, (r, c, v) => { if (!v) return; const [x, y] = center(d, r, c); if (y < ty - 1e-6) { ty = y; xs = []; } if (Math.abs(y - ty) < 1e-6) xs.push(x); });
+  return [xs.reduce((a, b) => a + b, 0) / xs.length, ty - bd(d).bh / 2];
+}
+const METAL = { plata: ["#c9cdd3", "#f4f6f8", "#8e949c"], oro: ["#d8ab3e", "#fbe6a6", "#9c7419"], poste: ["#d8ab3e", "#fbe6a6", "#9c7419"] };
+function drawHook(ctx, d) {
+  if (d.pieza === "anillo") return;
+  const [ax, ay] = topAnchor(d);
+  const col = METAL[d.pieza === "aros" ? d.gancho : "oro"];
+  const line = (w, c, path) => { ctx.strokeStyle = c; ctx.lineWidth = w; ctx.lineCap = "round"; ctx.lineJoin = "round"; ctx.beginPath(); path(); ctx.stroke(); };
+  if (d.pieza === "colgante") {
+    const ring = () => ctx.arc(ax, ay - 1.3, 1.2, 0, Math.PI * 2);
+    line(.45, col[2], ring); line(.25, col[0], ring);
+    for (const sx of [-1, 1]) { const chn = () => { ctx.moveTo(ax, ay - 2.4); ctx.quadraticCurveTo(ax + sx * 3, ay - 9, ax + sx * 9, ay - 16); }; line(.5, col[2], chn); ctx.setLineDash([.6, .35]); line(.32, col[0], chn); ctx.setLineDash([]); }
+    return;
+  }
+  if (d.gancho === "poste") {
+    const ring = () => ctx.arc(ax, ay - .9, .8, 0, Math.PI * 2);
+    line(.4, col[2], ring); line(.22, col[0], ring);
+    const gr = ctx.createRadialGradient(ax - .5, ay - 3.4, .2, ax, ay - 2.9, 1.6);
+    gr.addColorStop(0, col[1]); gr.addColorStop(.6, col[0]); gr.addColorStop(1, col[2]);
+    ctx.fillStyle = gr; ctx.beginPath(); ctx.arc(ax, ay - 2.9, 1.5, 0, Math.PI * 2); ctx.fill();
+    return;
+  }
+  const ring = () => ctx.arc(ax, ay - 1, .95, 0, Math.PI * 2);
+  const hook = () => { ctx.moveTo(ax, ay - 1.9); ctx.lineTo(ax, ay - 4.2); ctx.bezierCurveTo(ax, ay - 13, ax + 7.5, ay - 13, ax + 7.5, ay - 6.5); ctx.lineTo(ax + 7.5, ay - 1.5); };
+  line(.5, col[2], hook); line(.3, col[0], hook); line(.12, col[1], hook);
+  line(.42, col[2], ring); line(.24, col[0], ring);
+  const gr = ctx.createRadialGradient(ax - .25, ay - 4.9, .1, ax, ay - 4.6, .8);
+  gr.addColorStop(0, col[1]); gr.addColorStop(1, col[2]);
+  ctx.fillStyle = gr; ctx.beginPath(); ctx.arc(ax, ay - 4.6, .7, 0, Math.PI * 2); ctx.fill();
+}
+// área de la pieza con su gancho, en mm
+function pieceBox(d, m) {
+  let { x0, x1, y0, y1 } = m;
+  if (d.pieza === "aros") { const [ax, ay] = topAnchor(d); if (d.gancho === "poste") y0 = Math.min(y0, ay - 4.6); else { y0 = Math.min(y0, ay - 11.2); x1 = Math.max(x1, ax + 8.1); x0 = Math.min(x0, ax - .8); } }
+  else if (d.pieza === "colgante") { const [ax, ay] = topAnchor(d); y0 = Math.min(y0, ay - 16); x0 = Math.min(x0, ax - 9.3); x1 = Math.max(x1, ax + 9.3); }
+  return { x0, x1, y0, y1, w: x1 - x0, h: y1 - y0 };
+}
+// dibuja el par (o la pieza sola) centrado en el rectángulo dado; devuelve la escala en px por mm
+function drawSet(ctx, d, m, X, Y, W, H, maxScale = 40) {
+  if (!m.total) return 0;
+  const box = pieceBox(d, m), two = d.pieza === "aros", gap = Math.max(4, box.w * .25);
+  const totalW = two ? box.w * 2 + gap : box.w;
+  const s = Math.min(W / totalW, H / box.h, maxScale);
+  const ox = X + (W - totalW * s) / 2, oy = Y + (H - box.h * s) / 2;
+  const one = (left, flip) => {
+    ctx.save();
+    if (flip) { ctx.translate(left + box.w * s, oy); ctx.scale(-s, s); } else { ctx.translate(left, oy); ctx.scale(s, s); }
+    ctx.translate(-box.x0, -box.y0);
+    drawPiece(ctx, d, m); drawHook(ctx, d);
+    ctx.restore();
+  };
+  if (two) { one(ox, false); one(ox + (box.w + gap) * s, d.par === "espejo"); } else one(ox, false);
+  return s;
+}
+function drawPreview() {
+  const c = $("#prev"), dpr = window.devicePixelRatio || 1, W = c.clientWidth, H = c.clientHeight;
+  if (!W) return;
+  c.width = W * dpr; c.height = H * dpr;
+  const ctx = c.getContext("2d"); ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, W, H);
+  const m = measure(D);
+  if (!m.total) { ctx.fillStyle = css("--ink-soft"); ctx.font = `600 14px ${css("--sans")}`; ctx.textAlign = "center"; ctx.fillText("Pinta mostacillas para ver la pieza", W / 2, H / 2); $("#prevInfo").textContent = ""; return; }
+  const s = drawSet(ctx, D, m, 14, 12, W - 28, H - 38);
+  // regla de 1 cm a escala
+  const L = 10 * s, rx = 16, ry = H - 13;
+  ctx.strokeStyle = css("--ink-soft"); ctx.fillStyle = css("--ink-soft"); ctx.lineWidth = 1.5;
+  ctx.beginPath(); ctx.moveTo(rx, ry - 4); ctx.lineTo(rx, ry); ctx.lineTo(rx + L, ry); ctx.lineTo(rx + L, ry - 4); ctx.stroke();
+  ctx.font = `600 11px ${css("--sans")}`; ctx.textAlign = "left"; ctx.fillText("1 cm", rx + L + 6, ry - 1);
+  $("#prevInfo").textContent = `${cm(m.h)} × ${cm(m.w)} cm${D.pieza === "aros" ? " cada aro" : ""}`;
+}
+
+/* ================== cuenta y precio ================== */
+function renderInfo() {
+  const m = measure(D), P = price(D, m), lg = legend(D, m), piezas = D.pieza === "aros" ? 2 : 1;
+  const colors = Object.keys(m.count).length, I = T.insumos.mostacillas;
+  $("#status").innerHTML = m.total
+    ? `<span><b>${fmtN(m.total)}</b> mostacillas${piezas === 2 ? " por aro" : ""}</span><span><b>${cm(m.h)} × ${cm(m.w)}</b> cm</span><span><b>${colors}</b> ${colors === 1 ? "color" : "colores"}</span><span>Grilla ${D.W} × ${D.H}</span><span class="price">${clp(P.precio)}</span>`
+    : `<span>Grilla ${D.W} × ${D.H}. Elige una forma base en la pestaña Pieza o pinta directo sobre la grilla.</span>`;
+  $("#facts").innerHTML = [
+    ["Medida", m.total ? `${cm(m.h)} × ${cm(m.w)} cm` : "—"],
+    ["Mostacillas", `${fmtN(P.n)}${piezas === 2 ? " el par" : ""}`],
+    ["Mostacillas en gramos", `${fmtD(P.n / I.porGramo * (1 + I.merma))} g`],
+    ["Tejido estimado", `${fmtD(P.horas)} h`],
+  ].map(([a, b]) => `<div class="fact"><span>${a}</span><b class="num">${b}</b></div>`).join("");
+  $("#legTbl").innerHTML = lg.length ? `<tr><th></th><th>Color</th><th class="r">${piezas === 2 ? "Aro" : "Cant."}</th>${piezas === 2 ? '<th class="r">Par</th>' : ""}<th class="r">g</th></tr>` +
+    lg.map(l => `<tr><td><span class="leg-l">${l.letter}</span></td><td><span class="leg-sw" style="background:${l.c.hex}"></span><b>${codeTxt(l.id)}</b> <span class="hint">${esc(l.c.name)}</span>${STOCK.has(l.id) ? "" : ' <span class="hint" title="No está marcado como que lo tienes">· comprar</span>'}</td><td class="r">${fmtN(l.n)}</td>${piezas === 2 ? `<td class="r">${fmtN(l.n * 2)}</td>` : ""}<td class="r">${fmtD(l.n * piezas / I.porGramo * (1 + I.merma))}</td></tr>`).join("")
+    : `<tr><td class="hint">Todavía no hay mostacillas pintadas.</td></tr>`;
+  $("#selNivel").innerHTML = `<option value="auto">Automática: ${esc(T.disenos[autoNivel(D, m)].nombre.split(" (")[0])}</option>` + Object.entries(T.disenos).map(([k, v]) => `<option value="${k}">${esc(v.nombre)}</option>`).join("");
+  $("#selNivel").value = D.nivel;
+  $("#selTam").innerHTML = `<option value="auto">Automático: ${esc(T.tamanos[autoTamano(D, m)].nombre.split(" (")[0])}</option>` + Object.entries(T.tamanos).map(([k, v]) => `<option value="${k}">${esc(v.nombre)}</option>`).join("");
+  $("#selTam").value = D.tamano;
+  $("#ganchoField").hidden = D.pieza !== "aros";
+  $("#selGancho").value = D.gancho; $("#inPerlas").value = D.perlas; $("#inCuentas").value = D.cuentas;
+  $("#priceTbl").innerHTML = P.lines.map(([k, v]) => `<tr><td>${esc(k)}</td><td class="r">${clp(v)}</td></tr>`).join("") +
+    `<tr><td><b>Insumos</b></td><td class="r"><b>${clp(P.insumos)}</b></td></tr>` +
+    `<tr><td>Mano de obra (${fmtD(P.horas)} h × ${clp(T.valorHora)})</td><td class="r">${clp(P.mano)}</td></tr>` +
+    `<tr><td>Costo</td><td class="r">${clp(P.costo)}</td></tr>` +
+    `<tr><td>Ganancia ${Math.round(T.ganancia * 100)} %</td><td class="r">${clp(P.ganancia)}</td></tr>` +
+    `<tr class="total"><td>Precio de venta</td><td class="r">${clp(P.precio)}</td></tr>`;
+  $("#priceSrc").textContent = `Misma fórmula que calcular-precio.js, con los valores de tabla-precios.json (${tSource}). Redondeado a ${clp(T.redondeo)}.`;
+}
+$("#selNivel").onchange = e => { D.nivel = e.target.value; changed(); };
+$("#selTam").onchange = e => { D.tamano = e.target.value; changed(); };
+$("#selGancho").onchange = e => { D.gancho = e.target.value; changed(); };
+$("#inPerlas").onchange = e => { D.perlas = Math.max(0, +e.target.value | 0); changed(); };
+$("#inCuentas").onchange = e => { D.cuentas = Math.max(0, +e.target.value | 0); changed(); };
+$("#dName").addEventListener("input", e => { D.name = e.target.value || "Sin nombre"; scheduleSave(); });
+$("#dCliente").addEventListener("input", e => { D.cliente = e.target.value; scheduleSave(); });
+$("#dNotas").addEventListener("input", e => { D.notas = e.target.value; scheduleSave(); });
+$("#cardPrice").addEventListener("change", e => { UI.cardPrice = e.target.checked; saveUI(); });
+
+/* ================== archivos ================== */
+async function saveFile(filename, blob) {
+  try {
+    if (window.claude && window.claude.use) {
+      const dl = await window.claude.use("downloads");
+      if (dl) { await dl.save({ filename, data: blob }); toast("Listo: " + filename); return; }
+    }
+  } catch (e) { if (e && (e.code === "declined" || e.code === "rate_limited")) return; }
+  // en el celular: menú Compartir del teléfono (Guardar imagen → Fotos, Guardar en Archivos, WhatsApp…)
+  if (window.self === window.top && matchMedia("(pointer: coarse)").matches && navigator.canShare) {
+    const file = new File([blob], filename, { type: blob.type || "application/octet-stream" });
+    try {
+      if (navigator.canShare({ files: [file] })) { await navigator.share({ files: [file] }); return; }
+    } catch (e) { if (e && e.name === "AbortError") return; }
+  }
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob); a.download = filename; document.body.appendChild(a); a.click();
+  setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 2000);
+  toast("Descargado: " + filename);
+}
+const slug = s => (s || "diseno").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "") || "diseno";
+const canvasBlob = c => new Promise(r => c.toBlob(r, "image/png"));
+let logoImg = null;
+function getLogo() { return logoImg ? Promise.resolve(logoImg) : new Promise(res => { const i = new Image(); i.onload = () => res(logoImg = i); i.onerror = () => res(null); i.src = LOGO; }); }
+async function fontsReady() {
+  if (!document.fonts) return;
+  const t = new Promise(r => setTimeout(r, 2500));
+  await Promise.race([Promise.all([document.fonts.load('750 80px "Bricolage Grotesque"'), document.fonts.load('italic 400 80px "Instrument Serif"'), document.fonts.load('600 30px "Bricolage Grotesque"')]).catch(() => {}), t]);
+}
+
+/* ---------- imagen del diseño (1080 × 1350) ---------- */
+async function makeCard() {
+  await fontsReady();
+  const logo = await getLogo();
+  const W = 1080, H = 1350, c = document.createElement("canvas"); c.width = W; c.height = H;
+  const x = c.getContext("2d");
+  const PAPER = "#f4ede3", INK = "#24122e", PLUM = "#7a3fa0", SOFT = "#5a4a63", YEL = "#f7b928";
+  const SANS = '"Bricolage Grotesque", system-ui, sans-serif', SERIF = '"Instrument Serif", Georgia, serif';
+  x.fillStyle = PAPER; x.fillRect(0, 0, W, H);
+  const beads = ["#e5392f", "#f7b928", "#1e7be0", "#2e9f4f"];
+  for (let i = 0; i < 4; i++) { x.fillStyle = beads[i]; rr(x, 64 + i * 30, 64, 22, 22, 6); x.fill(); x.fillStyle = "rgba(0,0,0,.28)"; x.beginPath(); x.arc(75 + i * 30, 75, 4, 0, 7); x.fill(); }
+  x.fillStyle = PLUM; x.font = `700 24px ${SANS}`; x.textBaseline = "alphabetic"; x.fillText(D.cliente.trim() ? "PROPUESTA DE DISEÑO" : "DISEÑO KIKA MIYUKI", 196, 84);
+  const fit = (t, max, size, font) => { let s = size; x.font = font(s); while (x.measureText(t).width > max && s > 30) { s -= 2; x.font = font(s); } };
+  x.fillStyle = INK; fit(D.name, W - 128, 82, s => `750 ${s}px ${SANS}`); x.fillText(D.name, 64, 182);
+  if (D.cliente.trim()) { x.fillStyle = PLUM; fit("para " + D.cliente.trim(), W - 128, 64, s => `italic 400 ${s}px ${SERIF}`); x.fillText("para " + D.cliente.trim(), 64, 252); }
+  const fy = 300, fh = 760, fx = 64, fw = W - 128 - 22;
+  x.fillStyle = YEL; rr(x, fx + 22, fy + 22, fw, fh, 44); x.fill();
+  x.fillStyle = "#fffaf3"; rr(x, fx, fy, fw, fh, 44); x.fill();
+  const m = measure(D);
+  drawSet(x, D, m, fx + 60, fy + 60, fw - 120, fh - 120, 60);
+  const P = price(D, m), colors = Object.keys(m.count).length, piezas = D.pieza === "aros" ? 2 : 1;
+  x.fillStyle = INK; x.font = `600 32px ${SANS}`; x.fillText(`${cm(m.h)} × ${cm(m.w)} cm${piezas === 2 ? " cada aro" : ""}`, 64, 1146);
+  x.fillStyle = SOFT; x.font = `500 28px ${SANS}`; x.fillText(`${fmtN(P.n)} mostacillas Miyuki Delica · ${colors} ${colors === 1 ? "color" : "colores"}`, 64, 1190);
+  legend(D, m).slice(0, 12).forEach((l, i) => { x.fillStyle = l.c.hex; rr(x, 64 + i * 40, 1214, 30, 26, 7); x.fill(); x.fillStyle = "rgba(0,0,0,.18)"; x.fillRect(68 + i * 40, 1234, 22, 4); x.strokeStyle = "rgba(36,18,46,.15)"; x.lineWidth = 1.5; rr(x, 64 + i * 40, 1214, 30, 26, 7); x.stroke(); });
+  if (UI.cardPrice && P.precio) {
+    x.textAlign = "right"; x.fillStyle = PLUM; x.font = `750 76px ${SANS}`; x.fillText(clp(P.precio), W - 64, 1180);
+    x.fillStyle = SOFT; x.font = `500 24px ${SANS}`; x.fillText(piezas === 2 ? "el par, tejido a mano" : "tejido a mano", W - 64, 1216); x.textAlign = "left";
+  }
+  if (logo) { x.save(); rr(x, W - 64 - 96, H - 64 - 72, 96, 96, 20); x.clip(); x.drawImage(logo, W - 64 - 96, H - 64 - 72, 96, 96); x.restore(); }
+  x.fillStyle = SOFT; x.font = `500 22px ${SANS}`; x.fillText("@kikamiyuki · Iquique, Chile", 64, H - 40);
+  return c;
+}
+$("#bCard").onclick = async () => { if (!measure(D).total) { toast("Pinta el diseño primero"); return; } saveFile(`${slug(D.name)}.png`, await canvasBlob(await makeCard())); };
+try { if (navigator.canShare && window.self === window.top && navigator.canShare({ files: [new File([new Blob(["x"], { type: "image/png" })], "x.png", { type: "image/png" })] })) $("#bShare").hidden = false; } catch (e) { /* sin compartir */ }
+$("#bShare").onclick = async () => {
+  if (!measure(D).total) { toast("Pinta el diseño primero"); return; }
+  const blob = await canvasBlob(await makeCard());
+  try { await navigator.share({ files: [new File([blob], `${slug(D.name)}.png`, { type: "image/png" })] }); }
+  catch (e) { if (e.name !== "AbortError") saveFile(`${slug(D.name)}.png`, blob); }
+};
+
+/* ---------- patrón para tejer ---------- */
+function runs(list) {
+  // «3 A · 2 B»; los huecos internos se nombran
+  let a = 0, b = list.length - 1;
+  while (a <= b && !list[a]) a++; while (b >= a && !list[b]) b--;
+  const out = []; let cur, n = 0;
+  for (let i = a; i <= b; i++) { const v = list[i] || "·"; if (v === cur) n++; else { if (cur !== undefined) out.push([cur, n]); cur = v; n = 1; } }
+  if (cur !== undefined) out.push([cur, n]);
+  return out.map(([v, k]) => v === "·" ? `(${k} vacío${k > 1 ? "s" : ""})` : `${k} ${v}`).join(" · ");
+}
+async function makePattern() {
+  await fontsReady();
+  const m = measure(D), lg = legend(D, m), L = Object.fromEntries(lg.map(l => [l.id, l])), piezas = D.pieza === "aros" ? 2 : 1;
+  const { bw, bh } = bd(D), I = T.insumos.mostacillas;
+  const W = 1600, M = 70, SANS = '"Bricolage Grotesque", system-ui, sans-serif';
+  const [wmm, hmm] = gridMM(D);
+  let hTot = hmm; for (const s of m.lay) hTot = Math.max(hTot, s.y0 + s.len * FR.bh);
+  const s = Math.min((W - 2 * M - 80) / wmm, 46, 1800 / hTot);
+  const chartW = wmm * s, chartH = hTot * s;
+  const lines = [];
+  if (D.puntada === "peyote") {
+    for (let c = 0; c < D.W; c++) { const col = []; for (let r = 0; r < D.H; r++) if (valid(D, r, c)) col.push(getC(D, r, c) ? L[getC(D, r, c)].letter : null); const t = runs(col); if (t) lines.push([`Columna ${c + 1}`, col.filter(Boolean).length, t]); }
+  } else {
+    for (let r = 0; r < D.H; r++) { const row = []; for (let c = 0; c < D.W; c++) if (valid(D, r, c)) row.push(getC(D, r, c) ? L[getC(D, r, c)].letter : null); const t = runs(row); if (t) lines.push([`Fila ${r + 1}`, row.filter(Boolean).length, t]); }
+  }
+  m.lay.forEach((st, j) => lines.push([`Fleco ${j + 1}`, st.len, runs(Array.from({ length: st.len }, (_, k) => L[frColor(D, st, k)].letter))]));
+  const legRows = Math.ceil(lg.length / 2), lineH = 34;
+  const H = Math.ceil(M + 200 + chartH + 60 + 30 + legRows * 44 + 80 + lines.length * lineH + 60 + M);
+  const c = document.createElement("canvas"); c.width = W; c.height = H;
+  const x = c.getContext("2d");
+  x.fillStyle = "#ffffff"; x.fillRect(0, 0, W, H);
+  x.fillStyle = "#24122e"; x.font = `750 56px ${SANS}`; x.textBaseline = "alphabetic"; x.fillText(D.name, M, M + 50);
+  x.fillStyle = "#5a4a63"; x.font = `500 26px ${SANS}`;
+  const P = price(D, m);
+  x.fillText([`Puntada ${({ brick: "ladrillo (brick stitch)", peyote: "peyote", telar: "telar" })[D.puntada]}`, `grilla ${D.W} × ${D.H}`, `${cm(m.h)} × ${cm(m.w)} cm`, `${fmtN(m.total)} mostacillas${piezas === 2 ? " por aro (" + fmtN(m.total * 2) + " el par)" : ""}`].join(" · "), M, M + 96);
+  x.fillText(["Miyuki Delica 11/0", D.cliente.trim() && D.cliente.trim(), D.pieza === "aros" && ({ plata: "ganchos de plata 925", oro: "ganchos con baño de oro", poste: "postes dorados" })[D.gancho], P.precio && `precio sugerido ${clp(P.precio)}`, new Date().toLocaleDateString("es-CL")].filter(Boolean).join(" · "), M, M + 134);
+  if (D.notas.trim()) { x.font = `italic 500 22px ${SANS}`; x.fillText("Notas: " + D.notas.trim().replace(/\s+/g, " ").slice(0, 120), M, M + 168); }
+  const ox = M + 40 + (W - 2 * M - 80 - chartW) / 2, oy = M + 200;
+  const cell = (cx, cy, w, h, v) => {
+    const pw = w * s * .92, ph = h * s * .9, X = ox + cx * s - pw / 2, Y = oy + cy * s - ph / 2;
+    rr(x, X, Y, pw, ph, Math.min(pw, ph) * .22);
+    if (!v) { x.strokeStyle = "rgba(36,18,46,.12)"; x.lineWidth = 1; x.stroke(); return; }
+    const p = L[v].c; x.fillStyle = p.hex; x.fill(); x.strokeStyle = "rgba(36,18,46,.35)"; x.lineWidth = 1; x.stroke();
+    if (pw > 12) { x.fillStyle = lum(p.hex) > .55 ? "#24122e" : "#ffffff"; x.font = `700 ${Math.round(Math.min(pw, ph) * .56)}px ${SANS}`; x.textAlign = "center"; x.textBaseline = "middle"; x.fillText(L[v].letter, X + pw / 2, Y + ph / 2 + 1); }
+  };
+  eachCell(D, (r, cc, v) => { const [cx, cy] = center(D, r, cc); cell(cx, cy, bw, bh, v); });
+  m.lay.forEach(st => { for (let k = 0; k < st.len; k++) cell(st.x, st.y0 + (k + .5) * FR.bh, FR.bw, FR.bh, frColor(D, st, k)); });
+  x.fillStyle = "#5a4a63"; x.font = `600 ${Math.max(12, Math.min(18, s * .5))}px ${SANS}`; x.textBaseline = "middle";
+  if (D.puntada === "peyote") { x.textAlign = "center"; for (let cc = 0; cc < D.W; cc++) x.fillText(cc + 1, ox + (cc + .5) * bw * s, oy - 18); }
+  else for (let r = 0; r < D.H; r++) { const y = oy + (r + .5) * bh * s; x.textAlign = "right"; x.fillText(r + 1, ox - 12, y); x.textAlign = "left"; x.fillText(r + 1, ox + chartW + 12, y); }
+  let y = oy + chartH + 60;
+  x.textAlign = "left"; x.textBaseline = "alphabetic"; x.fillStyle = "#7a3fa0"; x.font = `700 22px ${SANS}`; x.fillText("COLORES", M, y); y += 20;
+  const colW = (W - 2 * M) / 2;
+  lg.forEach((l, i) => {
+    const X = M + (i % 2) * colW, Y = y + Math.floor(i / 2) * 44;
+    x.fillStyle = l.c.hex; rr(x, X, Y + 6, 40, 32, 8); x.fill(); x.strokeStyle = "rgba(36,18,46,.3)"; x.lineWidth = 1; x.stroke();
+    x.fillStyle = lum(l.c.hex) > .55 ? "#24122e" : "#ffffff"; x.font = `750 20px ${SANS}`; x.textAlign = "center"; x.fillText(l.letter, X + 20, Y + 29);
+    x.textAlign = "left"; x.fillStyle = "#24122e"; x.font = `700 22px ${SANS}`; x.fillText(codeTxt(l.id), X + 54, Y + 29);
+    const cw = x.measureText(codeTxt(l.id) + " ").width;
+    x.fillStyle = "#5a4a63"; x.font = `500 19px ${SANS}`;
+    let nm = l.c.name; const maxNm = colW - 54 - cw - 190; while (x.measureText(nm).width > maxNm && nm.length > 4) nm = nm.slice(0, -2);
+    x.fillText(nm === l.c.name ? nm : nm + "…", X + 54 + cw, Y + 29);
+    x.textAlign = "right"; x.fillStyle = "#24122e"; x.font = `600 20px ${SANS}`;
+    x.fillText(`${fmtN(l.n * piezas)} · ${fmtD(l.n * piezas / I.porGramo * (1 + I.merma))} g`, X + colW - 24, Y + 29); x.textAlign = "left";
+  });
+  y += legRows * 44 + 10;
+  x.fillStyle = "#5a4a63"; x.font = `500 18px ${SANS}`; x.fillText(`Cantidades ${piezas === 2 ? "para el par" : "para la pieza"}, con ${Math.round(I.merma * 100)} % de merma en los gramos.`, M, y + 8);
+  y += 50;
+  x.fillStyle = "#7a3fa0"; x.font = `700 22px ${SANS}`; x.fillText(D.puntada === "peyote" ? "COLUMNA POR COLUMNA (DE ARRIBA HACIA ABAJO)" : "FILA POR FILA (DE IZQUIERDA A DERECHA)", M, y);
+  if (D.puntada === "brick") { x.fillStyle = "#5a4a63"; x.font = `500 19px ${SANS}`; x.fillText("En ladrillo se suele partir por la fila más ancha y tejer hacia arriba, y después hacia abajo.", M, y + 30); y += 30; }
+  for (const [name, n, t] of lines) {
+    y += lineH;
+    x.fillStyle = "#24122e"; x.font = `700 21px ${SANS}`; x.fillText(name, M, y);
+    x.fillStyle = "#5a4a63"; x.font = `500 19px ${SANS}`; x.fillText(`(${n})`, M + 150, y);
+    x.fillStyle = "#24122e"; x.font = `500 21px ${SANS}`;
+    let tt = t; while (x.measureText(tt).width > W - 2 * M - 220 && tt.length > 10) tt = tt.slice(0, -2);
+    x.fillText(tt === t ? t : tt + "…", M + 220, y);
+  }
+  x.fillStyle = "#5a4a63"; x.font = `500 18px ${SANS}`; x.textAlign = "right"; x.fillText("Kika Miyuki · diseñador de patrones", W - M, H - 30);
+  return c;
+}
+$("#bPattern").onclick = async () => { if (!measure(D).total) { toast("Pinta el diseño primero"); return; } saveFile(`patron-${slug(D.name)}.png`, await canvasBlob(await makePattern())); };
+if (window.self === window.top) $("#bPrint").hidden = false;
+$("#bPrint").onclick = async () => {
+  if (!measure(D).total) { toast("Pinta el diseño primero"); return; }
+  const c = await makePattern(), img = new Image();
+  img.onload = () => setTimeout(() => window.print(), 50);
+  img.src = c.toDataURL("image/png");
+  $("#printArea").innerHTML = ""; $("#printArea").appendChild(img);
+};
+
+/* ================== biblioteca ================== */
+let LIB = load(K_LIB, []);
+function thumb(d) {
+  const c = document.createElement("canvas"); c.width = 240; c.height = 240;
+  const x = c.getContext("2d"); x.fillStyle = "#fffaf3"; x.fillRect(0, 0, 240, 240);
+  drawSet(x, d, measure(d), 14, 14, 212, 212, 30);
+  return c.toDataURL("image/jpeg", .82);
+}
+let savedSig = null;
+const curSig = () => JSON.stringify([D.cells, D.fringe, D.name, D.cliente, D.notas, D.pieza, D.puntada, D.W, D.H, D.gancho, D.perlas, D.cuentas, D.nivel, D.tamano, D.paleta]);
+function saveToLib() {
+  const s = JSON.parse(JSON.stringify(D));
+  s.editado = Date.now(); s.thumb = thumb(D); s.precio = price(D).precio;
+  const i = LIB.findIndex(x => x.id === s.id);
+  if (i >= 0) LIB[i] = s; else LIB.unshift(s);
+  if (!store(K_LIB, LIB)) { toast("No se pudo guardar: el navegador no tiene espacio. Exporta un respaldo y borra diseños viejos"); return false; }
+  savedSig = curSig(); toast("Guardado en Mis diseños");
+  return true;
+}
+const isDirty = () => D.cells.some(Boolean) && savedSig !== curSig();
+function renderLib() {
+  $("#lib").innerHTML = LIB.length ? LIB.map(d => `<div class="item" data-id="${d.id}">
+      <img src="${d.thumb || ""}" alt="" />
+      <b>${esc(d.name)}</b>
+      <span>${d.cliente ? esc(d.cliente) + " · " : ""}${new Date(d.editado).toLocaleDateString("es-CL")}${d.precio ? " · " + clp(d.precio) : ""}</span>
+      <div class="acts"><button class="go" data-a="open" type="button">Abrir</button><button data-a="dup" type="button">Copiar</button><button class="danger" data-a="del" type="button">Borrar</button></div>
+    </div>`).join("") : `<p class="empty">Todavía no guardas diseños. Usa «Guardar» arriba a la derecha.</p>`;
+}
+$("#bLib").onclick = () => { renderLib(); $("#dlgLib").showModal(); };
+document.querySelectorAll("[data-close]").forEach(b => b.onclick = () => b.closest("dialog").close());
+let pending = null;
+function openDesign(d, isNew) {
+  D = normalize(JSON.parse(JSON.stringify(d))); delete D.thumb; delete D.precio;
+  undoS.length = 0; redoS.length = 0; savedSig = isNew ? null : curSig(); phLive = false;
+  if (!D.paleta.includes(UI.color)) UI.color = usedIds(D)[0] || D.paleta[0];
+  changed(); fitZoom();
+}
+function guard(action) { if (isDirty()) { pending = action; $("#dlgNew").showModal(); } else action(); }
+$("#lib").addEventListener("click", e => {
+  const b = e.target.closest("button"); if (!b) return;
+  const d = LIB.find(x => x.id === b.closest(".item").dataset.id);
+  if (b.dataset.a === "open") { $("#dlgLib").close(); guard(() => openDesign(d)); }
+  else if (b.dataset.a === "dup") { const n = JSON.parse(JSON.stringify(d)); n.id = uid(); n.name = d.name + " (copia)"; n.editado = Date.now(); LIB.unshift(n); store(K_LIB, LIB); renderLib(); }
+  else if (b.dataset.a === "del") {
+    if (b.dataset.sure) { LIB = LIB.filter(x => x.id !== d.id); store(K_LIB, LIB); renderLib(); }
+    else { b.dataset.sure = "1"; b.textContent = "¿Seguro?"; setTimeout(() => { if (b.isConnected) { delete b.dataset.sure; b.textContent = "Borrar"; } }, 3000); }
+  }
+});
+$("#bSave").onclick = saveToLib;
+$("#bNew").onclick = () => guard(() => { openDesign(blank(), true); showTab("pieza"); toast("Diseño nuevo: elige una forma base, sube una imagen o pinta directo"); });
+$("#bNewSave").onclick = () => { if (saveToLib()) { $("#dlgNew").close(); if (pending) pending(); pending = null; } };
+$("#bNewDiscard").onclick = () => { $("#dlgNew").close(); if (pending) pending(); pending = null; };
+$("#bExportOne").onclick = () => saveFile(`${slug(D.name)}.json`, new Blob([JSON.stringify({ kikaDisenador: 2, disenos: [D] })], { type: "application/json" }));
+$("#bExportAll").onclick = () => saveFile(`disenos-kika-miyuki-${new Date().toISOString().slice(0, 10)}.json`, new Blob([JSON.stringify({ kikaDisenador: 2, tengo: [...STOCK], disenos: LIB })], { type: "application/json" }));
+$("#fileJson").addEventListener("change", async e => {
+  const f = e.target.files[0]; if (!f) return;
+  try {
+    const j = JSON.parse(await f.text());
+    const list = Array.isArray(j) ? j : j.disenos || [];
+    if (Array.isArray(j.tengo)) { j.tengo.forEach(id => CATMAP.has(id) && STOCK.add(id)); store(K_STOCK, [...STOCK]); }
+    let n = 0;
+    for (const d of list) {
+      if (!d || !Array.isArray(d.cells)) continue;
+      normalize(d); if (!d.thumb) d.thumb = thumb(d);
+      const i = LIB.findIndex(x => x.id === d.id); if (i >= 0) LIB[i] = d; else LIB.unshift(d); n++;
+    }
+    store(K_LIB, LIB); renderLib(); renderColors();
+    toast(n ? `Importé ${n} diseño${n > 1 ? "s" : ""}` : "Ese archivo no trae diseños");
+  } catch (err) { toast("Ese archivo no es un respaldo del diseñador"); }
+  e.target.value = "";
+});
+
+/* ================== pestañas ================== */
+function showTab(t) {
+  UI.tab = t; saveUI();
+  document.querySelectorAll(".tab").forEach(b => b.setAttribute("aria-selected", b.dataset.tab === t));
+  document.querySelectorAll(".pane").forEach(p => p.hidden = p.dataset.pane !== t);
+  if (t === "colores") renderColors();
+}
+document.querySelectorAll(".tab").forEach(b => b.onclick = () => showTab(b.dataset.tab));
+
+/* ================== sincronizar ================== */
+function syncForm() {
+  if (document.activeElement !== $("#dName")) $("#dName").value = D.name;
+  if (document.activeElement !== $("#dCliente")) $("#dCliente").value = D.cliente;
+  if (document.activeElement !== $("#dNotas")) $("#dNotas").value = D.notas;
+  $("#inW").value = D.W; $("#inH").value = D.H;
+  const [wmm, hmm] = gridMM(D);
+  if (document.activeElement !== $("#inWcm")) $("#inWcm").value = (wmm / 10).toFixed(1);
+  if (document.activeElement !== $("#inHcm")) $("#inHcm").value = (hmm / 10).toFixed(1);
+  $("#frOn").checked = D.fringe.on; $("#frOpts").hidden = !D.fringe.on;
+  $("#frLen").value = D.fringe.largo; $("#frLenLbl").textContent = D.fringe.largo;
+  $("#puntadaHint").textContent = PUNTADA_TXT[D.puntada];
+  segUpd.forEach(f => f());
+}
+let saveT = 0, prevT = 0;
+function scheduleSave() { D.editado = Date.now(); clearTimeout(saveT); saveT = setTimeout(() => store(K_CUR, D), 400); }
+function changed() {
+  for (const v of usedIds(D)) if (!D.paleta.includes(v)) D.paleta.push(v);
+  syncForm(); draw(); renderColors();
+  cancelAnimationFrame(prevT); prevT = requestAnimationFrame(() => { drawPreview(); renderInfo(); });
+  scheduleSave();
+}
+let uiT = 0; function saveUI() { clearTimeout(uiT); uiT = setTimeout(() => store(K_UI, UI), 300); }
+
+/* ================== ejemplo inicial ================== */
+function sample() {
+  // Triángulo de ladrillo con franjas y flecos en V que terminan en dorado: el aro clásico de flecos
+  const d = blank(15, 12);
+  d.name = "Triángulo con flecos (ejemplo)";
+  applyShape(d, shapeFn("triArriba"), "DB1371");
+  eachCell(d, (r, c, v) => {
+    if (!v) return;
+    const i = r * d.W + c;
+    if (r <= 2 || r === 11) d.cells[i] = "DB0031";
+    else if (r === 6 || r === 7) d.cells[i] = "DB1379";
+    else if (r === 9) d.cells[i] = "DB0200";
+  });
+  d.fringe = { on: true, forma: "v", largo: 22, cells: [] };
+  fringeLayout(d).forEach(s => d.fringe.cells[s.i] = Array.from({ length: s.len }, (_, k) => k < s.len * .4 ? "DB1371" : k < s.len - 2 ? "DB0248" : "DB0031"));
+  d.paleta = ["DB1371", "DB1379", "DB0200", "DB0248", "DB0031", "DB0010", "DB0723", "DB0721", "DB0724", "DB0730"];
+  return d;
+}
+
+/* ================== arranque ================== */
+if (!D) D = normalize(sample());
+if (!D.paleta.includes(UI.color)) UI.color = usedIds(D)[0] || D.paleta[0];
+$("#cardPrice").checked = UI.cardPrice;
+setTool(tool); toggles(); phLabels(); syncForm(); showTab(UI.tab);
+draw(); renderColors(); renderInfo();
+setZoom(UI.zoom);
+requestAnimationFrame(() => { if (!load(K_UI, null) || !load(K_CUR, null)) fitZoom(); drawPreview(); });
+addEventListener("resize", () => { clearTimeout(window.__rz); window.__rz = setTimeout(drawPreview, 120); });
+if (document.fonts) document.fonts.ready.then(() => { draw(); drawPreview(); });
+(async () => {
+  try {
+    // solo al abrirlo desde el proyecto con un servidor local; la app publicada usa la copia incluida
+    if (/^(localhost|127\.0\.0\.1)$/.test(location.hostname) && window.self === window.top) {
+      const r = await fetch("../tabla-precios.json", { cache: "no-store" });
+      if (r.ok) { const j = await r.json(); if (j.tamanos && j.insumos && j.disenos) { T = j; tSource = "tabla-precios.json del proyecto"; renderInfo(); } }
+    }
+  } catch (e) { /* se usa la copia incluida */ }
+})();
+// modo sin internet cuando está publicada como app (no funciona abriendo el archivo con doble clic)
+if ("serviceWorker" in navigator && location.protocol === "https:" && window.self === window.top) navigator.serviceWorker.register("sw.js").catch(() => {});
+})();
+</script>
+</body>
+</html>
