@@ -298,7 +298,11 @@ footer { color: var(--ink); font-size: 15px; }
 /* portada: la foto de la semana en su marco, con la sombra amarilla */
 .hero-foto { position: relative; margin: 0; rotate: -1.5deg; }
 .hero-foto img { display: block; width: 100%; height: auto; aspect-ratio: 3 / 4; object-fit: cover; border-radius: 48px; background: var(--paper2); box-shadow: 18px 18px 0 var(--yel); }
-.hero-foto figcaption { position: absolute; left: 22px; bottom: 22px; background: var(--paper); color: var(--ink); font-size: 13px; font-weight: 700; padding: 7px 14px; border-radius: 999px; rotate: 1.5deg; }
+.hero-foto figcaption { position: absolute; left: 22px; bottom: 74px; background: var(--paper); color: var(--ink); font-size: 13px; font-weight: 700; padding: 7px 14px; border-radius: 999px; rotate: 1.5deg; }
+/* botón para encargar los aros de la foto (pueden no estar en la colección) */
+.hero-encargo { position: absolute; left: 22px; bottom: 22px; rotate: 1.5deg; display: inline-flex; align-items: center; min-height: 44px; padding: 0 20px; border-radius: 999px; background: var(--ink); color: var(--paper); font-size: 14px; font-weight: 700; text-decoration: none; box-shadow: 4px 4px 0 var(--yel); }
+.hero-encargo:hover { background: var(--plum, var(--ink)); }
+.hero-encargo:focus-visible { outline: 3px solid var(--yel); outline-offset: 3px; }
 /* en computador la foto va a la derecha del texto; en celular, entre el título y el resto */
 .hero-grid { grid-template-areas: "top foto" "bottom foto"; row-gap: 0; }
 .hero-top { grid-area: top; align-self: end; }
@@ -311,7 +315,8 @@ footer { color: var(--ink); font-size: 15px; }
 @media (max-width: 640px) {
   .hero-visual { max-width: 250px; margin-bottom: 36px; }
   .hero-foto img { border-radius: 36px; box-shadow: 12px 12px 0 var(--yel); }
-  .hero-foto figcaption { left: 16px; bottom: 16px; font-size: 12px; }
+  .hero-foto figcaption { left: 16px; bottom: 66px; font-size: 12px; }
+  .hero-encargo { left: 16px; bottom: 16px; min-height: 40px; padding: 0 16px; font-size: 13px; }
 }
 
 /* ---------- accesibilidad ---------- */

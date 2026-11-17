@@ -475,6 +475,14 @@
             })();
           </script>
           <figcaption>La foto de la semana</figcaption>
+          <a href="https://ig.me/m/kikamiyuki" class="hero-encargo js-dm" data-msg="¡Hola! Quiero encargar los aros de la foto de la semana.">Encárgalos por DM</a>
+          <script>
+            // el mensaje lleva el enlace de la foto de esta semana, para saber qué aros son
+            (function () {
+              const a = document.currentScript.previousElementSibling, img = a.parentNode.querySelector("img");
+              a.dataset.msg = "¡Hola! Quiero encargar los aros de la foto de la semana: " + new URL(img.getAttribute("src"), location.href).href;
+            })();
+          </script>
         </figure>
         <span class="bead loose" style="--c:var(--red); --s:34px; left:-18px; top:14%"></span>
         <span class="bead loose" style="--c:var(--green); --s:26px; right:10%; top:-14px"></span>
@@ -525,7 +533,7 @@
       <div class="section-head reveal">
         <span class="eyebrow">La colección</span>
         <h2>Encuentra tu par favorito</h2>
-        <p>Al ser piezas hechas a mano, cada diseño se produce en pequeñas cantidades. Toca una foto para verla más grande.</p>
+        <p>Al ser piezas hechas a mano, cada diseño se produce en pequeñas cantidades. Toca una foto para ver el aro en detalle.</p>
       </div>
 
       <div class="filters reveal">
