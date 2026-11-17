@@ -1,4 +1,5 @@
 User-agent: *
 Allow: /
+Disallow: /disenador/
 
 Sitemap: https://kikamiyuki.github.io/sitemap.xml
