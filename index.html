@@ -830,7 +830,7 @@
     // normal tachado y un aviso arriba; antes y después la web muestra los precios normales, sin tener que publicar nada.
     // Las páginas de cada aro (generar-productos.js) leen este mismo PROMO. Para no tener descuento, PROMO vale null.
     // Para verlo antes en la vista previa local: http://localhost:5173/?promo
-    const PROMO = { nombre: "Black Friday", pct: 15, desde: "2026-11-27T00:00:00-03:00", hasta: "2026-12-01T00:00:00-03:00", aviso: "15% en toda la tienda", hastaTxt: "hasta el lunes 30", fechas: "27 al 30 de noviembre" };
+    const PROMO = { nombre: "Black Friday", pct: 15, desde: "2026-11-26T00:00:00-03:00", hasta: "2026-12-01T00:00:00-03:00", aviso: "15% en toda la tienda", hastaTxt: "hasta el lunes 30", fechas: "26 al 30 de noviembre" };
     // ===================================================
 
     const promoActiva = PROMO && ((location.hostname === "localhost" && new URLSearchParams(location.search).has("promo")) ||

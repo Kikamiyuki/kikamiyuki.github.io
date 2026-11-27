@@ -109,7 +109,7 @@
     const producto = {"name":"Sushi","price":15000,"img":"/img/sushi.jpg","msg":"¡Hola! Me interesan los aros \"Sushi\" ($15.000). ¿Están disponibles?\nhttps://kikamiyuki.github.io/p/sushi/","dm":"https://ig.me/m/kikamiyuki","currency":"$"};
     // Descuento programado: solo entre las fechas de PROMO (index.html)
     const enPromo = (location.hostname === "localhost" && new URLSearchParams(location.search).has("promo")) ||
-      (Date.now() >= Date.parse("2026-11-27T00:00:00-03:00") && Date.now() < Date.parse("2026-12-01T00:00:00-03:00"));
+      (Date.now() >= Date.parse("2026-11-26T00:00:00-03:00") && Date.now() < Date.parse("2026-12-01T00:00:00-03:00"));
     if (enPromo) {
       const d = {"price":12750,"oldPrice":15000,"msg":"¡Hola! Me interesan los aros \"Sushi\" (Black Friday: $12.750). ¿Están disponibles?\nhttps://kikamiyuki.github.io/p/sushi/","html":"<s>$15.000</s>$12.750<span class=\"offer\">Black Friday −15%</span>"};
       Object.assign(producto, { price: d.price, oldPrice: d.oldPrice, msg: d.msg });

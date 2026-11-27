@@ -109,7 +109,7 @@
     const producto = {"name":"Calavera Pastel","price":26000,"img":"/img/calavera-pastel.jpg","msg":"¡Hola! Me interesan los aros \"Calavera Pastel\" ($26.000). ¿Están disponibles?\nhttps://kikamiyuki.github.io/p/calavera-pastel/","dm":"https://ig.me/m/kikamiyuki","currency":"$"};
     // Descuento programado: solo entre las fechas de PROMO (index.html)
     const enPromo = (location.hostname === "localhost" && new URLSearchParams(location.search).has("promo")) ||
-      (Date.now() >= Date.parse("2026-11-27T00:00:00-03:00") && Date.now() < Date.parse("2026-12-01T00:00:00-03:00"));
+      (Date.now() >= Date.parse("2026-11-26T00:00:00-03:00") && Date.now() < Date.parse("2026-12-01T00:00:00-03:00"));
     if (enPromo) {
       const d = {"price":22100,"oldPrice":26000,"msg":"¡Hola! Me interesan los aros \"Calavera Pastel\" (Black Friday: $22.100). ¿Están disponibles?\nhttps://kikamiyuki.github.io/p/calavera-pastel/","html":"<s>$26.000</s>$22.100<span class=\"offer\">Black Friday −15%</span>"};
       Object.assign(producto, { price: d.price, oldPrice: d.oldPrice, msg: d.msg });
